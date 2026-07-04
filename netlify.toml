@@ -1,0 +1,4 @@
+[build]
+  # Statisk enkeltfil-app (index.html) – ingen bygging nødvendig
+  command = ""
+  publish = "."
