@@ -1111,9 +1111,9 @@ body{-webkit-tap-highlight-color:transparent;overflow-x:hidden}
 </div>
 
 <div class="card">
-  <div class="card-hd"><div class="ci" style="background:var(--orange-l)">📋</div><div><div class="ct">Utgifter</div></div></div>
+  <div class="card-hd" style="align-items:center"><div class="ci" style="background:var(--orange-l)">📋</div><div style="flex:1"><div class="ct">Utgifter</div><div class="cs" id="eco-sync">…</div></div><button onclick="ecoFetch()" style="padding:8px 12px;background:var(--gray-l);border:1px solid #d1d5db;border-radius:9px;font-weight:700;font-size:.8rem;cursor:pointer;white-space:nowrap">🔄 Oppdater</button></div>
   <div id="eco-list"></div>
-  <div class="alert ab" style="margin-top:10px">💾 Lagres lokalt på <strong>din enhet</strong> (ikke synkronisert mellom mobiler). Ferje og Aalborg-hotell er lagt inn på forhånd – slett eller endre fritt.</div>
+  <div class="alert ab" style="margin-top:10px">👨‍👩‍👧‍👧 <strong>Delt liste</strong> – Janiche og Jon fører på hver sin mobil og ser samme oversikt. Trykk 🔄 for å hente nyeste. Ferje + Aalborg er lagt inn på forhånd.</div>
 </div>
 </div>
 
@@ -1373,28 +1373,42 @@ function ensureMap(){
   setTimeout(function(){ tripMap.invalidateSize(); tripMap.fitBounds(bounds, {padding:[25,25]}); }, 80);
 }
 
-// ØKONOMI
+// ØKONOMI (delt liste via Supabase – begge mobiler ser samme)
+var SB_URL = 'https://fkmcamjjksqafuvtcjze.supabase.co';
+var SB_KEY = 'sb_publishable_W6cGE5nKw9Enp0I56GRBpQ_5skVZZZm';
 var ECO_RATES = {NOK:1, EUR:11.70, DKK:1.57, GBP:13.50};
-var ECO_KEY = 'roadtrip2026_eco';
-function ecoLoad(){
-  try{ var d = JSON.parse(localStorage.getItem(ECO_KEY)); if(Array.isArray(d)) return d; }catch(e){}
-  return [
-    {desc:'Color Line ferje t/r (3 voksne + bil)', cat:'Ferje/fly', amt:4692, cur:'NOK'},
-    {desc:'B&B Hotel Aalborg (natt 6/7)', cat:'Hotell', amt:1185.30, cur:'DKK'}
-  ];
+var ECO_CACHE = 'roadtrip2026_eco_cache';
+var ecoData = [];
+function ecoHeaders(extra){
+  var h = {'apikey':SB_KEY, 'Authorization':'Bearer '+SB_KEY};
+  if(extra){ for(var k in extra){ h[k]=extra[k]; } }
+  return h;
 }
-function ecoSave(list){ try{ localStorage.setItem(ECO_KEY, JSON.stringify(list)); }catch(e){} }
 function ecoNOK(e){ return e.amt * (ECO_RATES[e.cur] || 1); }
 function ecoFmt(n){ return Math.round(n).toLocaleString('no-NO') + ' kr'; }
 function ecoEsc(s){ return String(s).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+function ecoStatus(t){ var el = document.getElementById('eco-sync'); if(el) el.textContent = t; }
+function ecoFetch(){
+  ecoStatus('Henter …');
+  fetch(SB_URL+'/rest/v1/expenses?select=*&order=created_at.asc', {headers:ecoHeaders()})
+    .then(function(r){ if(!r.ok) throw new Error('http'); return r.json(); })
+    .then(function(rows){
+      ecoData = rows.map(function(r){ return {id:r.id, desc:r.title, cat:r.category, amt:Number(r.amount), cur:r.currency}; });
+      try{ localStorage.setItem(ECO_CACHE, JSON.stringify(ecoData)); }catch(e){}
+      ecoRender(); ecoStatus('✓ Delt liste · oppdatert nå');
+    })
+    .catch(function(){
+      try{ var c = JSON.parse(localStorage.getItem(ECO_CACHE)); if(Array.isArray(c)) ecoData = c; }catch(e){}
+      ecoRender(); ecoStatus('⚠️ Offline – viser sist lagrede. Trykk 🔄 når nettet er tilbake.');
+    });
+}
 function ecoRender(){
-  var list = ecoLoad();
-  var total = list.reduce(function(s,e){ return s + ecoNOK(e); }, 0);
   var elT = document.getElementById('eco-total'); if(!elT) return;
+  var total = ecoData.reduce(function(s,e){ return s + ecoNOK(e); }, 0);
   elT.textContent = ecoFmt(total);
-  document.getElementById('eco-count').textContent = list.length + ' utgifter';
+  document.getElementById('eco-count').textContent = ecoData.length + ' utgifter';
   var cats = {};
-  list.forEach(function(e){ cats[e.cat] = (cats[e.cat] || 0) + ecoNOK(e); });
+  ecoData.forEach(function(e){ cats[e.cat] = (cats[e.cat] || 0) + ecoNOK(e); });
   var bc = '';
   Object.keys(cats).sort(function(a,b){ return cats[b] - cats[a]; }).forEach(function(c){
     var pct = total > 0 ? Math.round(cats[c]/total*100) : 0;
@@ -1402,12 +1416,12 @@ function ecoRender(){
   });
   document.getElementById('eco-bycat').innerHTML = bc || '<div class="inote">Ingen utgifter ennå.</div>';
   var lh = '';
-  list.forEach(function(e,i){
+  ecoData.forEach(function(e){
     var extra = e.cur !== 'NOK' ? ' <span style="color:var(--gray-m);font-weight:400">('+e.amt+' '+e.cur+')</span>' : '';
     lh += '<div style="display:flex;align-items:center;gap:10px;padding:10px 2px;border-bottom:1px solid #f0f0f0">'+
       '<div style="flex:1;min-width:0"><div style="font-size:.86rem;font-weight:600">'+ecoEsc(e.desc)+'</div><div style="font-size:.72rem;color:var(--gray-m)">'+e.cat+'</div></div>'+
       '<div style="font-weight:700;font-size:.85rem;text-align:right;white-space:nowrap">'+ecoFmt(ecoNOK(e))+extra+'</div>'+
-      '<button onclick="ecoDelete('+i+')" style="background:none;border:none;cursor:pointer;font-size:1.05rem;padding:4px;flex-shrink:0">🗑️</button>'+
+      '<button onclick="ecoDelete('+e.id+')" style="background:none;border:none;cursor:pointer;font-size:1.05rem;padding:4px;flex-shrink:0">🗑️</button>'+
       '</div>';
   });
   document.getElementById('eco-list').innerHTML = lh || '<div class="inote">Ingen utgifter registrert ennå.</div>';
@@ -1416,13 +1430,22 @@ function ecoAdd(){
   var desc = document.getElementById('eco-desc').value.trim();
   var amt = parseFloat(document.getElementById('eco-amt').value);
   if(!desc || !(amt > 0)){ alert('Skriv inn hva utgiften gjelder og et beløp.'); return; }
-  var list = ecoLoad();
-  list.push({desc:desc, cat:document.getElementById('eco-cat').value, amt:amt, cur:document.getElementById('eco-cur').value});
-  ecoSave(list); ecoRender();
-  document.getElementById('eco-desc').value = '';
-  document.getElementById('eco-amt').value = '';
+  ecoStatus('Lagrer …');
+  fetch(SB_URL+'/rest/v1/expenses', {
+    method:'POST',
+    headers:ecoHeaders({'Content-Type':'application/json','Prefer':'return=representation'}),
+    body:JSON.stringify({title:desc, category:document.getElementById('eco-cat').value, amount:amt, currency:document.getElementById('eco-cur').value})
+  }).then(function(r){ if(!r.ok) throw new Error('http'); return r.json(); })
+    .then(function(){ document.getElementById('eco-desc').value=''; document.getElementById('eco-amt').value=''; ecoFetch(); })
+    .catch(function(){ ecoStatus('⚠️ Kunne ikke lagre'); alert('Kunne ikke lagre utgiften. Sjekk nettforbindelsen og prøv igjen.'); });
 }
-function ecoDelete(i){ var list = ecoLoad(); list.splice(i,1); ecoSave(list); ecoRender(); }
+function ecoDelete(id){
+  if(!confirm('Slette denne utgiften? Den forsvinner for begge.')) return;
+  ecoStatus('Sletter …');
+  fetch(SB_URL+'/rest/v1/expenses?id=eq.'+id, {method:'DELETE', headers:ecoHeaders()})
+    .then(function(r){ if(!r.ok) throw new Error('http'); ecoFetch(); })
+    .catch(function(){ ecoStatus('⚠️ Kunne ikke slette'); });
+}
 
 // VÆR (Open-Meteo, ingen API-nøkkel)
 var WX_STOPS = [
@@ -1576,7 +1599,7 @@ function showTab(name, btn) {
   btn.classList.add('active');
   window.scrollTo({top:0,behavior:'smooth'});
   if(name === 'kart') ensureMap();
-  if(name === 'okonomi') ecoRender();
+  if(name === 'okonomi') ecoFetch();
   if(name === 'vaer') wxLoad();
 }
 
@@ -1614,7 +1637,7 @@ function updatePersonProgress(person) {
 
 // Init all
 ['janiche','jon','emma','martine','felles'].forEach(p => updatePersonProgress(p));
-ecoRender();
+ecoFetch();
 wxInit();
 todayRender();
 </script>
