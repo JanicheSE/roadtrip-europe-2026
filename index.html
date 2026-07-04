@@ -1088,6 +1088,22 @@ body{-webkit-tap-highlight-color:transparent;overflow-x:hidden}
 <div class="sec-title">💰 Økonomi · reisebudsjett</div>
 
 <div class="card">
+  <div class="card-hd"><div class="ci" style="background:var(--blue-pale)">💱</div><div><div class="ct">Valutakalkulator</div><div class="cs" id="cc-rate">Henter kurs …</div></div></div>
+  <div style="display:flex;gap:10px;align-items:flex-end">
+    <div style="flex:1;min-width:0">
+      <div style="font-size:.72rem;font-weight:700;color:var(--gray-m);margin-bottom:4px">🇳🇴 NOK</div>
+      <input id="cc-nok" type="number" inputmode="decimal" placeholder="0" oninput="ccFrom('nok')" style="width:100%;padding:12px;border:1px solid #d1d5db;border-radius:9px;font-size:1rem;font-family:inherit">
+    </div>
+    <div style="font-size:1.2rem;color:var(--gray-m);padding-bottom:10px">⇄</div>
+    <div style="flex:1;min-width:0">
+      <div style="font-size:.72rem;font-weight:700;color:var(--gray-m);margin-bottom:4px">🇪🇺 EUR</div>
+      <input id="cc-eur" type="number" inputmode="decimal" placeholder="0" oninput="ccFrom('eur')" style="width:100%;padding:12px;border:1px solid #d1d5db;border-radius:9px;font-size:1rem;font-family:inherit">
+    </div>
+  </div>
+  <div class="inote" style="margin-top:8px">Skriv i ett felt – det andre regnes ut automatisk. Kurs oppdateres live.</div>
+</div>
+
+<div class="card">
   <div class="card-hd"><div class="ci" style="background:var(--green-l)">🧮</div><div><div class="ct">Totalt brukt</div><div class="cs" id="eco-count">0 utgifter</div></div></div>
   <div id="eco-total" style="font-size:2rem;font-weight:800;color:var(--green);margin-bottom:2px">0 kr</div>
   <div class="inote" style="margin-bottom:14px">Omregnet til NOK · ca. kurs: 1 € = 11,70 · 1 DKK = 1,57 · 1 £ = 13,50</div>
@@ -1447,6 +1463,21 @@ function ecoDelete(id){
     .catch(function(){ ecoStatus('⚠️ Kunne ikke slette'); });
 }
 
+// VALUTAKALKULATOR (live ECB-kurs via frankfurter.app, fast backup)
+var CC_RATE = 11.70; // NOK per EUR (fallback)
+function ccRateLabel(date){ var el=document.getElementById('cc-rate'); if(el) el.textContent = '1 € = '+CC_RATE.toFixed(2)+' kr' + (date ? ' · kurs '+date : ' · fast kurs (offline)'); }
+function ccFrom(which){
+  var nok=document.getElementById('cc-nok'), eur=document.getElementById('cc-eur'); if(!nok||!eur) return;
+  if(which==='nok'){ var v=parseFloat(nok.value); eur.value = isNaN(v) ? '' : (v/CC_RATE).toFixed(2); }
+  else { var w=parseFloat(eur.value); nok.value = isNaN(w) ? '' : (w*CC_RATE).toFixed(2); }
+}
+function ccFetchRate(){
+  fetch('https://api.frankfurter.dev/v1/latest?base=EUR&symbols=NOK')
+    .then(function(r){ return r.json(); })
+    .then(function(d){ if(d && d.rates && d.rates.NOK){ CC_RATE = d.rates.NOK; ccRateLabel(d.date); var n=document.getElementById('cc-nok'); if(n && n.value!=='') ccFrom('nok'); } })
+    .catch(function(){ ccRateLabel(null); });
+}
+
 // VÆR (Open-Meteo, ingen API-nøkkel)
 var WX_STOPS = [
   {n:'Larvik / Hirtshals', lat:57.59, lon:9.96, from:'2026-07-06'},
@@ -1599,7 +1630,7 @@ function showTab(name, btn) {
   btn.classList.add('active');
   window.scrollTo({top:0,behavior:'smooth'});
   if(name === 'kart') ensureMap();
-  if(name === 'okonomi') ecoFetch();
+  if(name === 'okonomi'){ ecoFetch(); ccFetchRate(); }
   if(name === 'vaer') wxLoad();
 }
 
@@ -1638,6 +1669,8 @@ function updatePersonProgress(person) {
 // Init all
 ['janiche','jon','emma','martine','felles'].forEach(p => updatePersonProgress(p));
 ecoFetch();
+ccRateLabel(null);
+ccFetchRate();
 wxInit();
 todayRender();
 </script>
