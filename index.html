@@ -2,8 +2,14 @@
 <html lang="no">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#1a4fa0">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Roadtrip 2026">
 <title>🚗 Roadtrip Europe 2026 – Sjurseth-Eliassen</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
 <style>
 :root {
   --blue:#1a4fa0; --blue-l:#2e6dd4; --blue-pale:#e8f0fb;
@@ -149,6 +155,30 @@ header p{font-size:.88rem;opacity:.82}
 .divider{height:1px;background:#e5e7eb;margin:13px 0}
 
 .appfooter{text-align:center;padding:18px;font-size:.72rem;color:var(--gray-m)}
+
+/* KART */
+#map{width:100%;height:68vh;min-height:380px;border-radius:var(--r);box-shadow:var(--shadow);z-index:1}
+.map-legend{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.mleg{display:flex;align-items:center;gap:5px;font-size:.74rem;font-weight:600;color:var(--gray);background:#fff;border:1px solid #e5e7eb;border-radius:20px;padding:4px 10px}
+.mleg .dot{width:11px;height:11px;border-radius:50%;flex-shrink:0}
+.leaflet-popup-content{font-family:inherit;font-size:.82rem;line-height:1.45;margin:10px 12px}
+.leaflet-popup-content b{color:var(--blue)}
+
+/* MOBIL */
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{-webkit-tap-highlight-color:transparent;overflow-x:hidden}
+@supports(padding:max(0px)){
+  header{padding-left:max(20px,env(safe-area-inset-left));padding-right:max(20px,env(safe-area-inset-right))}
+  .content{padding-bottom:max(60px,env(safe-area-inset-bottom))}
+}
+@media(max-width:600px){
+  header h1{font-size:1.4rem}
+  .tab{padding:12px 13px;font-size:.8rem}
+  .pitem{padding:9px 9px}
+  .pitem input[type=checkbox]{width:20px;height:20px}
+  .ptab{padding:8px 15px}
+  #map{height:72vh}
+}
 </style>
 </head>
 <body>
@@ -165,6 +195,7 @@ header p{font-size:.88rem;opacity:.82}
 
 <div class="tabs" id="maintabs">
   <button class="tab active" onclick="showTab('oversikt',this)">🗺️ Oversikt</button>
+  <button class="tab" onclick="showTab('kart',this)">📍 Kart</button>
   <button class="tab" onclick="showTab('dagsplan',this)">📅 Dagsplan</button>
   <button class="tab" onclick="showTab('pakkeliste',this)">🎒 Pakkeliste</button>
   <button class="tab" onclick="showTab('lading',this)">⚡ Lading</button>
@@ -211,17 +242,23 @@ header p{font-size:.88rem;opacity:.82}
     <div class="route-wrap">
       <div class="route">
         <div class="stop"><div class="sdot">🏠</div><div class="sname">Slependen</div><div class="sdate">Man 6/7</div></div>
-        <div class="arrow" style="position:relative"><span class="adist">~110 km</span></div>
-        <div class="stop"><div class="sdot">🚢</div><div class="sname">Larvik</div><div class="sdate">Avg 17:30</div></div>
-        <div class="arrow" style="position:relative"><span class="adist">~4 t ferje</span></div>
-        <div class="stop"><div class="sdot">🇩🇰</div><div class="sname">Hirtshals</div><div class="sdate">Ank 21:15</div></div>
-        <div class="arrow" style="position:relative"><span class="adist">~340 km</span></div>
-        <div class="stop"><div class="sdot">🇩🇪</div><div class="sname">Hamburg</div><div class="sdate">8–10/7</div></div>
-        <div class="arrow" style="position:relative"><span class="adist">~370 km</span></div>
-        <div class="stop"><div class="sdot">🇳🇱</div><div class="sname">Nederland</div><div class="sdate">11–16/7</div></div>
-        <div class="arrow" style="position:relative"><span class="adist">Retur</span></div>
+        <div class="arrow" style="position:relative"><span class="adist">ferje</span></div>
+        <div class="stop"><div class="sdot">🇩🇰</div><div class="sname">Hirtshals</div><div class="sdate">6/7</div></div>
+        <div class="arrow" style="position:relative"><span class="adist">~60 km</span></div>
+        <div class="stop"><div class="sdot">🏨</div><div class="sname">Aalborg</div><div class="sdate">Natt 6/7</div></div>
+        <div class="arrow" style="position:relative"><span class="adist">~350 km</span></div>
+        <div class="stop"><div class="sdot">🇩🇪</div><div class="sname">Hamburg</div><div class="sdate">7–9/7</div></div>
+        <div class="arrow" style="position:relative"><span class="adist">~420 km</span></div>
+        <div class="stop"><div class="sdot">✈️</div><div class="sname">Düsseldorf</div><div class="sdate">Jon 10/7</div></div>
+        <div class="arrow" style="position:relative"><span class="adist">venner</span></div>
+        <div class="stop"><div class="sdot">🇳🇱</div><div class="sname">Limburg</div><div class="sdate">11–13/7</div></div>
+        <div class="arrow" style="position:relative"><span class="adist">~150 km</span></div>
+        <div class="stop"><div class="sdot">🏛️</div><div class="sname">Amsterdam</div><div class="sdate">14–15/7</div></div>
+        <div class="arrow" style="position:relative"><span class="adist">~130 km</span></div>
+        <div class="stop"><div class="sdot">🏙️</div><div class="sname">Eindhoven</div><div class="sdate">Martine 17/7→</div></div>
+        <div class="arrow" style="position:relative"><span class="adist">retur ~800 km</span></div>
         <div class="stop"><div class="sdot">🚢</div><div class="sname">Hirtshals</div><div class="sdate">Lør 18/7</div></div>
-        <div class="arrow" style="position:relative"><span class="adist">~4 t ferje</span></div>
+        <div class="arrow" style="position:relative"><span class="adist">ferje</span></div>
         <div class="stop"><div class="sdot">🏠</div><div class="sname">Larvik</div><div class="sdate">Søn 19/7</div></div>
       </div>
     </div>
@@ -251,7 +288,22 @@ header p{font-size:.88rem;opacity:.82}
     </div>
   </div>
 
-  <div class="alert ab">💡 Bruk fanene øverst for å navigere. Pakkeliste-fanen har individuell liste per person!</div>
+  <div class="alert ab">💡 Bruk fanene øverst for å navigere. 📍 Kart-fanen viser alle stoppene, og Pakkeliste-fanen har egen liste per person!</div>
+</div>
+
+<!-- ===== KART ===== -->
+<div id="kart" class="section">
+<div class="sec-title">📍 Kart · alle stoppene på turen</div>
+<div class="card" style="padding:12px">
+  <div id="map"></div>
+  <div class="map-legend">
+    <span class="mleg"><span class="dot" style="background:#1a4fa0"></span>Kjørerute / stopp</span>
+    <span class="mleg"><span class="dot" style="background:#1a7a4a"></span>Overnatting</span>
+    <span class="mleg"><span class="dot" style="background:#d4650a"></span>Venner &amp; besøk</span>
+    <span class="mleg"><span class="dot" style="background:#7c3aed">✈</span>Flyplass</span>
+  </div>
+  <div class="alert ab" style="margin-top:12px">💡 Trykk på en markør for detaljer. Kartet trenger nett for å laste – last siden på forhånd om dere skal være offline.</div>
+</div>
 </div>
 
 <!-- ===== DAGSPLAN ===== -->
@@ -285,19 +337,20 @@ header p{font-size:.88rem;opacity:.82}
 <div class="day-card">
   <div class="day-hd" onclick="toggleDay(this)">
     <div class="dnum">TIR<br>7/7</div>
-    <div><div class="dtitle">🇩🇰 Gjennom Danmark sørover</div>
-    <div class="dmeta">Aalborg → Kolding-området · ~160 km</div></div>
+    <div><div class="dtitle">🇩🇰🇩🇪 Aalborg → Hamburg</div>
+    <div class="dmeta">Frokost inkl. · gjennom Danmark · ~350 km</div></div>
     <div class="dchev">▼</div>
   </div>
   <div class="day-body">
     <ul class="tl">
-      <li><div class="ttime">Morgen</div><div class="ticon">☕</div><div class="ttext"><strong>Frokost på B&amp;B HOTEL Aalborg</strong> (inkludert). Start rolig – dere er på ferie! Sjekk rekkevidde på Elroq.</div></li>
-      <li><div class="ttime">Innen 12:00</div><div class="ticon">🚪</div><div class="ttext"><strong>Utsjekk</strong> fra hotellet. Husk å hente evt. depositum-kvittering.</div></li>
-      <li><div class="ttime">~11:00</div><div class="ticon">🚗</div><div class="ttext">Kjør sørover E45 fra Aalborg mot Kolding.</div></li>
-      <li><div class="ttime">~12:30</div><div class="ticon">⚡</div><div class="ttext"><strong>Lading – Kolding (ca. 160 km)</strong> · IONITY ved Kolding V (motorvei E45). Lad til 80%. <span class="ttag tag-c">Lading</span> Kolding sentrum er fin for lunsj!</div></li>
-      <li><div class="ttime">~12:30</div><div class="ticon">🌭</div><div class="ttext">Lunsj i Kolding eller rastested. <span class="ttag tag-m">Mat</span> Prøv en dansk pølse (rød pølse!) eller bager.</div></li>
-      <li><div class="ttime">Ettermid.</div><div class="ticon">🏨</div><div class="ttext">Overnatting i Kolding, Vejle eller videre mot grensen. <span class="ttag tag-h">Hotell</span></div></li>
+      <li><div class="ttime">Morgen</div><div class="ticon">☕</div><div class="ttext"><strong>Frokost på B&amp;B HOTEL Aalborg</strong> (inkludert). Lad Elroq til 100% før avreise.</div></li>
+      <li><div class="ttime">Innen 12:00</div><div class="ticon">🚪</div><div class="ttext"><strong>Utsjekk.</strong> Kjør sørover E45 mot den tyske grensen.</div></li>
+      <li><div class="ttime">~13:00</div><div class="ticon">⚡</div><div class="ttext"><strong>Lading + lunsj – Kolding (~160 km)</strong> · IONITY Kolding V. Lad til 80%. <span class="ttag tag-c">Lading</span> Prøv en dansk rød pølse! <span class="ttag tag-m">Mat</span></div></li>
+      <li><div class="ttime">Ettermid.</div><div class="ticon">🇩🇪</div><div class="ttext">Grense DK/DE ved Flensburg. Ha pass klart. Videre på A7 mot Hamburg.</div></li>
+      <li><div class="ttime">~17:00</div><div class="ticon">🏙️</div><div class="ttext"><strong>Ankomst Hamburg!</strong> Sjekk inn på comfort-hotell. <span class="ttag tag-h">Hotell</span> Spør om EV-lading.</div></li>
+      <li><div class="ttime">Kveld</div><div class="ticon">🍽️</div><div class="ttext">Middag i Speicherstadt eller Altona. <span class="ttag tag-m">Mat</span></div></li>
     </ul>
+    <div class="alert ab" style="margin-top:8px">👥 3 reisende disse dagene: Janiche, Emma &amp; Martine. Jon møter dere i Düsseldorf fredag.</div>
   </div>
 </div>
 
@@ -305,16 +358,18 @@ header p{font-size:.88rem;opacity:.82}
 <div class="day-card">
   <div class="day-hd" onclick="toggleDay(this)">
     <div class="dnum">ONS<br>8/7</div>
-    <div><div class="dtitle">🇩🇰🇩🇪 Danmark → Hamburg</div>
-    <div class="dmeta">Grense ved Flensburg · Hamburg ankomst · ~200 km</div></div>
+    <div><div class="dtitle">🇩🇪 Hamburg – historie &amp; museer</div>
+    <div class="dmeta">Speicherstadt (UNESCO) · Miniatur Wunderland · Rathaus</div></div>
     <div class="dchev">▼</div>
   </div>
   <div class="day-body">
     <ul class="tl">
-      <li><div class="ttime">Morgen</div><div class="ticon">🚗</div><div class="ttext">Kjør sørover E45. Grenseovergang Danmark/Tyskland ved Padborg/Flensburg. Ha pass klart – EU-kontroll kan forekomme.</div></li>
-      <li><div class="ttime">Underveis</div><div class="ticon">⚡</div><div class="ttext"><strong>Lading – Flensburg</strong> · IONITY Flensburg eller Fastned ved A7. God matpause. <span class="ttag tag-c">Lading</span></div></li>
-      <li><div class="ttime">~14:00</div><div class="ticon">🏙️</div><div class="ttext"><strong>Ankomst Hamburg!</strong> Sjekk inn på hotell. <span class="ttag tag-h">Hotell</span> Spør om hotellet har EV-lading.</div></li>
-      <li><div class="ttime">Kveld</div><div class="ticon">🍽️</div><div class="ttext">Middag i Hamburg. Speicherstadt eller Altona-området. <span class="ttag tag-m">Mat</span></div></li>
+      <li><div class="ttime">Morgen</div><div class="ticon">🎢</div><div class="ttext"><strong>Miniatur Wunderland</strong> – verdens største modelljernbane. <em>Forhåndsbestill billetter!</em> miniatur-wunderland.de</div></li>
+      <li><div class="ttime">Lunsj</div><div class="ticon">🌭</div><div class="ttext">Currywurst eller kafé i Speicherstadt. <span class="ttag tag-m">Mat</span></div></li>
+      <li><div class="ttime">Ettermid.</div><div class="ticon">🏛️</div><div class="ttext"><strong>Speicherstadt &amp; Kontorhausviertel</strong> – UNESCO-verdensarv, vakker rød lagerhusarkitektur. Historie for Janiche!</div></li>
+      <li><div class="ttime">Ettermid.</div><div class="ticon">🖼️</div><div class="ttext">Hamburg Rathaus eller Kunsthalle. <span class="ttag tag-m">Museum</span></div></li>
+      <li><div class="ttime">Kveld</div><div class="ticon">🌊</div><div class="ttext">Elbpromenaden – middag ved vannet. <span class="ttag tag-m">Mat</span></div></li>
+      <li><div class="ttime">Natt</div><div class="ticon">⚡</div><div class="ttext">Lad bilen til 100% over natten. <span class="ttag tag-c">Lading</span></div></li>
     </ul>
   </div>
 </div>
@@ -323,18 +378,19 @@ header p{font-size:.88rem;opacity:.82}
 <div class="day-card">
   <div class="day-hd" onclick="toggleDay(this)">
     <div class="dnum">TOR<br>9/7</div>
-    <div><div class="dtitle">🇩🇪 Hamburg – Dag 1</div>
-    <div class="dmeta">Miniatur Wunderland · Speicherstadt · Elbpromenade</div></div>
+    <div><div class="dtitle">🇩🇪 Hamburg → Ruhr / Düsseldorf</div>
+    <div class="dmeta">Posisjonering for henting av Jon · ~420 km</div></div>
     <div class="dchev">▼</div>
   </div>
   <div class="day-body">
     <ul class="tl">
-      <li><div class="ttime">Morgen</div><div class="ticon">🎢</div><div class="ttext"><strong>Miniatur Wunderland</strong> – verdens største modelljernbane i Speicherstadt. <em>Bestill billetter på forhånd!</em> miniatur-wunderland.de</div></li>
-      <li><div class="ttime">Lunsj</div><div class="ticon">🌭</div><div class="ttext">Currywurst ved Speicherstadt eller café i nærheten. <span class="ttag tag-m">Mat</span></div></li>
-      <li><div class="ttime">Ettermid.</div><div class="ticon">🏛️</div><div class="ttext"><strong>Speicherstadt</strong> – UNESCO-verdensarv. Vakre kanaler og rød lagerhusarkitektur. Perfekt for bilder!</div></li>
-      <li><div class="ttime">Kveld</div><div class="ticon">🌊</div><div class="ttext">Elbpromenaden – vakker elvepromenade. Middag ved vannet. <span class="ttag tag-m">Mat</span></div></li>
-      <li><div class="ttime">Natt</div><div class="ticon">⚡</div><div class="ttext">Lad bilen over natten til 100%. <span class="ttag tag-c">Lading</span></div></li>
+      <li><div class="ttime">Morgen</div><div class="ticon">🚗</div><div class="ttext">Avreise Hamburg, fulladet batteri. A1 sørvestover.</div></li>
+      <li><div class="ttime">~10:30</div><div class="ticon">⚡</div><div class="ttext"><strong>Lading – Osnabrück (~150 km)</strong> · IONITY ved A1. <span class="ttag tag-c">Lading</span></div></li>
+      <li><div class="ttime">~13:00</div><div class="ticon">⚡</div><div class="ttext"><strong>Lading + lunsj – Münster/Dortmund</strong> · IONITY langs A1. <span class="ttag tag-c">Lading</span> <span class="ttag tag-m">Mat</span></div></li>
+      <li><div class="ttime">Ettermid.</div><div class="ticon">🏨</div><div class="ttext"><strong>Ankomst Düsseldorf/Ruhr-området.</strong> Sjekk inn nær flyplassen. <span class="ttag tag-h">Hotell</span></div></li>
+      <li><div class="ttime">Kveld</div><div class="ticon">👋</div><div class="ttext">Evt. Emma treffer <strong>Tyler i Herne Wanne-Eickel</strong> (~40 km). <span class="ttag tag-f">Venner</span></div></li>
     </ul>
+    <div class="alert ao" style="margin-top:8px">🛏️ Overnatt nær Düsseldorf – da er dere klare for Jons fly kl <strong>09:30</strong> fredag morgen.</div>
   </div>
 </div>
 
@@ -342,36 +398,127 @@ header p{font-size:.88rem;opacity:.82}
 <div class="day-card">
   <div class="day-hd" onclick="toggleDay(this)">
     <div class="dnum">FRE<br>10/7</div>
-    <div><div class="dtitle">🇩🇪→🇳🇱 Hamburg → Düsseldorf (hent Jon) → Nederland</div>
-    <div class="dmeta">Henter Jon på flyplassen ✈️ · ~530 km · lengre kjøredag</div></div>
+    <div><div class="dtitle">✈️ Hent Jon (DUS 09:30) + Emma &amp; Tyler</div>
+    <div class="dmeta">Jon lander 09:30 · YURUR3 · nå er dere fire 🎉</div></div>
     <div class="dchev">▼</div>
   </div>
   <div class="day-body">
     <ul class="tl">
-      <li><div class="ttime">Morgen</div><div class="ticon">🚗</div><div class="ttext">Avreise fra Hamburg med fulladet batteri. A1 sørvestover mot Ruhr-området / Düsseldorf.</div></li>
-      <li><div class="ttime">Underveis</div><div class="ticon">⚡</div><div class="ttext"><strong>Lading – Münster/Dortmund-området (~250–350 km)</strong> · IONITY langs A1. Lad til 80% + matpause. <span class="ttag tag-c">Lading</span></div></li>
-      <li><div class="ttime">Ettermid.</div><div class="ticon">✈️</div><div class="ttext"><strong>Düsseldorf lufthavn (DUS) – hent Jon!</strong> <span class="ttag tag-f">Henting</span> Nå er dere fire 🎉 Tidspunkt tilpasses Jons flyankomst. Kortidsparkering P3 er nærmest ankomsthallen.</div></li>
-      <li><div class="ttime">Kveld</div><div class="ticon">🇳🇱</div><div class="ttext">Videre fra Düsseldorf inn i Nederland (~1–2,5 t avhengig av destinasjon). Evt. Fastned-lading i NL. <span class="ttag tag-c">Lading</span></div></li>
-      <li><div class="ttime">Sen kveld</div><div class="ticon">🏨</div><div class="ttext"><strong>Ankomst destinasjon i Nederland!</strong> Sjekk inn. <span class="ttag tag-h">Hotell</span></div></li>
+      <li><div class="ttime">09:30</div><div class="ticon">✈️</div><div class="ttext"><strong>Jon lander Düsseldorf lufthavn (DUS)</strong> – SAS YURUR3 fra Oslo via København. <span class="ttag tag-f">Henting</span> Kortidsparkering P3 er nærmest ankomsthallen. Full flyinfo i Praktisk-fanen.</div></li>
+      <li><div class="ttime">Formiddag</div><div class="ticon">👋</div><div class="ttext"><strong>Emma til Tyler</strong> i Herne Wanne-Eickel (~40 km fra DUS). <span class="ttag tag-f">Venner</span></div></li>
+      <li><div class="ttime">Lunsj</div><div class="ticon">🍺</div><div class="ttext">Samling i Düsseldorf Altstadt – «verdens lengste bar». <span class="ttag tag-m">Mat</span></div></li>
+      <li><div class="ttime">Ettermid.</div><div class="ticon">🏛️</div><div class="ttext">Rhinpromenaden &amp; Altstadt (historie, koselig). Rolig comfort-dag.</div></li>
+      <li><div class="ttime">Kveld</div><div class="ticon">🏨</div><div class="ttext">Overnatting Düsseldorf/Ruhr. <span class="ttag tag-h">Hotell</span></div></li>
     </ul>
-    <div class="alert ao" style="margin-top:8px">✈️ <strong>Tidsplanen for dag 5 avhenger av Jons fly til Düsseldorf.</strong> Gi meg flyets ankomsttid, så justerer jeg avreise fra Hamburg og ladestoppene.</div>
+    <div class="alert ab" style="margin-top:8px">✈️ <strong>Jons fly:</strong> OSL 06:00 → København 07:15 → DUS 09:30 (SAS, ref. YURUR3). Si fra hvis noe endres, så justerer jeg dagen.</div>
   </div>
 </div>
 
-<!-- DAG 6–11 -->
+<!-- DAG 6 -->
 <div class="day-card">
   <div class="day-hd" onclick="toggleDay(this)">
-    <div class="dnum">LØR–TOR<br>11–16/7</div>
-    <div><div class="dtitle">🇳🇱 Nederland – Utforsking</div>
-    <div class="dmeta">Amsterdam · Keukenhof · Zaanse Schans · Gouda</div></div>
+    <div class="dnum">LØR<br>11/7</div>
+    <div><div class="dtitle">🇳🇱 Inn i Nederland – Martine til Chloe (Helden)</div>
+    <div class="dmeta">Martine bor hos Chloe 11–12/7 · Limburg · ~90 km</div></div>
     <div class="dchev">▼</div>
   </div>
   <div class="day-body">
     <ul class="tl">
-      <li><div class="ttime">Dag 1 NL</div><div class="ticon">🚲</div><div class="ttext"><strong>Amsterdam</strong> · Riksmuseum, kanalbåt, sykkeltur. Anne Frank-huset – <em>forhåndsbestill billetter!</em></div></li>
-      <li><div class="ttime">Dag 2 NL</div><div class="ticon">🌷</div><div class="ttext"><strong>Keukenhof</strong> (sjekk åpningstider) – blomsterhagen. Eller Zaanse Schans (vindmøller, tresko, ost) – hele familien elsker det!</div></li>
-      <li><div class="ttime">Dag 3 NL</div><div class="ticon">🧀</div><div class="ttext"><strong>Gouda eller Edam</strong> – ostemarkeder og nederlandsk sjarm. Dagtur fra Amsterdam.</div></li>
-      <li><div class="ttime">Dag 4–6</div><div class="ticon">🎨</div><div class="ttext">Fri utforsking! Hagenbecks-lignende dyreparker, strender, eller leie sykler og suse rundt i Amsterdam. Spar litt energi til hjemturen!</div></li>
+      <li><div class="ttime">Morgen</div><div class="ticon">🚗</div><div class="ttext">Kjør fra Ruhr inn i Nederland mot Helden (~90 km). Kort etappe – ingen lading nødvendig.</div></li>
+      <li><div class="ttime">~12:00</div><div class="ticon">👋</div><div class="ttext"><strong>Lever Martine hos Chloe i Helden.</strong> <span class="ttag tag-f">Venner</span> Hun bor der til 12/7. Avtal hentetidspunkt i morgen.</div></li>
+      <li><div class="ttime">Ettermid.</div><div class="ticon">🌷</div><div class="ttext"><strong>Kasteeltuinen Arcen</strong> (slottshager ved Venlo) – historie + praktfulle hager. Midt i blinken for deg, Janiche! <span class="ttag tag-m">Hage</span></div></li>
+      <li><div class="ttime">Kveld</div><div class="ticon">🏨</div><div class="ttext">Overnatting Venlo/Roermond-området. <span class="ttag tag-h">Hotell</span></div></li>
+    </ul>
+  </div>
+</div>
+
+<!-- DAG 7 -->
+<div class="day-card">
+  <div class="day-hd" onclick="toggleDay(this)">
+    <div class="dnum">SØN<br>12/7</div>
+    <div><div class="dtitle">🇳🇱 Limburg – historie + hent Martine</div>
+    <div class="dmeta">Roermond/museum · Emma evt. Tyler · hent Martine</div></div>
+    <div class="dchev">▼</div>
+  </div>
+  <div class="day-body">
+    <ul class="tl">
+      <li><div class="ttime">Formiddag</div><div class="ticon">🏛️</div><div class="ttext">Utflukt: <strong>Roermond</strong> – historisk by med katedral (og outlet om noen vil shoppe). <span class="ttag tag-m">Historie</span></div></li>
+      <li><div class="ttime">Dagtid</div><div class="ticon">👋</div><div class="ttext">Emma kan treffe <strong>Tyler</strong> igjen (Herne ~1 t unna). <span class="ttag tag-f">Venner</span></div></li>
+      <li><div class="ttime">Kveld</div><div class="ticon">👋</div><div class="ttext"><strong>Hent Martine hos Chloe i Helden</strong> (slutt på oppholdet). <span class="ttag tag-f">Venner</span></div></li>
+      <li><div class="ttime">Kveld</div><div class="ticon">🏨</div><div class="ttext">Overnatting Limburg, eller kjør et stykke mot midt-Nederland. <span class="ttag tag-h">Hotell</span></div></li>
+    </ul>
+  </div>
+</div>
+
+<!-- DAG 8 -->
+<div class="day-card">
+  <div class="day-hd" onclick="toggleDay(this)">
+    <div class="dnum">MAN<br>13/7</div>
+    <div><div class="dtitle">🎨 De Hoge Veluwe + Kröller-Müller</div>
+    <div class="dmeta">Kunstmuseum + skulpturhage + natur · ~130 km</div></div>
+    <div class="dchev">▼</div>
+  </div>
+  <div class="day-body">
+    <ul class="tl">
+      <li><div class="ttime">Morgen</div><div class="ticon">🚗</div><div class="ttext">Kjør mot Otterlo/Arnhem (~130 km). Lad ved behov underveis. <span class="ttag tag-c">Lading</span></div></li>
+      <li><div class="ttime">Dagtid</div><div class="ticon">🖼️</div><div class="ttext"><strong>Kröller-Müller Museum</strong> – nest største Van Gogh-samling + stor skulpturhage, midt i nasjonalparken. Museum + hage + natur! <span class="ttag tag-m">Museum</span></div></li>
+      <li><div class="ttime">Ettermid.</div><div class="ticon">🚲</div><div class="ttext">Gratis hvite sykler i parken – rolig og fint. Comfort-tempo.</div></li>
+      <li><div class="ttime">Kveld</div><div class="ticon">🏨</div><div class="ttext">Overnatting Arnhem/Apeldoorn. (Tips: <strong>Paleis Het Loo</strong> med barokkhage i nærheten!) <span class="ttag tag-h">Hotell</span></div></li>
+    </ul>
+  </div>
+</div>
+
+<!-- DAG 9 -->
+<div class="day-card">
+  <div class="day-hd" onclick="toggleDay(this)">
+    <div class="dnum">TIR<br>14/7</div>
+    <div><div class="dtitle">🏛️ Amsterdam – historie &amp; museer</div>
+    <div class="dmeta">Rijksmuseum · kanaler · Anne Frank · ~90 km</div></div>
+    <div class="dchev">▼</div>
+  </div>
+  <div class="day-body">
+    <ul class="tl">
+      <li><div class="ttime">Morgen</div><div class="ticon">🚗</div><div class="ttext">Kjør til Amsterdam (~90 km). Parker på P+R i utkanten og ta metro/tram inn – enkelt og rimelig.</div></li>
+      <li><div class="ttime">Dagtid</div><div class="ticon">🖼️</div><div class="ttext"><strong>Rijksmuseum</strong> – Rembrandt, gullalderen. <em>Forhåndsbestill!</em> <span class="ttag tag-m">Museum</span></div></li>
+      <li><div class="ttime">Ettermid.</div><div class="ticon">🚤</div><div class="ttext">Kanalrundtur gjennom grachtene. Klassisk Amsterdam.</div></li>
+      <li><div class="ttime">Ettermid.</div><div class="ticon">🏠</div><div class="ttext"><strong>Anne Frank-huset</strong> – gripende historie. <em>Forhåndsbestill billetter – selges ut raskt!</em></div></li>
+      <li><div class="ttime">Kveld</div><div class="ticon">🏨</div><div class="ttext">Overnatting Amsterdam (comfort). <span class="ttag tag-h">Hotell</span></div></li>
+    </ul>
+  </div>
+</div>
+
+<!-- DAG 10 -->
+<div class="day-card">
+  <div class="day-hd" onclick="toggleDay(this)">
+    <div class="dnum">ONS<br>15/7</div>
+    <div><div class="dtitle">🇳🇱 Amsterdam dag 2 / historiske byer</div>
+    <div class="dmeta">Van Gogh · Utrecht · Zaanse Schans – velg selv</div></div>
+    <div class="dchev">▼</div>
+  </div>
+  <div class="day-body">
+    <ul class="tl">
+      <li><div class="ttime">Valg A</div><div class="ticon">🖼️</div><div class="ttext"><strong>Van Gogh Museum</strong> eller Moco/Rembrandthuis. <span class="ttag tag-m">Museum</span></div></li>
+      <li><div class="ttime">Valg B</div><div class="ticon">🌬️</div><div class="ttext"><strong>Zaanse Schans</strong> – vindmøller, tresko &amp; ost. Hele familien elsker det!</div></li>
+      <li><div class="ttime">Valg C</div><div class="ticon">🏙️</div><div class="ttext"><strong>Utrecht</strong> – Domtoren og koselige grachten. Rolig historisk by. <span class="ttag tag-m">Historie</span></div></li>
+      <li><div class="ttime">Kveld</div><div class="ticon">🏨</div><div class="ttext">Overnatting Amsterdam. <span class="ttag tag-h">Hotell</span></div></li>
+    </ul>
+  </div>
+</div>
+
+<!-- DAG 11 -->
+<div class="day-card">
+  <div class="day-hd" onclick="toggleDay(this)">
+    <div class="dnum">TOR<br>16/7</div>
+    <div><div class="dtitle">🇳🇱 Mot Eindhoven – siste dag samlet</div>
+    <div class="dmeta">Sørover ~130 km · siste kveld alle fem</div></div>
+    <div class="dchev">▼</div>
+  </div>
+  <div class="day-body">
+    <ul class="tl">
+      <li><div class="ttime">Morgen</div><div class="ticon">🚗</div><div class="ttext">Kjør sørover mot Eindhoven (~130 km). Lad ved behov. <span class="ttag tag-c">Lading</span></div></li>
+      <li><div class="ttime">Dagtid</div><div class="ticon">⛪</div><div class="ttext">Underveis: <strong>'s-Hertogenbosch (Den Bosch)</strong> – gotisk St. Jan-katedral &amp; Hieronymus Bosch. <span class="ttag tag-m">Historie</span></div></li>
+      <li><div class="ttime">Kveld</div><div class="ticon">🍽️</div><div class="ttext">Siste felles middag i Eindhoven. <span class="ttag tag-m">Mat</span></div></li>
+      <li><div class="ttime">Kveld</div><div class="ticon">🏨</div><div class="ttext">Overnatting Eindhoven-området. Lad til 100% for returen. <span class="ttag tag-h">Hotell</span></div></li>
     </ul>
   </div>
 </div>
@@ -380,16 +527,18 @@ header p{font-size:.88rem;opacity:.82}
 <div class="day-card">
   <div class="day-hd" onclick="toggleDay(this)">
     <div class="dnum">FRE<br>17/7</div>
-    <div><div class="dtitle">🇳🇱🇩🇪 Kjøring nordover – Dag 1 retur</div>
-    <div class="dmeta">Nederland → Hamburg-området</div></div>
+    <div><div class="dtitle">👋🇩🇪 Martine blir i Eindhoven · retur starter</div>
+    <div class="dmeta">Janiche, Emma &amp; Jon nordover · ~450 km</div></div>
     <div class="dchev">▼</div>
   </div>
   <div class="day-body">
     <ul class="tl">
-      <li><div class="ttime">Morgen</div><div class="ticon">🚗</div><div class="ttext">Lad til 100% og avreise nordover. A1 gjennom Nederland → Tyskland.</div></li>
-      <li><div class="ttime">Underveis</div><div class="ticon">⚡</div><div class="ttext">Ladetopper: Arnhem + Osnabrück (samme steder som utveien). <span class="ttag tag-c">Lading</span></div></li>
-      <li><div class="ttime">Ettermid.</div><div class="ticon">🏨</div><div class="ttext">Overnatting Hamburg eller Flensburg-området. <span class="ttag tag-h">Hotell</span> Lad over natten til 100%.</div></li>
+      <li><div class="ttime">Morgen</div><div class="ticon">💜</div><div class="ttext"><strong>Martine blir igjen hos vennene sine i Eindhoven.</strong> <span class="ttag tag-f">Venner</span> Ha en fin tid – avtal hjemreise for henne separat!</div></li>
+      <li><div class="ttime">~10:00</div><div class="ticon">🚗</div><div class="ttext">Janiche, Emma &amp; Jon kjører nordover. A67/A1 mot Tyskland.</div></li>
+      <li><div class="ttime">Underveis</div><div class="ticon">⚡</div><div class="ttext">Ladetopper: Ruhr-området + Osnabrück (~2 stopp). <span class="ttag tag-c">Lading</span></div></li>
+      <li><div class="ttime">Kveld</div><div class="ticon">🏨</div><div class="ttext">Overnatting Bremen/Hamburg-området. Lad til 100%. <span class="ttag tag-h">Hotell</span></div></li>
     </ul>
+    <div class="alert ab" style="margin-top:8px">👥 Fra nå er dere 3 (Janiche, Emma &amp; Jon) – som stemmer med returferja for 3 voksne.</div>
   </div>
 </div>
 
@@ -403,8 +552,8 @@ header p{font-size:.88rem;opacity:.82}
   </div>
   <div class="day-body">
     <ul class="tl">
-      <li><div class="ttime">Formiddag</div><div class="ticon">🚗</div><div class="ttext">Kjør nordover gjennom Danmark. E45 mot Kolding → Vejle → Ålborg → Hirtshals (~310 km fra Flensburg).</div></li>
-      <li><div class="ttime">Underveis</div><div class="ticon">⚡</div><div class="ttext">Lading i Kolding hvis nødvendig. Kjør nok lading til å ha godt med reserve ved Hirtshals. <span class="ttag tag-c">Lading</span></div></li>
+      <li><div class="ttime">Morgen</div><div class="ticon">🚗</div><div class="ttext">Kjør nordover fra Hamburg/Bremen gjennom Danmark. Grense ved Flensburg → E45 mot Kolding → Vejle → Aalborg → Hirtshals.</div></li>
+      <li><div class="ttime">Underveis</div><div class="ticon">⚡</div><div class="ttext">Ladestopp Flensburg + Kolding. Sørg for god reserve ved Hirtshals. <span class="ttag tag-c">Lading</span></div></li>
       <li><div class="ttime">~19:00</div><div class="ticon">🍽️</div><div class="ttext">Middag i Hirtshals. Sjømat! God avslutning på ferieturen. <span class="ttag tag-m">Mat</span></div></li>
       <li><div class="ttime">21:15</div><div class="ticon">🛳️</div><div class="ttext"><strong>Oppmøte Color Line-terminalen Hirtshals!</strong> <span class="ttag tag-f">Ferje</span> Senest 60 min før avgang. Ha CEU1949 klar.</div></li>
       <li><div class="ttime">22:15</div><div class="ticon">🚢</div><div class="ttext"><strong>Avgang Hirtshals!</strong> SuperSpeed 2 mot Larvik. Natt til sjøs.</div></li>
@@ -583,6 +732,7 @@ header p{font-size:.88rem;opacity:.82}
       <div class="pitems">
         <label class="pitem"><input type="checkbox" data-person="emma" onchange="updatePersonProgress('emma')"><span><span>Pass</span><span class="pnote">Sjekk utløpsdato!</span></span></label>
         <label class="pitem"><input type="checkbox" data-person="emma" onchange="updatePersonProgress('emma')"><span><span>EHIC-kort</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="emma" onchange="updatePersonProgress('emma')"><span><span>Adresse/kontaktinfo til Tyler</span><span class="pnote">Herne Wanne-Eickel – for besøk underveis</span></span></label>
       </div>
     </div>
     <div class="divider"></div>
@@ -636,7 +786,7 @@ header p{font-size:.88rem;opacity:.82}
 <!-- MARTINE -->
 <div id="p-martine" class="ppanel">
   <div class="card">
-    <div class="card-hd"><div class="ci" style="background:var(--orange-l)">👩‍🦱</div><div><div class="ct">Martine</div><div class="cs">20 år · kul &amp; chill</div></div></div>
+    <div class="card-hd"><div class="ci" style="background:var(--orange-l)">👩‍🦱</div><div><div class="ct">Martine</div><div class="cs">22 år · kul &amp; chill</div></div></div>
     <div class="pstats" id="stats-martine"></div>
     <div class="pprog"><div class="pprogbar" id="bar-martine"></div></div>
 
@@ -647,6 +797,8 @@ header p{font-size:.88rem;opacity:.82}
         <label class="pitem"><input type="checkbox" data-person="martine" onchange="updatePersonProgress('martine')"><span><span>EHIC-kort</span></span></label>
         <label class="pitem"><input type="checkbox" data-person="martine" onchange="updatePersonProgress('martine')"><span><span>Eget bankkort</span><span class="pnote">Til lommepenger i DK/DE/NL</span></span></label>
         <label class="pitem"><input type="checkbox" data-person="martine" onchange="updatePersonProgress('martine')"><span><span>Resept / legeerklæring for HRT</span><span class="pnote">Greit å ha ved grensepassering og på apotek</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="martine" onchange="updatePersonProgress('martine')"><span><span>Kontaktinfo: Chloe (Helden) + venner i Eindhoven</span><span class="pnote">Bor hos Chloe 11–12/7 · blir i Eindhoven fra 17/7</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="martine" onchange="updatePersonProgress('martine')"><span><span>Egen hjemreise fra Eindhoven ordnet</span><span class="pnote">Avtal med mamma – tog/fly hjem etter oppholdet</span></span></label>
       </div>
     </div>
     <div class="divider"></div>
@@ -880,6 +1032,28 @@ header p{font-size:.88rem;opacity:.82}
   <div class="alert ao" style="margin-top:8px">⚠️ <strong>Ikke refunderbar</strong> – full pris belastes ved avbestilling eller no-show.</div>
 </div>
 
+<!-- Fly: Jon til Düsseldorf -->
+<div style="background:linear-gradient(135deg,#fdf4ff,#f3e8ff);border:2px solid var(--purple);border-radius:var(--r);padding:18px;margin-bottom:14px">
+  <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+    <span style="font-size:1.4rem">✈️</span>
+    <div><div style="font-weight:800;font-size:1rem;color:var(--purple)">Jon – fly til Düsseldorf</div>
+    <div style="font-size:.75rem;color:var(--gray-m)">SAS · Bestillingsref. <strong>YURUR3</strong> · Economy Bonus · Jon Neergaard Sjurseth Eliassen</div></div>
+  </div>
+  <div style="background:rgba(255,255,255,.85);border-radius:10px;padding:12px">
+    <div style="font-size:.68rem;font-weight:700;color:var(--gray-m);text-transform:uppercase;margin-bottom:6px">Utreise · Fredag 10. juli 2026</div>
+    <div style="display:flex;align-items:center;gap:8px;font-weight:700;color:var(--purple);flex-wrap:wrap">
+      <span>Oslo OSL</span><span style="color:var(--gray-m)">→</span><span>København</span><span style="color:var(--gray-m)">→</span><span>Düsseldorf DUS</span>
+    </div>
+    <div style="font-size:.8rem;margin-top:6px;line-height:1.6">
+      🛫 <strong>06:00</strong> OSL → 07:15 CPH · SK 1461 (A320neo)<br>
+      🔁 Mellomlanding Kastrup CPH: 55 min<br>
+      🛬 08:10 CPH → <strong>09:30 Düsseldorf</strong> · SK 1629 (CRJ 900)
+    </div>
+    <div style="font-size:.75rem;margin-top:6px;color:var(--gray)">⏱️ Total reisetid 3t 30m · 🧳 1 kolli · 🎫 EuroBonus EBB123490526</div>
+  </div>
+  <div class="alert ab" style="margin-top:10px">🚗 <strong>Janiche henter Jon på Düsseldorf lufthavn kl 09:30.</strong> Kortidsparkering P3 ligger nærmest ankomsthallen. Se dag 5 i Dagsplanen.</div>
+</div>
+
 <!-- Nødnumre -->
 <div class="card">
   <div class="card-hd"><div class="ci" style="background:var(--red-l)">🆘</div><div><div class="ct">Nødnumre</div></div></div>
@@ -921,7 +1095,40 @@ header p{font-size:.88rem;opacity:.82}
 
 <div class="appfooter">Roadtrip Europe 2026 · Sjurseth-Eliassen · Janiche, Jon, Emma &amp; Martine 🚗⚡🇩🇰🇩🇪🇳🇱</div>
 
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 <script>
+// KART-DATA (kjøreruten i rekkefølge)
+var TRIP_PLACES = [
+ {n:'Slependen (hjem)', c:[59.889,10.523], col:'#1a7a4a', d:'🏠 Start & slutt – Nedre Åsvei 45'},
+ {n:'Larvik', c:[59.0537,10.0357], col:'#1a4fa0', d:'🚢 Color Line ut 6/7 17:30 · hjem 19/7 02:00'},
+ {n:'Hirtshals', c:[57.5883,9.9569], col:'#1a4fa0', d:'🇩🇰 Ankomst 6/7 21:15 · retur 18/7 22:15'},
+ {n:'Aalborg', c:[57.0488,9.9217], col:'#1a7a4a', d:'🏨 B&B Hotel Aalborg – natt til 7/7'},
+ {n:'Kolding', c:[55.4904,9.4722], col:'#1a4fa0', d:'⚡ Ladestopp gjennom Danmark'},
+ {n:'Hamburg', c:[53.5511,9.9937], col:'#1a4fa0', d:'🇩🇪 7–9/7 · museer & Speicherstadt'},
+ {n:'Düsseldorf lufthavn', c:[51.2895,6.7668], col:'#7c3aed', d:'✈️ Hent Jon 10/7 kl 09:30 (YURUR3)'},
+ {n:'Herne (Tyler)', c:[51.5361,7.1547], col:'#d4650a', d:'👋 Emma besøker Tyler · Wanne-Eickel'},
+ {n:'Helden (Chloe)', c:[51.3306,5.9836], col:'#d4650a', d:'👋 Martine hos Chloe 11–12/7'},
+ {n:'De Hoge Veluwe', c:[52.0980,5.8180], col:'#1a4fa0', d:'🎨 Kröller-Müller museum + skulpturhage · 13/7'},
+ {n:'Amsterdam', c:[52.3676,4.9041], col:'#1a4fa0', d:'🏛️ 14–15/7 · Rijksmuseum, kanaler'},
+ {n:'Eindhoven', c:[51.4416,5.4697], col:'#d4650a', d:'🏙️ Martine blir hos venner fra 17/7'}
+];
+var ROUTE = [[59.889,10.523],[59.0537,10.0357],[57.5883,9.9569],[57.0488,9.9217],[55.4904,9.4722],[53.5511,9.9937],[51.2895,6.7668],[51.3306,5.9836],[52.0980,5.8180],[52.3676,4.9041],[51.4416,5.4697]];
+var tripMap = null;
+function ensureMap(){
+  if(tripMap){ setTimeout(function(){ tripMap.invalidateSize(); }, 60); return; }
+  tripMap = L.map('map', {scrollWheelZoom:false}).setView([54.5,8.5], 5);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {maxZoom:18, attribution:'© OpenStreetMap'}).addTo(tripMap);
+  L.polyline(ROUTE, {color:'#1a4fa0', weight:3, opacity:.5, dashArray:'6,8'}).addTo(tripMap);
+  var bounds = [];
+  TRIP_PLACES.forEach(function(p){
+    L.circleMarker(p.c, {radius:9, color:'#fff', weight:2, fillColor:p.col, fillOpacity:1}).addTo(tripMap)
+      .bindPopup('<b>'+p.n+'</b><br>'+p.d);
+    bounds.push(p.c);
+  });
+  tripMap.fitBounds(bounds, {padding:[25,25]});
+  setTimeout(function(){ tripMap.invalidateSize(); tripMap.fitBounds(bounds, {padding:[25,25]}); }, 80);
+}
+
 // MAIN TABS
 function showTab(name, btn) {
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
@@ -929,6 +1136,7 @@ function showTab(name, btn) {
   document.getElementById(name).classList.add('active');
   btn.classList.add('active');
   window.scrollTo({top:0,behavior:'smooth'});
+  if(name === 'kart') ensureMap();
 }
 
 // PERSON TABS
