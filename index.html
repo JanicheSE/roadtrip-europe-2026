@@ -196,6 +196,7 @@ body{-webkit-tap-highlight-color:transparent;overflow-x:hidden}
 <div class="tabs" id="maintabs">
   <button class="tab active" onclick="showTab('oversikt',this)">🗺️ Oversikt</button>
   <button class="tab" onclick="showTab('kart',this)">📍 Kart</button>
+  <button class="tab" onclick="showTab('vaer',this)">🌤️ Vær</button>
   <button class="tab" onclick="showTab('dagsplan',this)">📅 Dagsplan</button>
   <button class="tab" onclick="showTab('forslag',this)">💡 Forslag</button>
   <button class="tab" onclick="showTab('pakkeliste',this)">🎒 Pakkeliste</button>
@@ -306,6 +307,20 @@ body{-webkit-tap-highlight-color:transparent;overflow-x:hidden}
   </div>
   <div class="alert ab" style="margin-top:12px">💡 Trykk på en markør for detaljer. Blå = kjørerute · oransje = venner/besøk · lilla = flyplass.</div>
 </div>
+</div>
+
+<!-- ===== VÆR ===== -->
+<div id="vaer" class="section">
+<div class="sec-title">🌤️ Vær · morgen · formiddag · kveld</div>
+<div class="card">
+  <div style="display:flex;gap:8px;margin-bottom:12px">
+    <select id="wx-loc" onchange="wxLoad()" style="flex:1;padding:12px;border:1px solid #d1d5db;border-radius:9px;font-size:.88rem;font-family:inherit;background:#fff;min-width:0"></select>
+    <button onclick="wxGeo()" title="Bruk min posisjon" style="padding:12px 14px;background:var(--blue);color:#fff;border:none;border-radius:9px;font-weight:700;cursor:pointer;white-space:nowrap">📍 Her</button>
+  </div>
+  <div id="wx-status" class="inote" style="margin-bottom:10px"></div>
+  <div id="wx-days"></div>
+</div>
+<div class="alert ab">🔄 Oppdateres live hver gang du åpner fanen. Velg stedet dere er (eller trykk «📍 Her» for din faktiske posisjon). Værdata fra open-meteo.com.</div>
 </div>
 
 <!-- ===== DAGSPLAN ===== -->
@@ -1229,7 +1244,19 @@ body{-webkit-tap-highlight-color:transparent;overflow-x:hidden}
     <div style="font-size:.75rem;margin-top:6px;color:var(--gray)">Flys av Norwegian Air Shuttle</div>
   </div>
 
-  <div class="alert ao" style="margin-top:10px">🚆 <strong>NB:</strong> Hjemflyet går fra <strong>London-Gatwick</strong>, ikke Birmingham. Martine må reise Birmingham → London (tog ~1t45, book i forveien) i god tid før 26/7. 💊 HRT-medisiner må vare <strong>til 27. juli</strong>.</div>
+  <div class="alert ao" style="margin-top:10px">🚆 <strong>Viktig:</strong> Hjemflyet går fra <strong>London-Gatwick</strong> – Martine må komme seg Birmingham → Gatwick søndag 26/7. 💊 HRT må vare <strong>til 27. juli</strong>.</div>
+
+  <div style="background:rgba(255,255,255,.9);border-radius:10px;padding:12px;margin-top:9px;font-size:.82rem;line-height:1.6">
+    <div style="font-weight:800;color:var(--orange);margin-bottom:6px">🚆 Slik kommer Martine til Gatwick (søn 26/7)</div>
+    <div style="font-weight:700;margin-bottom:2px">Alt. A – Tog (raskest, ~2t45 + bytte)</div>
+    1. Birmingham New Street → <strong>London Euston</strong> (Avanti West Coast, ~1t25)<br>
+    2. T-bane Victoria line: Euston → <strong>Victoria</strong> (~10 min)<br>
+    3. Gatwick Express/Southern: Victoria → <strong>Gatwick</strong> (~30 min)<br>
+    <div style="font-weight:700;margin:8px 0 2px">Alt. B – Direktebuss (ingen bytte – roligst!)</div>
+    National Express Birmingham → Gatwick direkte (~4–4,5t, én buss hele veien).<br>
+    <div style="margin-top:8px;padding:8px 10px;background:var(--orange-l);border-radius:8px">⏰ <strong>Anbefalt:</strong> Reis fra Birmingham senest <strong>~10:00</strong> (tog) / <strong>~08:00</strong> (buss) → framme Gatwick ~13:00. Flyet er 16:25, så da har hun god margin. <strong>Kjøp billett i forveien!</strong></div>
+    <div style="margin-top:8px">🎫 Book: <a href="https://www.thetrainline.com/train-times/birmingham-new-street-to-gatwick-airport" target="_blank" rel="noopener" style="color:var(--orange)">Trainline (tog) ↗</a> · <a href="https://www.nationalexpress.com" target="_blank" rel="noopener" style="color:var(--orange)">National Express (buss) ↗</a></div>
+  </div>
 </div>
 
 <!-- Nødnumre -->
@@ -1362,6 +1389,88 @@ function ecoAdd(){
 }
 function ecoDelete(i){ var list = ecoLoad(); list.splice(i,1); ecoSave(list); ecoRender(); }
 
+// VÆR (Open-Meteo, ingen API-nøkkel)
+var WX_STOPS = [
+  {n:'Larvik / Hirtshals', lat:57.59, lon:9.96, from:'2026-07-06'},
+  {n:'Aalborg', lat:57.05, lon:9.92, from:'2026-07-07'},
+  {n:'Hamburg', lat:53.55, lon:9.99, from:'2026-07-08'},
+  {n:'Düsseldorf / Ruhr', lat:51.29, lon:6.77, from:'2026-07-10'},
+  {n:'Limburg (Venlo/Helden)', lat:51.33, lon:5.98, from:'2026-07-11'},
+  {n:'Arnhem / De Hoge Veluwe', lat:52.10, lon:5.82, from:'2026-07-13'},
+  {n:'Amsterdam', lat:52.37, lon:4.90, from:'2026-07-14'},
+  {n:'Eindhoven', lat:51.44, lon:5.47, from:'2026-07-16'},
+  {n:'Bremen / Hamburg (retur)', lat:53.08, lon:8.80, from:'2026-07-17'}
+];
+function wxDesc(c){
+  if(c===0) return ['☀️','Klarvær'];
+  if(c<=2) return ['🌤️','Lettskyet'];
+  if(c===3) return ['☁️','Skyet'];
+  if(c===45||c===48) return ['🌫️','Tåke'];
+  if(c>=51&&c<=57) return ['🌦️','Yr'];
+  if(c>=61&&c<=67) return ['🌧️','Regn'];
+  if(c>=71&&c<=77) return ['❄️','Snø'];
+  if(c>=80&&c<=82) return ['🌧️','Regnbyger'];
+  if(c>=85&&c<=86) return ['🌨️','Snøbyger'];
+  if(c>=95) return ['⛈️','Torden'];
+  return ['🌡️','—'];
+}
+function wxInit(){
+  var sel = document.getElementById('wx-loc'); if(!sel) return;
+  sel.innerHTML = WX_STOPS.map(function(s,i){ return '<option value="'+i+'">'+s.n+'</option>'; }).join('');
+  var today = new Date(); var pick = 0;
+  WX_STOPS.forEach(function(s,i){ if(new Date(s.from+'T00:00') <= today) pick = i; });
+  sel.value = pick;
+}
+function wxLoad(){
+  var sel = document.getElementById('wx-loc'); if(!sel) return;
+  var s = WX_STOPS[parseInt(sel.value,10)] || WX_STOPS[0];
+  wxFetch(s.lat, s.lon, s.n);
+}
+function wxGeo(){
+  var st = document.getElementById('wx-status');
+  if(!navigator.geolocation){ st.textContent = 'Posisjon støttes ikke i denne nettleseren.'; return; }
+  st.textContent = 'Henter posisjonen din …';
+  navigator.geolocation.getCurrentPosition(
+    function(p){ wxFetch(p.coords.latitude, p.coords.longitude, '📍 Din posisjon'); },
+    function(){ st.textContent = 'Fikk ikke posisjon (avvist eller utilgjengelig). Velg sted i listen i stedet.'; }
+  );
+}
+function wxFetch(lat, lon, label){
+  var st = document.getElementById('wx-status');
+  var box = document.getElementById('wx-days');
+  st.textContent = 'Henter vær for ' + label + ' …';
+  box.innerHTML = '';
+  var url = 'https://api.open-meteo.com/v1/forecast?latitude='+lat+'&longitude='+lon+
+    '&hourly=temperature_2m,precipitation_probability,weather_code'+
+    '&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max,precipitation_sum'+
+    '&timezone=auto&forecast_days=7';
+  fetch(url).then(function(r){ return r.json(); }).then(function(d){
+    if(!d.daily){ st.textContent = 'Fant ikke værdata.'; return; }
+    var hMap = {};
+    (d.hourly.time||[]).forEach(function(t,i){ hMap[t] = d.hourly.temperature_2m[i]; });
+    function hourTemp(day, hh){ var v = hMap[day+'T'+hh+':00']; return v==null ? '–' : Math.round(v)+'°'; }
+    var html = '';
+    d.daily.time.forEach(function(day, i){
+      var wd = new Date(day+'T12:00').toLocaleDateString('no-NO', {weekday:'short', day:'numeric', month:'numeric'});
+      var ic = wxDesc(d.daily.weather_code[i]);
+      html += '<div style="padding:11px 12px;background:var(--gray-l);border-radius:10px;margin-bottom:9px">'+
+        '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:7px">'+
+          '<div style="font-weight:800;font-size:.88rem;text-transform:capitalize">'+wd+'</div>'+
+          '<div style="font-size:.85rem;font-weight:600">'+ic[0]+' '+ic[1]+'</div>'+
+        '</div>'+
+        '<div style="display:flex;gap:12px;font-size:.82rem;flex-wrap:wrap">'+
+          '<span>🌅 Morgen <b>'+hourTemp(day,'08')+'</b></span>'+
+          '<span>☀️ Formiddag <b>'+hourTemp(day,'13')+'</b></span>'+
+          '<span>🌆 Kveld <b>'+hourTemp(day,'19')+'</b></span>'+
+        '</div>'+
+        '<div style="font-size:.76rem;color:var(--gray-m);margin-top:5px">🌡️ '+Math.round(d.daily.temperature_2m_min[i])+'–'+Math.round(d.daily.temperature_2m_max[i])+'° · 🌧️ regn '+(d.daily.precipitation_probability_max[i]==null?'–':d.daily.precipitation_probability_max[i]+'%')+' ('+(d.daily.precipitation_sum[i]||0)+' mm)</div>'+
+      '</div>';
+    });
+    box.innerHTML = html;
+    st.textContent = label + ' · oppdatert nå';
+  }).catch(function(){ st.textContent = 'Kunne ikke hente vær (sjekk nett). Prøv igjen.'; });
+}
+
 // MAIN TABS
 function showTab(name, btn) {
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
@@ -1371,6 +1480,7 @@ function showTab(name, btn) {
   window.scrollTo({top:0,behavior:'smooth'});
   if(name === 'kart') ensureMap();
   if(name === 'okonomi') ecoRender();
+  if(name === 'vaer') wxLoad();
 }
 
 // PERSON TABS
@@ -1408,6 +1518,7 @@ function updatePersonProgress(person) {
 // Init all
 ['janiche','jon','emma','martine','felles'].forEach(p => updatePersonProgress(p));
 ecoRender();
+wxInit();
 </script>
 </body>
 </html>
