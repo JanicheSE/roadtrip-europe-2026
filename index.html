@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🚗 Roadtrip Europe 2026 – Sjurseth-Eliassen</title>
+<style>
+:root {
+  --blue:#1a4fa0; --blue-l:#2e6dd4; --blue-pale:#e8f0fb;
+  --green:#1a7a4a; --green-l:#e6f4ec;
+  --orange:#d4650a; --orange-l:#fdf0e6;
+  --red:#b91c1c; --red-l:#fef2f2;
+  --purple:#7c3aed; --purple-l:#fdf4ff;
+  --gray:#374151; --gray-l:#f3f4f6; --gray-m:#9ca3af;
+  --shadow:0 2px 12px rgba(0,0,0,0.08); --r:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;background:#f0f4f8;color:var(--gray);min-height:100vh}
+
+/* HEADER */
+header{background:linear-gradient(135deg,var(--blue) 0%,#0d3070 100%);color:#fff;padding:24px 20px 20px;position:relative;overflow:hidden}
+header::after{content:'🇩🇰🇩🇪🇳🇱';position:absolute;right:16px;top:50%;transform:translateY(-50%);font-size:2rem;opacity:.8;letter-spacing:3px}
+header h1{font-size:1.6rem;font-weight:700;margin-bottom:3px}
+header p{font-size:.88rem;opacity:.82}
+.badge-row{display:flex;gap:7px;margin-top:10px;flex-wrap:wrap}
+.badge{background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3);border-radius:20px;padding:3px 11px;font-size:.75rem;font-weight:600}
+
+/* MAIN TABS */
+.tabs{display:flex;background:#fff;border-bottom:2px solid #e5e7eb;overflow-x:auto;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.06);scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{padding:13px 16px;border:none;background:none;cursor:pointer;font-size:.82rem;font-weight:600;color:var(--gray-m);white-space:nowrap;border-bottom:3px solid transparent;transition:all .2s;display:flex;align-items:center;gap:5px;margin-bottom:-2px}
+.tab:hover{color:var(--blue);background:var(--blue-pale)}
+.tab.active{color:var(--blue);border-bottom-color:var(--blue)}
+
+.content{max-width:900px;margin:0 auto;padding:18px 14px 60px}
+.section{display:none}
+.section.active{display:block}
+.sec-title{font-size:1.1rem;font-weight:800;color:var(--blue);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+
+/* CARDS */
+.card{background:#fff;border-radius:var(--r);padding:18px;margin-bottom:14px;box-shadow:var(--shadow)}
+.card-hd{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.ci{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0}
+.ct{font-size:.97rem;font-weight:700}
+.cs{font-size:.75rem;color:var(--gray-m)}
+
+/* INFO GRID */
+.igrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:480px){.igrid{grid-template-columns:1fr}}
+.icard{background:#fff;border-radius:12px;padding:14px;box-shadow:var(--shadow)}
+.ilabel{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--gray-m);margin-bottom:3px}
+.ival{font-size:1rem;font-weight:700;color:var(--blue)}
+.inote{font-size:.73rem;color:var(--gray-m);margin-top:2px}
+
+/* ALERTS */
+.alert{border-radius:10px;padding:11px 13px;font-size:.82rem;margin-bottom:11px;line-height:1.5}
+.ab{background:var(--blue-pale);border-left:4px solid var(--blue);color:var(--blue)}
+.ao{background:var(--orange-l);border-left:4px solid var(--orange);color:var(--orange)}
+.ag{background:var(--green-l);border-left:4px solid var(--green);color:var(--green)}
+
+/* ROUTE */
+.route-wrap{overflow-x:auto;scrollbar-width:none}
+.route-wrap::-webkit-scrollbar{display:none}
+.route{display:flex;align-items:center;padding:14px 0;min-width:500px}
+.stop{display:flex;flex-direction:column;align-items:center;text-align:center;flex-shrink:0}
+.sdot{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.2rem;background:var(--blue-pale);border:3px solid var(--blue);margin-bottom:5px}
+.sname{font-size:.72rem;font-weight:700;color:var(--blue);max-width:65px}
+.sdate{font-size:.62rem;color:var(--gray-m);max-width:65px}
+.arrow{flex:1;min-width:28px;height:3px;background:linear-gradient(90deg,var(--blue-l),var(--blue));position:relative;align-self:center;margin-bottom:24px}
+.arrow::after{content:'▶';position:absolute;right:-7px;top:-9px;font-size:.65rem;color:var(--blue)}
+.adist{position:absolute;top:-16px;left:50%;transform:translateX(-50%);font-size:.58rem;color:var(--gray-m);white-space:nowrap;background:#fff;padding:1px 3px}
+
+/* DAY CARDS */
+.day-card{background:#fff;border-radius:var(--r);margin-bottom:12px;overflow:hidden;box-shadow:var(--shadow)}
+.day-hd{display:flex;align-items:center;gap:11px;padding:13px 16px;cursor:pointer;user-select:none;transition:background .15s}
+.day-hd:hover{background:var(--gray-l)}
+.dnum{width:44px;height:44px;border-radius:50%;background:var(--blue);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:800;flex-shrink:0;text-align:center;line-height:1.2}
+.dtitle{font-weight:700;font-size:.93rem}
+.dmeta{font-size:.72rem;color:var(--gray-m)}
+.dchev{margin-left:auto;color:var(--gray-m);font-size:.82rem;transition:transform .2s}
+.day-body{display:none;padding:0 16px 16px;border-top:1px solid #f0f0f0}
+.day-body.open{display:block}
+.tl{list-style:none;padding:11px 0 0}
+.tl li{display:flex;gap:10px;margin-bottom:11px;font-size:.83rem;align-items:flex-start}
+.ttime{min-width:46px;font-weight:700;color:var(--blue);font-size:.76rem;padding-top:2px}
+.ticon{width:26px;height:26px;border-radius:50%;background:var(--blue-pale);display:flex;align-items:center;justify-content:center;font-size:.85rem;flex-shrink:0}
+.ttext{flex:1;padding-top:4px;line-height:1.5}
+.ttag{display:inline-block;padding:1px 7px;border-radius:10px;font-size:.66rem;font-weight:700;margin-left:3px;vertical-align:middle}
+.tag-c{background:var(--green-l);color:var(--green)}
+.tag-f{background:var(--blue-pale);color:var(--blue)}
+.tag-h{background:var(--orange-l);color:var(--orange)}
+.tag-m{background:var(--purple-l);color:var(--purple)}
+
+/* PERSON TABS */
+.ptabs{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}
+.ptab{padding:7px 14px;border-radius:20px;border:2px solid #e5e7eb;background:#fff;cursor:pointer;font-size:.82rem;font-weight:700;color:var(--gray-m);transition:all .2s}
+.ptab:hover{border-color:var(--blue);color:var(--blue)}
+.ptab.active{background:var(--blue);border-color:var(--blue);color:#fff}
+.ppanel{display:none}
+.ppanel.active{display:block}
+
+/* PACKING */
+.pack-cat{margin-bottom:16px}
+.pcat-title{font-size:.75rem;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:var(--gray-m);margin-bottom:7px;display:flex;align-items:center;gap:5px}
+.pitems{display:flex;flex-direction:column;gap:5px}
+.pitem{display:flex;align-items:flex-start;gap:9px;padding:7px 9px;border-radius:9px;cursor:pointer;transition:background .15s;font-size:.84rem}
+.pitem:hover{background:var(--gray-l)}
+.pitem input[type=checkbox]{width:17px;height:17px;cursor:pointer;accent-color:var(--blue);flex-shrink:0;margin-top:2px}
+.pitem.checked label{text-decoration:line-through;color:var(--gray-m)}
+.pitem label{cursor:pointer;line-height:1.4;flex:1}
+.pnote{font-size:.7rem;color:var(--gray-m);margin-top:1px;display:block}
+.pprog{background:#e5e7eb;border-radius:10px;height:5px;margin-bottom:10px;overflow:hidden}
+.pprogbar{background:linear-gradient(90deg,var(--blue-l),var(--green));height:100%;border-radius:10px;transition:width .3s}
+.pstats{font-size:.78rem;color:var(--gray-m);margin-bottom:8px}
+
+/* CHARGING */
+.cstop{display:flex;gap:12px;padding:13px;border-radius:11px;background:var(--green-l);margin-bottom:11px;align-items:flex-start}
+.cicon{font-size:1.4rem;flex-shrink:0;margin-top:1px}
+.cname{font-weight:700;font-size:.92rem;color:var(--green)}
+.cdet{font-size:.78rem;color:var(--gray);margin-top:2px;line-height:1.5}
+.cmeta{display:flex;gap:7px;margin-top:5px;flex-wrap:wrap}
+.cpill{background:#fff;border-radius:20px;padding:2px 8px;font-size:.7rem;font-weight:700;border:1px solid rgba(26,122,74,.25);color:var(--green)}
+
+/* EV SPECS */
+.evgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:11px 0}
+@media(max-width:380px){.evgrid{grid-template-columns:1fr 1fr}}
+.evs{background:var(--blue-pale);border-radius:9px;padding:9px;text-align:center}
+.evsv{font-size:1.1rem;font-weight:800;color:var(--blue)}
+.evsl{font-size:.65rem;color:var(--gray-m);margin-top:2px}
+
+/* CREW */
+.crew{display:flex;gap:10px;flex-wrap:wrap;margin-top:9px}
+.crewcard{flex:1;min-width:110px;background:#fff;border-radius:11px;padding:13px;text-align:center;box-shadow:var(--shadow)}
+.cavatar{width:48px;height:48px;border-radius:50%;margin:0 auto 7px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;background:var(--blue-pale)}
+.cname{font-weight:700;font-size:.88rem}
+.crole{font-size:.7rem;color:var(--gray-m)}
+
+/* FERRY BOX */
+.ferry-box{background:linear-gradient(135deg,#e8f0fb,#dbeafe);border:2px solid var(--blue);border-radius:var(--r);padding:16px;margin-bottom:14px}
+.ferry-route{display:flex;align-items:center;gap:10px;margin:10px 0}
+.fport{text-align:center}
+.fport-name{font-weight:800;font-size:1rem;color:var(--blue)}
+.fport-sub{font-size:.72rem;color:var(--gray-m)}
+.farrow{flex:1;height:2px;background:var(--blue);position:relative}
+.farrow::after{content:'▶';position:absolute;right:-8px;top:-9px;font-size:.8rem;color:var(--blue)}
+.ftime{text-align:center;margin-top:8px}
+.ftime span{background:var(--blue);color:#fff;border-radius:8px;padding:4px 12px;font-size:.78rem;font-weight:700}
+
+.divider{height:1px;background:#e5e7eb;margin:13px 0}
+
+.appfooter{text-align:center;padding:18px;font-size:.72rem;color:var(--gray-m)}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🚗 Roadtrip Europe 2026</h1>
+  <p>Sjurseth-Eliassen · 6. – 19. juli · Larvik → Hirtshals → Hamburg → Nederland</p>
+  <div class="badge-row">
+    <span class="badge">🚢 CEU1949 · Color Line</span>
+    <span class="badge">⚡ Skoda Elroq 50</span>
+    <span class="badge">👨‍👩‍👧‍👦 Janiche, Jon, Emma &amp; Martine</span>
+  </div>
+</header>
+
+<div class="tabs" id="maintabs">
+  <button class="tab active" onclick="showTab('oversikt',this)">🗺️ Oversikt</button>
+  <button class="tab" onclick="showTab('dagsplan',this)">📅 Dagsplan</button>
+  <button class="tab" onclick="showTab('pakkeliste',this)">🎒 Pakkeliste</button>
+  <button class="tab" onclick="showTab('lading',this)">⚡ Lading</button>
+  <button class="tab" onclick="showTab('praktisk',this)">📋 Praktisk</button>
+</div>
+
+<div class="content">
+
+<!-- ===== OVERSIKT ===== -->
+<div id="oversikt" class="section active">
+
+  <!-- Ferje-høydepunkt -->
+  <div class="ferry-box">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+      <span style="font-size:1.3rem">🚢</span>
+      <div><div style="font-weight:800;font-size:.95rem;color:var(--blue)">Color Line SuperSpeed 2 · Bookingnr. CEU1949</div>
+      <div style="font-size:.75rem;color:var(--gray-m)">Betalt · Janiche Sjurseth-Eliassen</div></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px">
+      <div style="background:rgba(255,255,255,.7);border-radius:10px;padding:11px">
+        <div style="font-size:.68rem;font-weight:700;color:var(--gray-m);text-transform:uppercase;letter-spacing:.6px">UT – Man 6. juli</div>
+        <div class="ferry-route">
+          <div class="fport"><div class="fport-name">Larvik</div><div class="fport-sub">17:30</div></div>
+          <div class="farrow"></div>
+          <div class="fport"><div class="fport-name">Hirtshals</div><div class="fport-sub">21:15</div></div>
+        </div>
+        <div style="font-size:.73rem;color:var(--gray);margin-top:4px">🍽️ 3× kveldsbuffet inkl. (dekk 8)<br>⏰ Oppmøte senest <strong>16:30</strong></div>
+      </div>
+      <div style="background:rgba(255,255,255,.7);border-radius:10px;padding:11px">
+        <div style="font-size:.68rem;font-weight:700;color:var(--gray-m);text-transform:uppercase;letter-spacing:.6px">RETUR – Lør 18. juli</div>
+        <div class="ferry-route">
+          <div class="fport"><div class="fport-name">Hirtshals</div><div class="fport-sub">22:15</div></div>
+          <div class="farrow"></div>
+          <div class="fport"><div class="fport-name">Larvik</div><div class="fport-sub">02:00 ✱</div></div>
+        </div>
+        <div style="font-size:.73rem;color:var(--gray);margin-top:4px">✱ Ankomst natt til søndag 19. juli<br>⏰ Oppmøte senest <strong>21:15</strong></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Rute -->
+  <div class="card">
+    <div class="card-hd"><div class="ci" style="background:var(--blue-pale)">🗺️</div><div><div class="ct">Reiseruten</div><div class="cs">6–19. juli 2026 · 13 dager</div></div></div>
+    <div class="route-wrap">
+      <div class="route">
+        <div class="stop"><div class="sdot">🏠</div><div class="sname">Slependen</div><div class="sdate">Man 6/7</div></div>
+        <div class="arrow" style="position:relative"><span class="adist">~110 km</span></div>
+        <div class="stop"><div class="sdot">🚢</div><div class="sname">Larvik</div><div class="sdate">Avg 17:30</div></div>
+        <div class="arrow" style="position:relative"><span class="adist">~4 t ferje</span></div>
+        <div class="stop"><div class="sdot">🇩🇰</div><div class="sname">Hirtshals</div><div class="sdate">Ank 21:15</div></div>
+        <div class="arrow" style="position:relative"><span class="adist">~340 km</span></div>
+        <div class="stop"><div class="sdot">🇩🇪</div><div class="sname">Hamburg</div><div class="sdate">8–10/7</div></div>
+        <div class="arrow" style="position:relative"><span class="adist">~370 km</span></div>
+        <div class="stop"><div class="sdot">🇳🇱</div><div class="sname">Nederland</div><div class="sdate">11–16/7</div></div>
+        <div class="arrow" style="position:relative"><span class="adist">Retur</span></div>
+        <div class="stop"><div class="sdot">🚢</div><div class="sname">Hirtshals</div><div class="sdate">Lør 18/7</div></div>
+        <div class="arrow" style="position:relative"><span class="adist">~4 t ferje</span></div>
+        <div class="stop"><div class="sdot">🏠</div><div class="sname">Larvik</div><div class="sdate">Søn 19/7</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Gjengen -->
+  <div class="card">
+    <div class="card-hd"><div class="ci" style="background:var(--purple-l)">👨‍👩‍👧‍👦</div><div><div class="ct">Reisegjengen</div></div></div>
+    <div class="crew">
+      <div class="crewcard"><div class="cavatar">👩</div><div class="cname">Janiche</div><div class="crole">Uorganisert sjef</div></div>
+      <div class="crewcard"><div class="cavatar">👨</div><div class="cname">Jon</div><div class="crole">Co-pilot</div></div>
+      <div class="crewcard"><div class="cavatar">👧</div><div class="cname">Emma</div><div class="crole">Eventyrer</div></div>
+      <div class="crewcard"><div class="cavatar">🧒</div><div class="cname">Martine</div><div class="crole">Chill &amp; blessed</div></div>
+    </div>
+  </div>
+
+  <!-- Nøkkelinfo -->
+  <div class="card">
+    <div class="card-hd"><div class="ci" style="background:var(--orange-l)">ℹ️</div><div><div class="ct">Nøkkeltall</div></div></div>
+    <div class="igrid">
+      <div class="icard"><div class="ilabel">🚢 Booking</div><div class="ival" style="font-size:1.3rem;letter-spacing:1px">CEU1949</div><div class="inote">Color Line · Betalt</div></div>
+      <div class="icard"><div class="ilabel">⚡ Bil</div><div class="ival">Skoda Elroq 50</div><div class="inote">~375 km WLTP · EV</div></div>
+      <div class="icard"><div class="ilabel">📅 Ut</div><div class="ival">Man 6. juli</div><div class="inote">Avg Larvik 17:30</div></div>
+      <div class="icard"><div class="ilabel">📅 Hjem</div><div class="ival">Søn 19. juli</div><div class="inote">Ank Larvik ~02:00</div></div>
+      <div class="icard"><div class="ilabel">🗺️ Reisetid</div><div class="ival">13 dager</div><div class="inote">6–19. juli</div></div>
+      <div class="icard"><div class="ilabel">🏠 Adresse</div><div class="ival" style="font-size:.85rem">Nedre Åsvei 45</div><div class="inote">1341 Slependen</div></div>
+    </div>
+  </div>
+
+  <div class="alert ab">💡 Bruk fanene øverst for å navigere. Pakkeliste-fanen har individuell liste per person!</div>
+</div>
+
+<!-- ===== DAGSPLAN ===== -->
+<div id="dagsplan" class="section">
+<div class="sec-title">📅 Dagsplan · 6–19. juli 2026</div>
+
+<!-- DAG 1 -->
+<div class="day-card">
+  <div class="day-hd" onclick="toggleDay(this)">
+    <div class="dnum">MAN<br>6/7</div>
+    <div><div class="dtitle">🏠→🚢 Slependen → Larvik → Ferje</div>
+    <div class="dmeta">Hjemreise til havn · Color Line 17:30 · Kveldsbuffet inkl.</div></div>
+    <div class="dchev">▼</div>
+  </div>
+  <div class="day-body open">
+    <ul class="tl">
+      <li><div class="ttime">Morgen</div><div class="ticon">☀️</div><div class="ttext">Siste pakking. Last bilen fra Nedre Åsvei 45. Sjekk at CEU1949-billetten er tilgjengelig digitalt eller utskrift.</div></li>
+      <li><div class="ttime">~13:00</div><div class="ticon">🚗</div><div class="ttext">Kjør fra Slependen mot Larvik (~110 km, ca. 1t 20 min via E18). Start med fulladet batteri!</div></li>
+      <li><div class="ttime">16:00</div><div class="ticon">🛳️</div><div class="ttext"><strong>Ankomst Color Line-terminalen Larvik.</strong> <span class="ttag tag-f">Ferje</span> Oppmøte senest <strong>16:30</strong> (60 min før avgang). Ha billettreferansen CEU1949 klar.</div></li>
+      <li><div class="ttime">17:30</div><div class="ticon">🚢</div><div class="ttext"><strong>Avgang Larvik!</strong> SuperSpeed 2 mot Hirtshals. Innsjekk boardingkort – brukes som lugar-nøkkel og til buffet.</div></li>
+      <li><div class="ttime">17:30+</div><div class="ticon">🍽️</div><div class="ttext"><strong>Kveldsbuffet</strong> · «Catch Me If You Can», dekk 8. <span class="ttag tag-m">3 billetter inkl.</span> Forhåndsbetalt – kan ikke refunderes. Restauranten stenger 60 min før ankomst (dvs. ~20:15).</div></li>
+      <li><div class="ttime">21:15</div><div class="ticon">🇩🇰</div><div class="ttext"><strong>Ankomst Hirtshals!</strong> Kjør av ferja. Kort kjøring til overnatting i Hirtshals-området eller Hjørring.</div></li>
+    </ul>
+    <div class="alert ao" style="margin-top:8px">🚗 Elroq 50: max kjørehøyde 1,62 m – godt innenfor Color Lines grense på 1,95 m. Oppgi at det er elbil ved innsjekk.</div>
+  </div>
+</div>
+
+<!-- DAG 2 -->
+<div class="day-card">
+  <div class="day-hd" onclick="toggleDay(this)">
+    <div class="dnum">TIR<br>7/7</div>
+    <div><div class="dtitle">🇩🇰 Gjennom Danmark sørover</div>
+    <div class="dmeta">Hirtshals → Kolding-området · ~230 km</div></div>
+    <div class="dchev">▼</div>
+  </div>
+  <div class="day-body">
+    <ul class="tl">
+      <li><div class="ttime">Morgen</div><div class="ticon">☕</div><div class="ttext">Frokost i Hirtshals. Start rolig – dere er på ferie! Sjekk rekkevidde på Elroq.</div></li>
+      <li><div class="ttime">~09:30</div><div class="ticon">🚗</div><div class="ttext">Kjør sørover E39/E45. Passerer Ålborg (~70 km fra Hirtshals) – dansk kafé om dere vil.</div></li>
+      <li><div class="ttime">~11:30</div><div class="ticon">⚡</div><div class="ttext"><strong>Lading – Kolding (ca. 230 km)</strong> · IONITY ved Kolding V (motorvei E45). Lad til 80%. <span class="ttag tag-c">Lading</span> Kolding sentrum er fin for lunsj!</div></li>
+      <li><div class="ttime">~12:30</div><div class="ticon">🌭</div><div class="ttext">Lunsj i Kolding eller rastested. <span class="ttag tag-m">Mat</span> Prøv en dansk pølse (rød pølse!) eller bager.</div></li>
+      <li><div class="ttime">Ettermid.</div><div class="ticon">🏨</div><div class="ttext">Overnatting i Kolding, Vejle eller videre mot grensen. <span class="ttag tag-h">Hotell</span></div></li>
+    </ul>
+  </div>
+</div>
+
+<!-- DAG 3 -->
+<div class="day-card">
+  <div class="day-hd" onclick="toggleDay(this)">
+    <div class="dnum">ONS<br>8/7</div>
+    <div><div class="dtitle">🇩🇰🇩🇪 Danmark → Hamburg</div>
+    <div class="dmeta">Grense ved Flensburg · Hamburg ankomst · ~200 km</div></div>
+    <div class="dchev">▼</div>
+  </div>
+  <div class="day-body">
+    <ul class="tl">
+      <li><div class="ttime">Morgen</div><div class="ticon">🚗</div><div class="ttext">Kjør sørover E45. Grenseovergang Danmark/Tyskland ved Padborg/Flensburg. Ha pass klart – EU-kontroll kan forekomme.</div></li>
+      <li><div class="ttime">Underveis</div><div class="ticon">⚡</div><div class="ttext"><strong>Lading – Flensburg</strong> · IONITY Flensburg eller Fastned ved A7. God matpause. <span class="ttag tag-c">Lading</span></div></li>
+      <li><div class="ttime">~14:00</div><div class="ticon">🏙️</div><div class="ttext"><strong>Ankomst Hamburg!</strong> Sjekk inn på hotell. <span class="ttag tag-h">Hotell</span> Spør om hotellet har EV-lading.</div></li>
+      <li><div class="ttime">Kveld</div><div class="ticon">🍽️</div><div class="ttext">Middag i Hamburg. Speicherstadt eller Altona-området. <span class="ttag tag-m">Mat</span></div></li>
+    </ul>
+  </div>
+</div>
+
+<!-- DAG 4 -->
+<div class="day-card">
+  <div class="day-hd" onclick="toggleDay(this)">
+    <div class="dnum">TOR<br>9/7</div>
+    <div><div class="dtitle">🇩🇪 Hamburg – Dag 1</div>
+    <div class="dmeta">Miniatur Wunderland · Speicherstadt · Elbpromenade</div></div>
+    <div class="dchev">▼</div>
+  </div>
+  <div class="day-body">
+    <ul class="tl">
+      <li><div class="ttime">Morgen</div><div class="ticon">🎢</div><div class="ttext"><strong>Miniatur Wunderland</strong> – verdens største modelljernbane i Speicherstadt. <em>Bestill billetter på forhånd!</em> miniatur-wunderland.de</div></li>
+      <li><div class="ttime">Lunsj</div><div class="ticon">🌭</div><div class="ttext">Currywurst ved Speicherstadt eller café i nærheten. <span class="ttag tag-m">Mat</span></div></li>
+      <li><div class="ttime">Ettermid.</div><div class="ticon">🏛️</div><div class="ttext"><strong>Speicherstadt</strong> – UNESCO-verdensarv. Vakre kanaler og rød lagerhusarkitektur. Perfekt for bilder!</div></li>
+      <li><div class="ttime">Kveld</div><div class="ticon">🌊</div><div class="ttext">Elbpromenaden – vakker elvepromenade. Middag ved vannet. <span class="ttag tag-m">Mat</span></div></li>
+      <li><div class="ttime">Natt</div><div class="ticon">⚡</div><div class="ttext">Lad bilen over natten til 100%. <span class="ttag tag-c">Lading</span></div></li>
+    </ul>
+  </div>
+</div>
+
+<!-- DAG 5 -->
+<div class="day-card">
+  <div class="day-hd" onclick="toggleDay(this)">
+    <div class="dnum">FRE<br>10/7</div>
+    <div><div class="dtitle">🇩🇪→🇳🇱 Hamburg → Nederland</div>
+    <div class="dmeta">~370 km · Dag 2 ladetopper</div></div>
+    <div class="dchev">▼</div>
+  </div>
+  <div class="day-body">
+    <ul class="tl">
+      <li><div class="ttime">Morgen</div><div class="ticon">🚗</div><div class="ttext">Avreise fra Hamburg. Fulladet batteri. A1 mot Bremen og videre vest.</div></li>
+      <li><div class="ttime">~10:00</div><div class="ticon">⚡</div><div class="ttext"><strong>Lading – Osnabrück (~150 km)</strong> · IONITY Osnabrück Nord ved A1. <span class="ttag tag-c">Lading</span> 20–25 min lading til 80%.</div></li>
+      <li><div class="ttime">~12:30</div><div class="ticon">🇳🇱</div><div class="ttext">Grensen Tyskland/Nederland. A1 inn i Nederland. Velkommen til flatland og vindmøller!</div></li>
+      <li><div class="ttime">~14:00</div><div class="ticon">⚡</div><div class="ttext"><strong>Lading – Arnhem/Utrecht-området</strong> · Fastned har mange ladere i NL. Valgfri stopp. <span class="ttag tag-c">Lading</span></div></li>
+      <li><div class="ttime">~16:00</div><div class="ticon">🏨</div><div class="ttext"><strong>Ankomst destinasjon i Nederland!</strong> Sjekk inn. <span class="ttag tag-h">Hotell</span></div></li>
+    </ul>
+  </div>
+</div>
+
+<!-- DAG 6–11 -->
+<div class="day-card">
+  <div class="day-hd" onclick="toggleDay(this)">
+    <div class="dnum">LØR–TOR<br>11–16/7</div>
+    <div><div class="dtitle">🇳🇱 Nederland – Utforsking</div>
+    <div class="dmeta">Amsterdam · Keukenhof · Zaanse Schans · Gouda</div></div>
+    <div class="dchev">▼</div>
+  </div>
+  <div class="day-body">
+    <ul class="tl">
+      <li><div class="ttime">Dag 1 NL</div><div class="ticon">🚲</div><div class="ttext"><strong>Amsterdam</strong> · Riksmuseum, kanalbåt, sykkeltur. Anne Frank-huset – <em>forhåndsbestill billetter!</em></div></li>
+      <li><div class="ttime">Dag 2 NL</div><div class="ticon">🌷</div><div class="ttext"><strong>Keukenhof</strong> (sjekk åpningstider) – blomsterhagen. Eller Zaanse Schans (vindmøller, tresko, ost) – barna elsker det!</div></li>
+      <li><div class="ttime">Dag 3 NL</div><div class="ticon">🧀</div><div class="ttext"><strong>Gouda eller Edam</strong> – ostemarkeder og nederlandsk sjarm. Dagtur fra Amsterdam.</div></li>
+      <li><div class="ttime">Dag 4–6</div><div class="ticon">🎨</div><div class="ttext">Fri utforsking! Hagenbecks-lignende dyreparker, strender, eller leie sykler og suse rundt i Amsterdam. Spar litt energi til hjemturen!</div></li>
+    </ul>
+  </div>
+</div>
+
+<!-- DAG 12 -->
+<div class="day-card">
+  <div class="day-hd" onclick="toggleDay(this)">
+    <div class="dnum">FRE<br>17/7</div>
+    <div><div class="dtitle">🇳🇱🇩🇪 Kjøring nordover – Dag 1 retur</div>
+    <div class="dmeta">Nederland → Hamburg-området</div></div>
+    <div class="dchev">▼</div>
+  </div>
+  <div class="day-body">
+    <ul class="tl">
+      <li><div class="ttime">Morgen</div><div class="ticon">🚗</div><div class="ttext">Lad til 100% og avreise nordover. A1 gjennom Nederland → Tyskland.</div></li>
+      <li><div class="ttime">Underveis</div><div class="ticon">⚡</div><div class="ttext">Ladetopper: Arnhem + Osnabrück (samme steder som utveien). <span class="ttag tag-c">Lading</span></div></li>
+      <li><div class="ttime">Ettermid.</div><div class="ticon">🏨</div><div class="ttext">Overnatting Hamburg eller Flensburg-området. <span class="ttag tag-h">Hotell</span> Lad over natten til 100%.</div></li>
+    </ul>
+  </div>
+</div>
+
+<!-- DAG 13 -->
+<div class="day-card">
+  <div class="day-hd" onclick="toggleDay(this)">
+    <div class="dnum">LØR<br>18/7</div>
+    <div><div class="dtitle">🇩🇰🚢 Hirtshals – Ferje hjem</div>
+    <div class="dmeta">Avgang 22:15 · Oppmøte senest 21:15!</div></div>
+    <div class="dchev">▼</div>
+  </div>
+  <div class="day-body">
+    <ul class="tl">
+      <li><div class="ttime">Formiddag</div><div class="ticon">🚗</div><div class="ttext">Kjør nordover gjennom Danmark. E45 mot Kolding → Vejle → Ålborg → Hirtshals (~310 km fra Flensburg).</div></li>
+      <li><div class="ttime">Underveis</div><div class="ticon">⚡</div><div class="ttext">Lading i Kolding hvis nødvendig. Kjør nok lading til å ha godt med reserve ved Hirtshals. <span class="ttag tag-c">Lading</span></div></li>
+      <li><div class="ttime">~19:00</div><div class="ticon">🍽️</div><div class="ttext">Middag i Hirtshals. Sjømat! God avslutning på ferieturen. <span class="ttag tag-m">Mat</span></div></li>
+      <li><div class="ttime">21:15</div><div class="ticon">🛳️</div><div class="ttext"><strong>Oppmøte Color Line-terminalen Hirtshals!</strong> <span class="ttag tag-f">Ferje</span> Senest 60 min før avgang. Ha CEU1949 klar.</div></li>
+      <li><div class="ttime">22:15</div><div class="ticon">🚢</div><div class="ttext"><strong>Avgang Hirtshals!</strong> SuperSpeed 2 mot Larvik. Natt til sjøs.</div></li>
+    </ul>
+    <div class="alert ao" style="margin-top:8px">⚠️ Buffet stenger 60 min før ankomst. Merk: ingen forhåndsbetalt buffet på returferja.</div>
+  </div>
+</div>
+
+<!-- DAG 14 -->
+<div class="day-card">
+  <div class="day-hd" onclick="toggleDay(this)">
+    <div class="dnum">SØN<br>19/7</div>
+    <div><div class="dtitle">🏠 Hjem!</div>
+    <div class="dmeta">Ankomst Larvik 02:00 · Kjøring til Slependen</div></div>
+    <div class="dchev">▼</div>
+  </div>
+  <div class="day-body">
+    <ul class="tl">
+      <li><div class="ttime">02:00</div><div class="ticon">🇳🇴</div><div class="ttext"><strong>Ankomst Larvik!</strong> Av-ferje og kjør hjem til Slependen (~110 km, ca. 1t 20 min). Alle er nok trøtte – kjør forsiktig!</div></li>
+      <li><div class="ttime">~04:00</div><div class="ticon">🏠</div><div class="ttext"><strong>Hjemme på Nedre Åsvei 45!</strong> 🎉 Pakk ut, last opp bilder, og hvil godt. Dere fortjener det!</div></li>
+    </ul>
+  </div>
+</div>
+
+</div>
+
+<!-- ===== PAKKELISTE (per person) ===== -->
+<div id="pakkeliste" class="section">
+<div class="sec-title">🎒 Pakkeliste per person</div>
+
+<div class="ptabs">
+  <button class="ptab active" onclick="showPerson('janiche',this)">👩 Janiche</button>
+  <button class="ptab" onclick="showPerson('jon',this)">👨 Jon</button>
+  <button class="ptab" onclick="showPerson('emma',this)">👧 Emma</button>
+  <button class="ptab" onclick="showPerson('martine',this)">🧒 Martine</button>
+  <button class="ptab" onclick="showPerson('felles',this)">🚗 Felles</button>
+</div>
+
+<!-- JANICHE -->
+<div id="p-janiche" class="ppanel active">
+  <div class="card">
+    <div class="card-hd"><div class="ci" style="background:var(--purple-l)">👩</div><div><div class="ct">Janiche – Sjåfør &amp; navigator</div></div></div>
+    <div class="pstats" id="stats-janiche"></div>
+    <div class="pprog"><div class="pprogbar" id="bar-janiche"></div></div>
+
+    <div class="pack-cat">
+      <div class="pcat-title">📄 Dokumenter (ditt ansvar)</div>
+      <div class="pitems">
+        <label class="pitem"><input type="checkbox" data-person="janiche" onchange="updatePersonProgress('janiche')"><span><span>Pass (gyldig)</span><span class="pnote">Sjekk utløpsdato!</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="janiche" onchange="updatePersonProgress('janiche')"><span><span>Color Line-billett CEU1949</span><span class="pnote">Digitalt og/eller utskrift</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="janiche" onchange="updatePersonProgress('janiche')"><span><span>Vognkort / registreringsbevis</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="janiche" onchange="updatePersonProgress('janiche')"><span><span>Grønt kort (forsikringsbevis)</span><span class="pnote">Fra Gjensidige/If e.l.</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="janiche" onchange="updatePersonProgress('janiche')"><span><span>EHIC-kort (europeisk helsetrygdkort)</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="janiche" onchange="updatePersonProgress('janiche')"><span><span>Hotellbekreftelser (alle)</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="janiche" onchange="updatePersonProgress('janiche')"><span><span>Kredittkort/bankkort (Visa/MC)</span></span></label>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div class="pack-cat">
+      <div class="pcat-title">👗 Klær (13 dager)</div>
+      <div class="pitems">
+        <label class="pitem"><input type="checkbox" data-person="janiche" onchange="updatePersonProgress('janiche')"><span><span>T-skjorter (5 stk)</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="janiche" onchange="updatePersonProgress('janiche')"><span><span>Topper/bluser (3 stk)</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="janiche" onchange="updatePersonProgress('janiche')"><span><span>Bukser (2–3 stk)</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="janiche" onchange="updatePersonProgress('janiche')"><span><span>Shorts (2 stk)</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="janiche" onchange="updatePersonProgress('janiche')"><span><span>Pent antrekk til restaurant (1 stk)</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="janiche" onchange="updatePersonProgress('janiche')"><span><span>Kjole/lett kjoler (2 stk)</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="janiche" onchange="updatePersonProgress('janiche')"><span><span>Genser/cardigan</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="janiche" onchange="updatePersonProgress('janiche')"><span><span>Regnjakke</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="janiche" onchange="updatePersonProgress('janiche')"><span><span>Badedrakt</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="janiche" onchange="updatePersonProgress('janiche')"><span><span>Undertøy + sokker (7–8 stk)</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="janiche" onchange="updatePersonProgress('janiche')"><span><span>Pysjamas</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="janiche" onchange="updatePersonProgress('janiche')"><span><span>Komfortable gåsko</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="janiche" onchange="updatePersonProgress('janiche')"><span><span>Sandaler</span></span></label>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div class="pack-cat">
+      <div class="pcat-title">🧴 Toalettsaker</div>
+      <div class="pitems">
+        <label class="pitem"><input type="checkbox" data-person="janiche" onchange="updatePersonProgress('janiche')"><span><span>Sjampo og balsam</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="janiche" onchange="updatePersonProgress('janiche')"><span><span>Tannbørste og tannkrem</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="janiche" onchange="updatePersonProgress('janiche')"><span><span>Deodorant</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="janiche" onchange="updatePersonProgress('janiche')"><span><span>Ansiktskrem og sminke</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="janiche" onchange="updatePersonProgress('janiche')"><span><span>Solkrem SPF 30+</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="janiche" onchange="updatePersonProgress('janiche')"><span><span>Solbriller</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="janiche" onchange="updatePersonProgress('janiche')"><span><span>Hårprodukter</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="janiche" onchange="updatePersonProgress('janiche')"><span><span>Medisiner (egne faste)</span></span></label>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div class="pack-cat">
+      <div class="pcat-title">📱 Teknologi</div>
+      <div class="pitems">
+        <label class="pitem"><input type="checkbox" data-person="janiche" onchange="updatePersonProgress('janiche')"><span><span>Mobil + USB-C-lader</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="janiche" onchange="updatePersonProgress('janiche')"><span><span>Kamera</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="janiche" onchange="updatePersonProgress('janiche')"><span><span>Power bank</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="janiche" onchange="updatePersonProgress('janiche')"><span><span>ABRP-app installert for Elroq 50</span><span class="pnote">A Better Route Planner – beste EV-ruteapp</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="janiche" onchange="updatePersonProgress('janiche')"><span><span>Google Maps / offline kart nedlastet</span><span class="pnote">Last ned DK, DE og NL offline</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="janiche" onchange="updatePersonProgress('janiche')"><span><span>IONITY-app + Fastned-app installert</span></span></label>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- JON -->
+<div id="p-jon" class="ppanel">
+  <div class="card">
+    <div class="card-hd"><div class="ci" style="background:var(--blue-pale)">👨</div><div><div class="ct">Jon – Co-pilot &amp; navigatør</div></div></div>
+    <div class="pstats" id="stats-jon"></div>
+    <div class="pprog"><div class="pprogbar" id="bar-jon"></div></div>
+
+    <div class="pack-cat">
+      <div class="pcat-title">📄 Dokumenter</div>
+      <div class="pitems">
+        <label class="pitem"><input type="checkbox" data-person="jon" onchange="updatePersonProgress('jon')"><span><span>Pass (gyldig)</span><span class="pnote">Sjekk utløpsdato!</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="jon" onchange="updatePersonProgress('jon')"><span><span>EHIC-kort</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="jon" onchange="updatePersonProgress('jon')"><span><span>Kredittkort/bankkort</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="jon" onchange="updatePersonProgress('jon')"><span><span>Kontanter (€ og DKK)</span><span class="pnote">~€100 og ~200 DKK</span></span></label>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div class="pack-cat">
+      <div class="pcat-title">👕 Klær (13 dager)</div>
+      <div class="pitems">
+        <label class="pitem"><input type="checkbox" data-person="jon" onchange="updatePersonProgress('jon')"><span><span>T-skjorter (6 stk)</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="jon" onchange="updatePersonProgress('jon')"><span><span>Skjorte (2 stk)</span><span class="pnote">Til restaurant i Hamburg</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="jon" onchange="updatePersonProgress('jon')"><span><span>Bukser (3 stk)</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="jon" onchange="updatePersonProgress('jon')"><span><span>Shorts (2 stk)</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="jon" onchange="updatePersonProgress('jon')"><span><span>Genser</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="jon" onchange="updatePersonProgress('jon')"><span><span>Regnjakke</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="jon" onchange="updatePersonProgress('jon')"><span><span>Badebukse</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="jon" onchange="updatePersonProgress('jon')"><span><span>Undertøy + sokker (8 stk)</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="jon" onchange="updatePersonProgress('jon')"><span><span>Pysjamas</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="jon" onchange="updatePersonProgress('jon')"><span><span>Gåsko / sneakers</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="jon" onchange="updatePersonProgress('jon')"><span><span>Sandaler</span></span></label>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div class="pack-cat">
+      <div class="pcat-title">🧴 Toalettsaker</div>
+      <div class="pitems">
+        <label class="pitem"><input type="checkbox" data-person="jon" onchange="updatePersonProgress('jon')"><span><span>Tannbørste og tannkrem</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="jon" onchange="updatePersonProgress('jon')"><span><span>Barberskum / barberhøvel</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="jon" onchange="updatePersonProgress('jon')"><span><span>Deodorant</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="jon" onchange="updatePersonProgress('jon')"><span><span>Solkrem</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="jon" onchange="updatePersonProgress('jon')"><span><span>Solbriller</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="jon" onchange="updatePersonProgress('jon')"><span><span>Medisiner (egne faste)</span></span></label>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div class="pack-cat">
+      <div class="pcat-title">📱 Teknologi &amp; co-pilot</div>
+      <div class="pitems">
+        <label class="pitem"><input type="checkbox" data-person="jon" onchange="updatePersonProgress('jon')"><span><span>Mobil + lader</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="jon" onchange="updatePersonProgress('jon')"><span><span>Hodetelefoner</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="jon" onchange="updatePersonProgress('jon')"><span><span>Power bank</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="jon" onchange="updatePersonProgress('jon')"><span><span>PlugShare-app</span><span class="pnote">Backup ladekart</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="jon" onchange="updatePersonProgress('jon')"><span><span>Offline kart DE + NL nedlastet</span></span></label>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- EMMA -->
+<div id="p-emma" class="ppanel">
+  <div class="card">
+    <div class="card-hd"><div class="ci" style="background:var(--green-l)">👧</div><div><div class="ct">Emma – 3. klasse-eventyreren</div><div class="cs">Starter 3. klasse 18. august!</div></div></div>
+    <div class="pstats" id="stats-emma"></div>
+    <div class="pprog"><div class="pprogbar" id="bar-emma"></div></div>
+
+    <div class="pack-cat">
+      <div class="pcat-title">📄 Dokumenter</div>
+      <div class="pitems">
+        <label class="pitem"><input type="checkbox" data-person="emma" onchange="updatePersonProgress('emma')"><span><span>Pass</span><span class="pnote">Sjekk utløpsdato!</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="emma" onchange="updatePersonProgress('emma')"><span><span>EHIC-kort</span></span></label>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div class="pack-cat">
+      <div class="pcat-title">👗 Klær</div>
+      <div class="pitems">
+        <label class="pitem"><input type="checkbox" data-person="emma" onchange="updatePersonProgress('emma')"><span><span>T-skjorter (6 stk)</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="emma" onchange="updatePersonProgress('emma')"><span><span>Kjoler (3 stk)</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="emma" onchange="updatePersonProgress('emma')"><span><span>Leggings / tynne bukser (2 stk)</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="emma" onchange="updatePersonProgress('emma')"><span><span>Shorts (2 stk)</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="emma" onchange="updatePersonProgress('emma')"><span><span>Genser / cardigan</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="emma" onchange="updatePersonProgress('emma')"><span><span>Regnjakke</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="emma" onchange="updatePersonProgress('emma')"><span><span>Badedrakt</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="emma" onchange="updatePersonProgress('emma')"><span><span>Undertøy + sokker (8 stk)</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="emma" onchange="updatePersonProgress('emma')"><span><span>Pysjamas</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="emma" onchange="updatePersonProgress('emma')"><span><span>Komfortable gåsko</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="emma" onchange="updatePersonProgress('emma')"><span><span>Sandaler</span></span></label>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div class="pack-cat">
+      <div class="pcat-title">🧴 Toalettsaker</div>
+      <div class="pitems">
+        <label class="pitem"><input type="checkbox" data-person="emma" onchange="updatePersonProgress('emma')"><span><span>Tannbørste + barnetannkrem</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="emma" onchange="updatePersonProgress('emma')"><span><span>Børste / hårstrikk</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="emma" onchange="updatePersonProgress('emma')"><span><span>Barnsolkrem SPF 50</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="emma" onchange="updatePersonProgress('emma')"><span><span>Barneshampoo</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="emma" onchange="updatePersonProgress('emma')"><span><span>Myggspray for barn</span></span></label>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div class="pack-cat">
+      <div class="pcat-title">🎮 Underholdning i bilen</div>
+      <div class="pitems">
+        <label class="pitem"><input type="checkbox" data-person="emma" onchange="updatePersonProgress('emma')"><span><span>iPad/nettbrett + lader</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="emma" onchange="updatePersonProgress('emma')"><span><span>Hodetelefoner (barnevennlige)</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="emma" onchange="updatePersonProgress('emma')"><span><span>Filmer/serier nedlastet offline</span><span class="pnote">Netflix, Disney+ etc. – last ned hjemme!</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="emma" onchange="updatePersonProgress('emma')"><span><span>Favorittbøker (2–3 stk)</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="emma" onchange="updatePersonProgress('emma')"><span><span>Aktivitetsbok / tegnesaker</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="emma" onchange="updatePersonProgress('emma')"><span><span>Kortspill / reisespill</span><span class="pnote">UNO, Sushi Go e.l.</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="emma" onchange="updatePersonProgress('emma')"><span><span>Nakkepute til bilen</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="emma" onchange="updatePersonProgress('emma')"><span><span>Favorittleketøy / bamse</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="emma" onchange="updatePersonProgress('emma')"><span><span>Liten ryggsekk til utflukter</span></span></label>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MARTINE -->
+<div id="p-martine" class="ppanel">
+  <div class="card">
+    <div class="card-hd"><div class="ci" style="background:var(--orange-l)">🧒</div><div><div class="ct">Martine</div></div></div>
+    <div class="pstats" id="stats-martine"></div>
+    <div class="pprog"><div class="pprogbar" id="bar-martine"></div></div>
+
+    <div class="pack-cat">
+      <div class="pcat-title">📄 Dokumenter</div>
+      <div class="pitems">
+        <label class="pitem"><input type="checkbox" data-person="martine" onchange="updatePersonProgress('martine')"><span><span>Pass</span><span class="pnote">Sjekk utløpsdato!</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="martine" onchange="updatePersonProgress('martine')"><span><span>EHIC-kort</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="martine" onchange="updatePersonProgress('martine')"><span><span>Eget bankkort</span><span class="pnote">Til lommepenger i DK/DE/NL</span></span></label>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div class="pack-cat">
+      <div class="pcat-title">👗 Klær (13 dager)</div>
+      <div class="pitems">
+        <label class="pitem"><input type="checkbox" data-person="martine" onchange="updatePersonProgress('martine')"><span><span>T-skjorter / topper (6 stk)</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="martine" onchange="updatePersonProgress('martine')"><span><span>Kjoler / skjørt (2–3 stk)</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="martine" onchange="updatePersonProgress('martine')"><span><span>Bukser / jeans (2 stk)</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="martine" onchange="updatePersonProgress('martine')"><span><span>Shorts (2 stk)</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="martine" onchange="updatePersonProgress('martine')"><span><span>Genser / hoodie</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="martine" onchange="updatePersonProgress('martine')"><span><span>Regnjakke</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="martine" onchange="updatePersonProgress('martine')"><span><span>Badedrakt</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="martine" onchange="updatePersonProgress('martine')"><span><span>Undertøy + sokker (8 stk)</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="martine" onchange="updatePersonProgress('martine')"><span><span>Pysjamas</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="martine" onchange="updatePersonProgress('martine')"><span><span>Gåsko / sneakers</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="martine" onchange="updatePersonProgress('martine')"><span><span>Sandaler</span></span></label>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div class="pack-cat">
+      <div class="pcat-title">🧴 Toalettsaker</div>
+      <div class="pitems">
+        <label class="pitem"><input type="checkbox" data-person="martine" onchange="updatePersonProgress('martine')"><span><span>Tannbørste + tannkrem</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="martine" onchange="updatePersonProgress('martine')"><span><span>Ansiktsvask / rens</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="martine" onchange="updatePersonProgress('martine')"><span><span>Deodorant</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="martine" onchange="updatePersonProgress('martine')"><span><span>Solkrem SPF 30+</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="martine" onchange="updatePersonProgress('martine')"><span><span>Solbriller</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="martine" onchange="updatePersonProgress('martine')"><span><span>Sjampo + balsam</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="martine" onchange="updatePersonProgress('martine')"><span><span>Hårprodukter</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="martine" onchange="updatePersonProgress('martine')"><span><span>Medisiner (egne)</span></span></label>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div class="pack-cat">
+      <div class="pcat-title">📱 Teknologi</div>
+      <div class="pitems">
+        <label class="pitem"><input type="checkbox" data-person="martine" onchange="updatePersonProgress('martine')"><span><span>Mobil + lader (USB-C)</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="martine" onchange="updatePersonProgress('martine')"><span><span>Hodetelefoner / ørepropper</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="martine" onchange="updatePersonProgress('martine')"><span><span>Power bank</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="martine" onchange="updatePersonProgress('martine')"><span><span>Nakkepute til bilen</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="martine" onchange="updatePersonProgress('martine')"><span><span>Bok / Kindle</span></span></label>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FELLES -->
+<div id="p-felles" class="ppanel">
+  <div class="card">
+    <div class="card-hd"><div class="ci" style="background:var(--green-l)">🚗</div><div><div class="ct">Felles – bil og familie</div></div></div>
+    <div class="pstats" id="stats-felles"></div>
+    <div class="pprog"><div class="pprogbar" id="bar-felles"></div></div>
+
+    <div class="pack-cat">
+      <div class="pcat-title">⚡ Elroq 50 – EV-tilbehør</div>
+      <div class="pitems">
+        <label class="pitem"><input type="checkbox" data-person="felles" onchange="updatePersonProgress('felles')"><span><span>CCS/Type 2 ladekabel</span><span class="pnote">Inkludert i Elroq – sjekk at den er i bilen</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="felles" onchange="updatePersonProgress('felles')"><span><span>Mode 2 nødladekabel (til vanlig stikkontakt)</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="felles" onchange="updatePersonProgress('felles')"><span><span>IONITY-app installert + konto opprettet</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="felles" onchange="updatePersonProgress('felles')"><span><span>Fastned-app installert</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="felles" onchange="updatePersonProgress('felles')"><span><span>ABRP installert med Elroq 50-profil</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="felles" onchange="updatePersonProgress('felles')"><span><span>Dekktrykk sjekket</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="felles" onchange="updatePersonProgress('felles')"><span><span>Paneserrutevann fylt opp</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="felles" onchange="updatePersonProgress('felles')"><span><span>Skjermbrikke / bompenger sjekket</span><span class="pnote">Danmark og Nederland har bomveier</span></span></label>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div class="pack-cat">
+      <div class="pcat-title">🚦 Påbudt i EU (bil)</div>
+      <div class="pitems">
+        <label class="pitem"><input type="checkbox" data-person="felles" onchange="updatePersonProgress('felles')"><span><span>Refleksvest × 4</span><span class="pnote">Påbudt i DE, DK og NL</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="felles" onchange="updatePersonProgress('felles')"><span><span>Varseltrekant</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="felles" onchange="updatePersonProgress('felles')"><span><span>Førstehjelpskit</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="felles" onchange="updatePersonProgress('felles')"><span><span>Brannslokker (anbefalt for EV)</span></span></label>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div class="pack-cat">
+      <div class="pcat-title">💊 Familie-apotek</div>
+      <div class="pitems">
+        <label class="pitem"><input type="checkbox" data-person="felles" onchange="updatePersonProgress('felles')"><span><span>Paracet (voksne + barn)</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="felles" onchange="updatePersonProgress('felles')"><span><span>Ibuprofen</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="felles" onchange="updatePersonProgress('felles')"><span><span>Reisesykemedisiner</span><span class="pnote">F.eks. Scopoderm-plaster for ferje</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="felles" onchange="updatePersonProgress('felles')"><span><span>Magemedisiner (Imodium, Imovane)</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="felles" onchange="updatePersonProgress('felles')"><span><span>Sårplaster og bandasjer</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="felles" onchange="updatePersonProgress('felles')"><span><span>Desinfeksjonsmiddel (håndsprit)</span></span></label>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div class="pack-cat">
+      <div class="pcat-title">🍎 Snacks og drikke til bilen</div>
+      <div class="pitems">
+        <label class="pitem"><input type="checkbox" data-person="felles" onchange="updatePersonProgress('felles')"><span><span>Vannflasker × 4 (gjenbrukbare)</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="felles" onchange="updatePersonProgress('felles')"><span><span>Termokopp til kaffe (Janiche/Jon)</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="felles" onchange="updatePersonProgress('felles')"><span><span>Frukt og grønnsaker til bilturen</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="felles" onchange="updatePersonProgress('felles')"><span><span>Kjeks, nøtter og snacks</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="felles" onchange="updatePersonProgress('felles')"><span><span>Søppelpose til bilen</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="felles" onchange="updatePersonProgress('felles')"><span><span>Desinfiseringsservietter</span></span></label>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<!-- ===== LADING ===== -->
+<div id="lading" class="section">
+<div class="sec-title">⚡ Ladestrategi – Elroq 50</div>
+
+<div class="card">
+  <div class="card-hd"><div class="ci" style="background:var(--green-l)">🚗</div><div><div class="ct">Skoda Elroq 50 – nøkkeltall</div></div></div>
+  <div class="evgrid">
+    <div class="evs"><div class="evsv">~375</div><div class="evsl">km WLTP</div></div>
+    <div class="evs"><div class="evsv">~260</div><div class="evsl">km motorvei reell</div></div>
+    <div class="evs"><div class="evsv">150 kW</div><div class="evsl">maks DC-lading</div></div>
+    <div class="evs"><div class="evsv">55 kWh</div><div class="evsl">netto batteri</div></div>
+    <div class="evs"><div class="evsv">~22 min</div><div class="evsl">10→80% IONITY</div></div>
+    <div class="evs"><div class="evsv">CCS/T2</div><div class="evsl">kontakttype</div></div>
+  </div>
+  <div class="alert ao" style="margin-top:8px">⚠️ Motorvei 120 km/t: planlegg ladetopp senest hvert 200. km. Start hver dag med 100%.</div>
+</div>
+
+<div class="card">
+  <div class="card-hd"><div class="ci" style="background:var(--green-l)">🇩🇰→🇩🇪</div><div><div class="ct">Hirtshals → Hamburg (~340 km)</div><div class="cs">Start med fulladet batteri fra ferja</div></div></div>
+  <div class="cstop">
+    <div class="cicon">⚡</div>
+    <div><div class="cname">1. Kolding – IONITY / Recharge</div>
+    <div class="cdet">Ca. 230 km fra Hirtshals via E45. IONITY ved Kolding V eller Recharge Kolding Storcenter. Lad til 80%. Perfekt lunsj-stopp!</div>
+    <div class="cmeta"><span class="cpill">~230 km fra start</span><span class="cpill">Lad til 80%</span><span class="cpill">~22 min</span></div></div>
+  </div>
+  <div class="cstop">
+    <div class="cicon">⚡</div>
+    <div><div class="cname">2. Flensburg / Schleswig – IONITY</div>
+    <div class="cdet">Grenseovergangen. Ca. 80 km fra Kolding. IONITY Flensburg eller Fastned Schleswig ved A7. Valgfri toppfylling.</div>
+    <div class="cmeta"><span class="cpill">~310 km fra start</span><span class="cpill">Valgfri</span><span class="cpill">~15 min</span></div></div>
+  </div>
+  <div class="cstop" style="background:var(--blue-pale)">
+    <div class="cicon">🏙️</div>
+    <div><div class="cname" style="color:var(--blue)">Hamburg – hotell eller offentlig lading</div>
+    <div class="cdet" style="color:var(--gray)">Spør hotellet om EV-lading. Alternativt: IONITY Hamburg, Recharge, eller Fastned. Mål: 100% over natten.</div>
+    <div class="cmeta"><span class="cpill" style="color:var(--blue);border-color:rgba(26,79,160,.25)">Lad til 100% over natten</span></div></div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-hd"><div class="ci" style="background:var(--green-l)">🇩🇪→🇳🇱</div><div><div class="ct">Hamburg → Nederland (~370 km)</div><div class="cs">Start med fulladet batteri</div></div></div>
+  <div class="cstop">
+    <div class="cicon">⚡</div>
+    <div><div class="cname">1. Bremen / Osnabrück – IONITY</div>
+    <div class="cdet">Ca. 150 km fra Hamburg. IONITY Osnabrück Nord ved A1. Rask lading, god kafé-pause.</div>
+    <div class="cmeta"><span class="cpill">~150 km fra start</span><span class="cpill">Lad til 80%</span><span class="cpill">~25 min</span></div></div>
+  </div>
+  <div class="cstop">
+    <div class="cicon">⚡</div>
+    <div><div class="cname">2. Arnhem / Nijmegen – Fastned</div>
+    <div class="cdet">Ca. 100 km inn i Nederland. Fastned er sterk i NL. Valgfri stopp avhengig av forbruk.</div>
+    <div class="cmeta"><span class="cpill">~260 km fra start</span><span class="cpill">Valgfri</span><span class="cpill">~15 min</span></div></div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-hd"><div class="ci" style="background:var(--purple-l)">📱</div><div><div class="ct">Apper du trenger</div></div></div>
+  <div style="display:flex;flex-direction:column;gap:8px">
+    <div style="display:flex;align-items:center;gap:11px;padding:9px;background:var(--gray-l);border-radius:9px"><span style="font-size:1.4rem">🗺️</span><div><div style="font-weight:700;font-size:.86rem">ABRP – A Better Route Planner</div><div style="font-size:.74rem;color:var(--gray-m)">Velg Elroq 50. Last ned offline-kart. Beste EV-ruteplanlegger!</div></div></div>
+    <div style="display:flex;align-items:center;gap:11px;padding:9px;background:var(--gray-l);border-radius:9px"><span style="font-size:1.4rem">⚡</span><div><div style="font-weight:700;font-size:.86rem">IONITY</div><div style="font-size:.74rem;color:var(--gray-m)">Raskeste DC i Europa. Abonnement ~€0,35/kWh vs. €0,79 uten.</div></div></div>
+    <div style="display:flex;align-items:center;gap:11px;padding:9px;background:var(--gray-l);border-radius:9px"><span style="font-size:1.4rem">🇳🇱</span><div><div style="font-weight:700;font-size:.86rem">Fastned</div><div style="font-size:.74rem;color:var(--gray-m)">Dominerer i Nederland og tyske motorveier.</div></div></div>
+    <div style="display:flex;align-items:center;gap:11px;padding:9px;background:var(--gray-l);border-radius:9px"><span style="font-size:1.4rem">🇩🇰</span><div><div style="font-weight:700;font-size:.86rem">Recharge (tidl. Fortum)</div><div style="font-size:.74rem;color:var(--gray-m)">God dekning i Danmark.</div></div></div>
+    <div style="display:flex;align-items:center;gap:11px;padding:9px;background:var(--gray-l);border-radius:9px"><span style="font-size:1.4rem">🔌</span><div><div style="font-weight:700;font-size:.86rem">PlugShare</div><div style="font-size:.74rem;color:var(--gray-m)">Brukeranmeldelser av alle ladestasjoner. God backup.</div></div></div>
+  </div>
+  <div class="alert ab" style="margin-top:12px">💳 Kontaktløs Visa/Mastercard fungerer på de fleste IONITY og Fastned uten app.</div>
+</div>
+</div>
+
+<!-- ===== PRAKTISK ===== -->
+<div id="praktisk" class="section">
+<div class="sec-title">📋 Praktisk informasjon</div>
+
+<!-- Color Line detaljert -->
+<div style="background:linear-gradient(135deg,#e8f0fb,#dbeafe);border:2px solid var(--blue);border-radius:var(--r);padding:18px;margin-bottom:14px">
+  <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+    <span style="font-size:1.4rem">🚢</span>
+    <div><div style="font-weight:800;font-size:1rem;color:var(--blue)">Color Line SuperSpeed 2</div>
+    <div style="font-size:.75rem;color:var(--gray-m)">Bookingnr: <strong>CEU1949</strong> · Betalt · Janiche Sjurseth-Eliassen, Nedre Åsvei 45</div></div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+    <div style="background:rgba(255,255,255,.8);border-radius:10px;padding:12px">
+      <div style="font-size:.68rem;font-weight:700;color:var(--gray-m);text-transform:uppercase;margin-bottom:6px">UT · Mandag 6. juli 2026</div>
+      <div style="font-weight:700;color:var(--blue)">Larvik → Hirtshals</div>
+      <div style="font-size:.8rem;margin-top:4px">🕔 Avgang: <strong>17:30</strong><br>🕘 Ankomst: <strong>21:15</strong><br>⏰ Oppmøte senest: <strong>16:30</strong></div>
+      <div style="font-size:.75rem;margin-top:6px;color:var(--gray)">🍽️ 3× kveldsbuffet inkl. (dekk 8)<br>«Catch Me If You Can»<br>🚗 1 liten bil (max 1,95m høyde)</div>
+    </div>
+    <div style="background:rgba(255,255,255,.8);border-radius:10px;padding:12px">
+      <div style="font-size:.68rem;font-weight:700;color:var(--gray-m);text-transform:uppercase;margin-bottom:6px">RETUR · Lørdag 18. juli 2026</div>
+      <div style="font-weight:700;color:var(--blue)">Hirtshals → Larvik</div>
+      <div style="font-size:.8rem;margin-top:4px">🕙 Avgang: <strong>22:15</strong><br>🕑 Ankomst: <strong>02:00 (natt til søn 19/7)</strong><br>⏰ Oppmøte senest: <strong>21:15</strong></div>
+      <div style="font-size:.75rem;margin-top:6px;color:var(--gray)">🚗 1 liten bil<br>💰 10% retur-rabatt inkl.</div>
+    </div>
+  </div>
+  <div class="alert ao" style="margin-top:10px">🍽️ Kveldsbuffeten er <strong>forhåndsbetalt og kan ikke refunderes om bord.</strong> Bufféen stenger 60 min før ankomst, dvs. ~20:15.</div>
+  <div class="alert ab" style="margin-top:8px">⚡ Color Line: Elbiler parkeres på dedikert plass – oppgi dette ved innsjekk. Ikke regn med lademuligheter om bord.</div>
+</div>
+
+<!-- Nødnumre -->
+<div class="card">
+  <div class="card-hd"><div class="ci" style="background:var(--red-l)">🆘</div><div><div class="ct">Nødnumre</div></div></div>
+  <div class="igrid">
+    <div class="icard"><div class="ilabel">🇪🇺 Nød (alle EU-land)</div><div class="ival" style="color:var(--red);font-size:1.4rem">112</div></div>
+    <div class="icard"><div class="ilabel">🇩🇰 Politiet (ikke-akutt)</div><div class="ival" style="color:var(--red)">114</div></div>
+    <div class="icard"><div class="ilabel">🇩🇪 Politiet (ikke-akutt)</div><div class="ival" style="color:var(--red)">110</div></div>
+    <div class="icard"><div class="ilabel">🇳🇱 Politiet (ikke-akutt)</div><div class="ival" style="color:var(--red);font-size:.85rem">0900-8844</div></div>
+    <div class="icard"><div class="ilabel">🇳🇴 Utenrikstjenesten</div><div class="ival" style="font-size:.82rem">+47 23 95 00 00</div><div class="inote">24/7</div></div>
+    <div class="icard"><div class="ilabel">🚗 Skoda veihjelp EU</div><div class="ival" style="font-size:.78rem">+49 800 023 1100</div></div>
+  </div>
+</div>
+
+<!-- Trafikk -->
+<div class="card">
+  <div class="card-hd"><div class="ci" style="background:var(--orange-l)">🚦</div><div><div class="ct">Trafikkregler</div></div></div>
+  <div style="display:flex;flex-direction:column;gap:9px">
+    <div style="padding:10px 12px;background:var(--gray-l);border-radius:9px"><div style="font-weight:700;font-size:.87rem;margin-bottom:2px">🇩🇰 Danmark – fartsgrense motorvei 130 km/t</div><div style="font-size:.79rem;color:var(--gray);line-height:1.5">0,5 promille. Refleksvest i bil. Ingen mobilbruk uten håndfri.</div></div>
+    <div style="padding:10px 12px;background:var(--gray-l);border-radius:9px"><div style="font-weight:700;font-size:.87rem;margin-bottom:2px">🇩🇪 Tyskland – varierende (130 anbefalt)</div><div style="font-size:.79rem;color:var(--gray);line-height:1.5">Refleksvest <strong>påbudt</strong>. Varseltrekant påbudt. Bom på noen veier.</div></div>
+    <div style="padding:10px 12px;background:var(--gray-l);border-radius:9px"><div style="font-weight:700;font-size:.87rem;margin-bottom:2px">🇳🇱 Nederland – motorvei 100 km/t (dagtid)</div><div style="font-size:.79rem;color:var(--gray);line-height:1.5">Syklister alltid hensyn! Mange miljøsoner i byer – EV slipper inn. Moproute på sykkelfelt: forbudt.</div></div>
+    <div style="padding:10px 12px;background:var(--blue-pale);border-radius:9px"><div style="font-weight:700;font-size:.87rem;margin-bottom:2px">💶 Valuta</div><div style="font-size:.79rem;color:var(--gray);line-height:1.5"><strong>Danmark:</strong> Dansk krone (DKK). <strong>Tyskland + Nederland:</strong> Euro (€). Bankkort aksepteres nesten overalt.</div></div>
+  </div>
+</div>
+
+<!-- Miniatur Wunderland -->
+<div class="card">
+  <div class="card-hd"><div class="ci" style="background:var(--purple-l)">🎢</div><div><div class="ct">Hamburg – Bestill på forhånd!</div></div></div>
+  <div style="padding:12px;background:var(--purple-l);border-radius:10px;font-size:.84rem;line-height:1.6">
+    <strong>Miniatur Wunderland</strong> – verdens største modelljernbane i Speicherstadt. Svært populært, lange køer! Bestill billetter på forhånd: <a href="https://www.miniatur-wunderland.de" style="color:var(--purple)">miniatur-wunderland.de</a>. Åpent daglig – plan gjerne 3–4 timer.
+  </div>
+  <div style="padding:12px;background:var(--orange-l);border-radius:10px;font-size:.84rem;line-height:1.6;margin-top:9px">
+    <strong>Anne Frank-huset (Amsterdam)</strong> – forhåndsbestill billetter på <a href="https://www.annefrank.org" style="color:var(--orange)">annefrank.org</a>. Selges ut raskt!
+  </div>
+</div>
+
+</div>
+
+</div><!-- /content -->
+
+<div class="appfooter">Roadtrip Europe 2026 · Sjurseth-Eliassen · Janiche, Jon, Emma &amp; Martine 🚗⚡🇩🇰🇩🇪🇳🇱</div>
+
+<script>
+// MAIN TABS
+function showTab(name, btn) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(name).classList.add('active');
+  btn.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// PERSON TABS
+function showPerson(name, btn) {
+  document.querySelectorAll('.ppanel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.ptab').forEach(t => t.classList.remove('active'));
+  document.getElementById('p-' + name).classList.add('active');
+  btn.classList.add('active');
+}
+
+// DAY ACCORDION
+function toggleDay(hd) {
+  const body = hd.nextElementSibling;
+  const chev = hd.querySelector('.dchev');
+  const open = body.classList.toggle('open');
+  chev.style.transform = open ? 'rotate(180deg)' : '';
+}
+
+// PACKING PROGRESS PER PERSON
+function updatePersonProgress(person) {
+  const all = document.querySelectorAll(`input[data-person="${person}"]`);
+  const checked = document.querySelectorAll(`input[data-person="${person}"]:checked`);
+  const pct = all.length > 0 ? Math.round(checked.length / all.length * 100) : 0;
+  const bar = document.getElementById('bar-' + person);
+  const stats = document.getElementById('stats-' + person);
+  if (bar) bar.style.width = pct + '%';
+  if (stats) stats.textContent = `${checked.length} av ${all.length} pakket (${pct}%)`;
+  // Toggle style
+  all.forEach(cb => {
+    const item = cb.closest('.pitem');
+    item.classList.toggle('checked', cb.checked);
+  });
+}
+
+// Init all
+['janiche','jon','emma','martine','felles'].forEach(p => updatePersonProgress(p));
+</script>
+</body>
+</html>
