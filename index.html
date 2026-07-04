@@ -197,6 +197,7 @@ body{-webkit-tap-highlight-color:transparent;overflow-x:hidden}
   <button class="tab active" onclick="showTab('oversikt',this)">🗺️ Oversikt</button>
   <button class="tab" onclick="showTab('kart',this)">📍 Kart</button>
   <button class="tab" onclick="showTab('dagsplan',this)">📅 Dagsplan</button>
+  <button class="tab" onclick="showTab('forslag',this)">💡 Forslag</button>
   <button class="tab" onclick="showTab('pakkeliste',this)">🎒 Pakkeliste</button>
   <button class="tab" onclick="showTab('lading',this)">⚡ Lading</button>
   <button class="tab" onclick="showTab('okonomi',this)">💰 Økonomi</button>
@@ -476,7 +477,7 @@ body{-webkit-tap-highlight-color:transparent;overflow-x:hidden}
   <div class="day-hd" onclick="toggleDay(this)">
     <div class="dnum">TIR<br>14/7</div>
     <div><div class="dtitle">🏛️ Amsterdam – historie &amp; museer</div>
-    <div class="dmeta">Rijksmuseum · kanaler · Anne Frank · ~90 km</div></div>
+    <div class="dmeta">Rijksmuseum · Van Gogh · Moco · kanaler · ~90 km</div></div>
     <div class="dchev">▼</div>
   </div>
   <div class="day-body">
@@ -484,7 +485,7 @@ body{-webkit-tap-highlight-color:transparent;overflow-x:hidden}
       <li><div class="ttime">Morgen</div><div class="ticon">🚗</div><div class="ttext">Kjør til Amsterdam (~90 km). Parker på P+R i utkanten og ta metro/tram inn – enkelt og rimelig.</div></li>
       <li><div class="ttime">Dagtid</div><div class="ticon">🖼️</div><div class="ttext"><strong>Rijksmuseum</strong> – Rembrandt, gullalderen. <em>Forhåndsbestill!</em> <span class="ttag tag-m">Museum</span></div></li>
       <li><div class="ttime">Ettermid.</div><div class="ticon">🚤</div><div class="ttext">Kanalrundtur gjennom grachtene. Klassisk Amsterdam.</div></li>
-      <li><div class="ttime">Ettermid.</div><div class="ticon">🏠</div><div class="ttext"><strong>Anne Frank-huset</strong> – gripende historie. <em>Forhåndsbestill billetter – selges ut raskt!</em></div></li>
+      <li><div class="ttime">For Emma</div><div class="ticon">🎨</div><div class="ttext"><strong>Moco Museum</strong> (Banksy &amp; moderne kunst) eller <strong>Van Gogh Museum</strong> – Emma elsker kunst! <span class="ttag tag-m">Kunst</span> Se Forslag-fanen for lenker.</div></li>
       <li><div class="ttime">For Jon</div><div class="ticon">🍺</div><div class="ttext"><strong>Brouwerij 't IJ</strong> – ikonisk bryggeri ved vindmølla, med egen IJ IPA + omvisning. Eller Two Chefs Brewing (Green Bullet IPA). <span class="ttag tag-f">IPA</span></div></li>
       <li><div class="ttime">Kveld</div><div class="ticon">🏨</div><div class="ttext">Overnatting Amsterdam (comfort). <span class="ttag tag-h">Hotell</span></div></li>
     </ul>
@@ -521,6 +522,7 @@ body{-webkit-tap-highlight-color:transparent;overflow-x:hidden}
     <ul class="tl">
       <li><div class="ttime">Morgen</div><div class="ticon">🚗</div><div class="ttext">Kjør sørover mot Eindhoven (~130 km). Lad ved behov. <span class="ttag tag-c">Lading</span></div></li>
       <li><div class="ttime">Dagtid</div><div class="ticon">⛪</div><div class="ttext">Underveis: <strong>'s-Hertogenbosch (Den Bosch)</strong> – gotisk St. Jan-katedral &amp; Hieronymus Bosch. <span class="ttag tag-m">Historie</span></div></li>
+      <li><div class="ttime">For Emma</div><div class="ticon">🎨</div><div class="ttext"><strong>Van Abbemuseum</strong> i Eindhoven – et av Europas ledende museer for samtidskunst (Picasso, Chagall, Beuys). <span class="ttag tag-m">Kunst</span></div></li>
       <li><div class="ttime">Kveld</div><div class="ticon">🍽️</div><div class="ttext">Siste felles middag i Eindhoven. <span class="ttag tag-m">Mat</span></div></li>
       <li><div class="ttime">Kveld</div><div class="ticon">🏨</div><div class="ttext">Overnatting Eindhoven-området. Lad til 100% for returen. <span class="ttag tag-h">Hotell</span></div></li>
     </ul>
@@ -583,6 +585,58 @@ body{-webkit-tap-highlight-color:transparent;overflow-x:hidden}
   </div>
 </div>
 
+</div>
+
+<!-- ===== FORSLAG ===== -->
+<div id="forslag" class="section">
+<div class="sec-title">💡 Forslag &amp; booking</div>
+<div class="alert ab" style="margin-bottom:14px">Valgfrie ideer langs ruten – trykk på et forslag for å åpne nettsiden / booke. ↗</div>
+
+<!-- KUNST for Emma -->
+<div class="card">
+  <div class="card-hd"><div class="ci" style="background:var(--purple-l)">🎨</div><div><div class="ct">Kunst &amp; museer – for Emma</div><div class="cs">Emma elsker kunst</div></div></div>
+  <div style="display:flex;flex-direction:column;gap:8px">
+    <a href="https://www.vangoghmuseum.nl/en" target="_blank" rel="noopener" style="display:block;padding:10px 12px;background:var(--gray-l);border-radius:10px;text-decoration:none;color:inherit"><div style="font-weight:700;font-size:.86rem;color:var(--blue)">Van Gogh Museum · Amsterdam ↗</div><div style="font-size:.76rem;color:var(--gray-m);margin-top:2px">Verdens største Van Gogh-samling. Forhåndsbestill.</div></a>
+    <a href="https://www.mocomuseum.com/amsterdam/" target="_blank" rel="noopener" style="display:block;padding:10px 12px;background:var(--gray-l);border-radius:10px;text-decoration:none;color:inherit"><div style="font-weight:700;font-size:.86rem;color:var(--blue)">Moco Museum · Amsterdam ↗</div><div style="font-size:.76rem;color:var(--gray-m);margin-top:2px">Banksy, moderne &amp; street art. Populært blant unge.</div></a>
+    <a href="https://www.stedelijk.nl/en" target="_blank" rel="noopener" style="display:block;padding:10px 12px;background:var(--gray-l);border-radius:10px;text-decoration:none;color:inherit"><div style="font-weight:700;font-size:.86rem;color:var(--blue)">Stedelijk Museum · Amsterdam ↗</div><div style="font-size:.76rem;color:var(--gray-m);margin-top:2px">Moderne og samtidskunst &amp; design.</div></a>
+    <a href="https://www.krollermuller.nl/en" target="_blank" rel="noopener" style="display:block;padding:10px 12px;background:var(--gray-l);border-radius:10px;text-decoration:none;color:inherit"><div style="font-weight:700;font-size:.86rem;color:var(--blue)">Kröller-Müller Museum · Otterlo ↗</div><div style="font-size:.76rem;color:var(--gray-m);margin-top:2px">Van Gogh + skulpturhage i nasjonalparken (dag 13).</div></a>
+    <a href="https://vanabbemuseum.nl/en/" target="_blank" rel="noopener" style="display:block;padding:10px 12px;background:var(--gray-l);border-radius:10px;text-decoration:none;color:inherit"><div style="font-weight:700;font-size:.86rem;color:var(--blue)">Van Abbemuseum · Eindhoven ↗</div><div style="font-size:.76rem;color:var(--gray-m);margin-top:2px">Ledende samtidskunst – der Martines venner bor (dag 16).</div></a>
+    <a href="https://www.kunstpalast.de/en" target="_blank" rel="noopener" style="display:block;padding:10px 12px;background:var(--gray-l);border-radius:10px;text-decoration:none;color:inherit"><div style="font-weight:700;font-size:.86rem;color:var(--blue)">Kunstpalast · Düsseldorf ↗</div><div style="font-size:.76rem;color:var(--gray-m);margin-top:2px">Klassisk til moderne – på hentedagen for Jon.</div></a>
+    <a href="https://www.hamburger-kunsthalle.de/en" target="_blank" rel="noopener" style="display:block;padding:10px 12px;background:var(--gray-l);border-radius:10px;text-decoration:none;color:inherit"><div style="font-weight:700;font-size:.86rem;color:var(--blue)">Hamburger Kunsthalle · Hamburg ↗</div><div style="font-size:.76rem;color:var(--gray-m);margin-top:2px">Stort kunstmuseum (dag 3).</div></a>
+  </div>
+</div>
+
+<!-- MÅ BOOKES -->
+<div class="card">
+  <div class="card-hd"><div class="ci" style="background:var(--orange-l)">🎟️</div><div><div class="ct">Bør bookes på forhånd</div><div class="cs">Populært i juli – sikre plass</div></div></div>
+  <div style="display:flex;flex-direction:column;gap:8px">
+    <a href="https://www.paardensportcentrumepe.nl/en/" target="_blank" rel="noopener" style="display:block;padding:10px 12px;background:var(--green-l);border-radius:10px;text-decoration:none;color:inherit"><div style="font-weight:700;font-size:.86rem;color:var(--green)">🐴 Emmas ridetur · Paardensportcentrum Epe ↗</div><div style="font-size:.76rem;color:var(--gray-m);margin-top:2px">Guidet skogstur på Veluwe (erfarne ryttere). Ring/mail for å booke: +31 648 101 082.</div></a>
+    <a href="https://www.denieuweheuvel.com/" target="_blank" rel="noopener" style="display:block;padding:10px 12px;background:var(--green-l);border-radius:10px;text-decoration:none;color:inherit"><div style="font-weight:700;font-size:.86rem;color:var(--green)">🐴 Alternativ ridning · De Nieuwe Heuvel ↗</div><div style="font-size:.76rem;color:var(--gray-m);margin-top:2px">Rideskole midt i Veluwe.</div></a>
+    <a href="https://www.miniatur-wunderland.com/visit/tickets/" target="_blank" rel="noopener" style="display:block;padding:10px 12px;background:var(--gray-l);border-radius:10px;text-decoration:none;color:inherit"><div style="font-weight:700;font-size:.86rem;color:var(--blue)">🎢 Miniatur Wunderland · Hamburg ↗</div><div style="font-size:.76rem;color:var(--gray-m);margin-top:2px">Lange køer – kjøp tidsbillett online (dag 3).</div></a>
+    <a href="https://www.rijksmuseum.nl/en" target="_blank" rel="noopener" style="display:block;padding:10px 12px;background:var(--gray-l);border-radius:10px;text-decoration:none;color:inherit"><div style="font-weight:700;font-size:.86rem;color:var(--blue)">🏛️ Rijksmuseum · Amsterdam ↗</div><div style="font-size:.76rem;color:var(--gray-m);margin-top:2px">Forhåndsbestill tidsluke (dag 14).</div></a>
+    <a href="https://www.hogeveluwe.nl/en" target="_blank" rel="noopener" style="display:block;padding:10px 12px;background:var(--gray-l);border-radius:10px;text-decoration:none;color:inherit"><div style="font-weight:700;font-size:.86rem;color:var(--blue)">🌲 Nasjonalpark De Hoge Veluwe ↗</div><div style="font-size:.76rem;color:var(--gray-m);margin-top:2px">Inngang + Kröller-Müller. Gratis hvite sykler (dag 13).</div></a>
+    <a href="https://www.oostwegelcollection.nl/chateau-st-gerlach/en/" target="_blank" rel="noopener" style="display:block;padding:10px 12px;background:var(--purple-l);border-radius:10px;text-decoration:none;color:inherit"><div style="font-weight:700;font-size:.86rem;color:var(--purple)">🏰 Château St. Gerlach (slott) · Valkenburg ↗</div><div style="font-size:.76rem;color:var(--gray-m);margin-top:2px">5★ slottshotell med hager. Book tidlig (dag 11–12).</div></a>
+  </div>
+</div>
+
+<!-- SHOPPING -->
+<div class="card">
+  <div class="card-hd"><div class="ci" style="background:var(--blue-pale)">🛍️</div><div><div class="ct">Shopping</div></div></div>
+  <div style="display:flex;flex-direction:column;gap:8px">
+    <a href="https://www.mcarthurglen.com/en/outlets/nl/designer-outlet-roermond/" target="_blank" rel="noopener" style="display:block;padding:10px 12px;background:var(--gray-l);border-radius:10px;text-decoration:none;color:inherit"><div style="font-weight:700;font-size:.86rem;color:var(--blue)">Designer Outlet Roermond ↗</div><div style="font-size:.76rem;color:var(--gray-m);margin-top:2px">200+ merker (Adidas, Gucci, Prada m.fl.), midt i Limburg – nær Chloe/slottet (dag 11–12).</div></a>
+  </div>
+  <div class="alert ao" style="margin-top:10px">👕 <strong>Y-3-klær:</strong> Roermond har ingen egen Y-3-butikk, men <strong>Adidas-outleten</strong> der fører av og til Y-3-linjen – verdt et besøk. Ekte Y-3/Yohji Yamamoto finnes best i <strong>flaggskipbutikk i Antwerpen</strong> (~1,5 t fra Eindhoven). Ring Roermond på forhånd for å høre om de har Y-3 nå.</div>
+</div>
+
+<!-- ØL for Jon -->
+<div class="card">
+  <div class="card-hd"><div class="ci" style="background:var(--orange-l)">🍺</div><div><div class="ct">Øl &amp; bryggerier – for Jon</div><div class="cs">IPA &amp; craft</div></div></div>
+  <div style="display:flex;flex-direction:column;gap:8px">
+    <a href="https://www.brouwerijhetij.nl/en" target="_blank" rel="noopener" style="display:block;padding:10px 12px;background:var(--gray-l);border-radius:10px;text-decoration:none;color:inherit"><div style="font-weight:700;font-size:.86rem;color:var(--blue)">Brouwerij 't IJ · Amsterdam ↗</div><div style="font-size:.76rem;color:var(--gray-m);margin-top:2px">Ikonisk bryggeri ved vindmølla, IJ IPA + omvisning.</div></a>
+    <a href="https://www.twochefsbrewing.com" target="_blank" rel="noopener" style="display:block;padding:10px 12px;background:var(--gray-l);border-radius:10px;text-decoration:none;color:inherit"><div style="font-weight:700;font-size:.86rem;color:var(--blue)">Two Chefs Brewing · Amsterdam ↗</div><div style="font-size:.76rem;color:var(--gray-m);margin-top:2px">Green Bullet IPA &amp; masse craft.</div></a>
+    <a href="https://www.uerige.de/en/" target="_blank" rel="noopener" style="display:block;padding:10px 12px;background:var(--gray-l);border-radius:10px;text-decoration:none;color:inherit"><div style="font-weight:700;font-size:.86rem;color:var(--blue)">Uerige · Düsseldorf Altstadt ↗</div><div style="font-size:.76rem;color:var(--gray-m);margin-top:2px">Ferskt Altbier fra fatet (dag 5).</div></a>
+  </div>
+</div>
 </div>
 
 <!-- ===== PAKKELISTE (per person) ===== -->
@@ -1209,7 +1263,7 @@ body{-webkit-tap-highlight-color:transparent;overflow-x:hidden}
     <strong>Miniatur Wunderland</strong> – verdens største modelljernbane i Speicherstadt. Svært populært, lange køer! Bestill billetter på forhånd: <a href="https://www.miniatur-wunderland.de" style="color:var(--purple)">miniatur-wunderland.de</a>. Åpent daglig – plan gjerne 3–4 timer.
   </div>
   <div style="padding:12px;background:var(--orange-l);border-radius:10px;font-size:.84rem;line-height:1.6;margin-top:9px">
-    <strong>Anne Frank-huset (Amsterdam)</strong> – forhåndsbestill billetter på <a href="https://www.annefrank.org" style="color:var(--orange)">annefrank.org</a>. Selges ut raskt!
+    📌 Alle aktiviteter som bør bookes på forhånd – med lenker – finner du samlet i <strong>💡 Forslag-fanen</strong>.
   </div>
 </div>
 
