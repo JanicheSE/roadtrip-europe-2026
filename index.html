@@ -210,6 +210,15 @@ body{-webkit-tap-highlight-color:transparent;overflow-x:hidden}
 <!-- ===== OVERSIKT ===== -->
 <div id="oversikt" class="section active">
 
+  <!-- I DAG -->
+  <div id="today-card" style="background:linear-gradient(135deg,var(--blue) 0%,#0d3070 100%);color:#fff;border-radius:var(--r);padding:16px 16px 18px;margin-bottom:16px;box-shadow:var(--shadow)">
+    <div style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.8px;opacity:.85" id="today-date">I dag</div>
+    <div style="font-size:1.15rem;font-weight:800;margin:3px 0 2px" id="today-title">—</div>
+    <div style="font-size:.85rem;opacity:.9;line-height:1.5" id="today-plan"></div>
+    <div id="today-wx" style="display:flex;gap:12px;flex-wrap:wrap;margin-top:11px;font-size:.82rem"></div>
+    <div id="today-remind" style="margin-top:11px;font-size:.82rem;background:rgba(255,255,255,.16);border-radius:9px;padding:9px 11px;line-height:1.5"></div>
+  </div>
+
   <!-- Ferje-høydepunkt -->
   <div class="ferry-box">
     <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
@@ -639,8 +648,9 @@ body{-webkit-tap-highlight-color:transparent;overflow-x:hidden}
   <div class="card-hd"><div class="ci" style="background:var(--blue-pale)">🛍️</div><div><div class="ct">Shopping</div></div></div>
   <div style="display:flex;flex-direction:column;gap:8px">
     <a href="https://www.mcarthurglen.com/en/outlets/nl/designer-outlet-roermond/" target="_blank" rel="noopener" style="display:block;padding:10px 12px;background:var(--gray-l);border-radius:10px;text-decoration:none;color:inherit"><div style="font-weight:700;font-size:.86rem;color:var(--blue)">Designer Outlet Roermond ↗</div><div style="font-size:.76rem;color:var(--gray-m);margin-top:2px">200+ merker (Adidas, Gucci, Prada m.fl.), midt i Limburg – nær Chloe/slottet (dag 11–12).</div></a>
+    <a href="https://www.google.com/maps/search/Yohji+Yamamoto+Nationalestraat+32+Antwerpen" target="_blank" rel="noopener" style="display:block;padding:10px 12px;background:var(--purple-l);border-radius:10px;text-decoration:none;color:inherit"><div style="font-weight:700;font-size:.86rem;color:var(--purple)">Yohji Yamamoto · Antwerpen ↗</div><div style="font-size:.76rem;color:var(--gray-m);margin-top:2px">Y-3/Yohji flaggskip i motekvarteret (Nationalestraat 32). ~1,5 t fra Eindhoven/Limburg.</div></a>
   </div>
-  <div class="alert ao" style="margin-top:10px">👕 <strong>Y-3-klær:</strong> Roermond har ingen egen Y-3-butikk, men <strong>Adidas-outleten</strong> der fører av og til Y-3-linjen – verdt et besøk. Ekte Y-3/Yohji Yamamoto finnes best i <strong>flaggskipbutikk i Antwerpen</strong> (~1,5 t fra Eindhoven). Ring Roermond på forhånd for å høre om de har Y-3 nå.</div>
+  <div class="alert ao" style="margin-top:10px">👕 <strong>Y-3-klær:</strong> Roermond har ingen egen Y-3-butikk (Adidas-outleten fører den av og til). For ekte Y-3/Yohji Yamamoto er <strong>flaggskipet i Antwerpen</strong> beste bet – men <strong>ring/sjekk at den er åpen</strong> før dere drar (det har vært snakk om nedleggelse). Kan gjøres som dagstur fra Limburg eller Eindhoven.</div>
 </div>
 
 <!-- ØL for Jon -->
@@ -650,6 +660,30 @@ body{-webkit-tap-highlight-color:transparent;overflow-x:hidden}
     <a href="https://www.brouwerijhetij.nl/en" target="_blank" rel="noopener" style="display:block;padding:10px 12px;background:var(--gray-l);border-radius:10px;text-decoration:none;color:inherit"><div style="font-weight:700;font-size:.86rem;color:var(--blue)">Brouwerij 't IJ · Amsterdam ↗</div><div style="font-size:.76rem;color:var(--gray-m);margin-top:2px">Ikonisk bryggeri ved vindmølla, IJ IPA + omvisning.</div></a>
     <a href="https://www.twochefsbrewing.com" target="_blank" rel="noopener" style="display:block;padding:10px 12px;background:var(--gray-l);border-radius:10px;text-decoration:none;color:inherit"><div style="font-weight:700;font-size:.86rem;color:var(--blue)">Two Chefs Brewing · Amsterdam ↗</div><div style="font-size:.76rem;color:var(--gray-m);margin-top:2px">Green Bullet IPA &amp; masse craft.</div></a>
     <a href="https://www.uerige.de/en/" target="_blank" rel="noopener" style="display:block;padding:10px 12px;background:var(--gray-l);border-radius:10px;text-decoration:none;color:inherit"><div style="font-weight:700;font-size:.86rem;color:var(--blue)">Uerige · Düsseldorf Altstadt ↗</div><div style="font-size:.76rem;color:var(--gray-m);margin-top:2px">Ferskt Altbier fra fatet (dag 5).</div></a>
+  </div>
+</div>
+
+<!-- RESTAURANTER -->
+<div class="card">
+  <div class="card-hd"><div class="ci" style="background:var(--green-l)">🍽️</div><div><div class="ct">Restauranttips (familievennlig)</div><div class="cs">Trykk for kart &amp; åpningstider</div></div></div>
+  <div style="display:flex;flex-direction:column;gap:8px">
+    <a href="https://www.google.com/maps/search/familievennlig+restaurant+Hamburg+Speicherstadt" target="_blank" rel="noopener" style="display:block;padding:10px 12px;background:var(--gray-l);border-radius:10px;text-decoration:none;color:inherit"><div style="font-weight:700;font-size:.86rem;color:var(--blue)">🇩🇪 Hamburg ↗</div><div style="font-size:.76rem;color:var(--gray-m);margin-top:2px">Bullerei (Sternschanze), Block House (grill), Hard Rock Cafe ved havna.</div></a>
+    <a href="https://www.google.com/maps/search/restaurant+D%C3%BCsseldorf+Altstadt+familie" target="_blank" rel="noopener" style="display:block;padding:10px 12px;background:var(--gray-l);border-radius:10px;text-decoration:none;color:inherit"><div style="font-weight:700;font-size:.86rem;color:var(--blue)">🇩🇪 Düsseldorf ↗</div><div style="font-size:.76rem;color:var(--gray-m);margin-top:2px">Brauerei zum Schlüssel (Altbier + mat), pizzeriaer i Altstadt.</div></a>
+    <a href="https://www.google.com/maps/search/restaurant+Valkenburg+Limburg+familie" target="_blank" rel="noopener" style="display:block;padding:10px 12px;background:var(--gray-l);border-radius:10px;text-decoration:none;color:inherit"><div style="font-weight:700;font-size:.86rem;color:var(--blue)">🇳🇱 Limburg / Valkenburg ↗</div><div style="font-size:.76rem;color:var(--gray-m);margin-top:2px">Château St. Gerlach (fine dining), pannenkoekenhuis, brasserier i Valkenburg.</div></a>
+    <a href="https://www.google.com/maps/search/familievennlig+restaurant+Amsterdam+centrum" target="_blank" rel="noopener" style="display:block;padding:10px 12px;background:var(--gray-l);border-radius:10px;text-decoration:none;color:inherit"><div style="font-weight:700;font-size:.86rem;color:var(--blue)">🇳🇱 Amsterdam ↗</div><div style="font-size:.76rem;color:var(--gray-m);margin-top:2px">The Pancake Bakery, Moeders (nederlandsk), Pllek (NDSM, avslappet).</div></a>
+    <a href="https://www.google.com/maps/search/restaurant+Eindhoven+centrum+familie" target="_blank" rel="noopener" style="display:block;padding:10px 12px;background:var(--gray-l);border-radius:10px;text-decoration:none;color:inherit"><div style="font-weight:700;font-size:.86rem;color:var(--blue)">🇳🇱 Eindhoven ↗</div><div style="font-size:.76rem;color:var(--gray-m);margin-top:2px">Down Town Gourmet Market (food hall), Radio Royaal (industri-sjarm).</div></a>
+  </div>
+</div>
+
+<!-- REGNVÆR-BACKUP -->
+<div class="card">
+  <div class="card-hd"><div class="ci" style="background:var(--blue-pale)">🌧️</div><div><div class="ct">Regnvær-backup (innendørs)</div><div class="cs">Sjekk Vær-fanen – planer for grå dager</div></div></div>
+  <div style="display:flex;flex-direction:column;gap:8px">
+    <a href="https://www.miniatur-wunderland.com/" target="_blank" rel="noopener" style="display:block;padding:10px 12px;background:var(--gray-l);border-radius:10px;text-decoration:none;color:inherit"><div style="font-weight:700;font-size:.86rem;color:var(--blue)">🇩🇪 Hamburg ↗</div><div style="font-size:.76rem;color:var(--gray-m);margin-top:2px">Miniatur Wunderland, Hamburger Kunsthalle, Dialog im Dunkeln.</div></a>
+    <a href="https://www.aquazoo.duesseldorf.de/" target="_blank" rel="noopener" style="display:block;padding:10px 12px;background:var(--gray-l);border-radius:10px;text-decoration:none;color:inherit"><div style="font-weight:700;font-size:.86rem;color:var(--blue)">🇩🇪 Düsseldorf ↗</div><div style="font-size:.76rem;color:var(--gray-m);margin-top:2px">Aquazoo Löbbecke, Kunstpalast (museum).</div></a>
+    <a href="https://www.thermae2000.nl/en/" target="_blank" rel="noopener" style="display:block;padding:10px 12px;background:var(--gray-l);border-radius:10px;text-decoration:none;color:inherit"><div style="font-weight:700;font-size:.86rem;color:var(--blue)">🇳🇱 Limburg / Valkenburg ↗</div><div style="font-size:.76rem;color:var(--gray-m);margin-top:2px">Fluweelengrot/Gemeentegrot (grotter!), Thermae 2000 (spa), Outlet Roermond.</div></a>
+    <a href="https://www.nemosciencemuseum.nl/en/" target="_blank" rel="noopener" style="display:block;padding:10px 12px;background:var(--gray-l);border-radius:10px;text-decoration:none;color:inherit"><div style="font-weight:700;font-size:.86rem;color:var(--blue)">🇳🇱 Amsterdam ↗</div><div style="font-size:.76rem;color:var(--gray-m);margin-top:2px">NEMO Science Museum, kunstmuseene (Van Gogh/Rijks/Moco), Body Worlds.</div></a>
+    <a href="https://www.dafmuseum.nl/en/" target="_blank" rel="noopener" style="display:block;padding:10px 12px;background:var(--gray-l);border-radius:10px;text-decoration:none;color:inherit"><div style="font-weight:700;font-size:.86rem;color:var(--blue)">🇳🇱 Eindhoven ↗</div><div style="font-size:.76rem;color:var(--gray-m);margin-top:2px">Van Abbemuseum (kunst), Philips Museum, DAF Museum (biler).</div></a>
   </div>
 </div>
 </div>
@@ -1316,6 +1350,7 @@ var TRIP_PLACES = [
  {n:'De Hoge Veluwe', c:[52.0980,5.8180], col:'#1a4fa0', d:'🎨 Kröller-Müller museum + skulpturhage · 13/7'},
  {n:'Amsterdam', c:[52.3676,4.9041], col:'#1a4fa0', d:'🏛️ 14–15/7 · Rijksmuseum, kanaler'},
  {n:'Eindhoven', c:[51.4416,5.4697], col:'#d4650a', d:'🏙️ Martine blir hos venner fra 17/7'},
+ {n:'Antwerpen (valgfri)', c:[51.2194,4.4025], col:'#1a7a4a', d:'🛍️ Yohji Yamamoto / Y-3 flaggskip · valgfri dagstur ~1,5t'},
  {n:'Birmingham', c:[52.4862,-1.8904], col:'#d4650a', d:'✈️ Martine: easyJet fra Amsterdam 23/7 21:35→21:50'},
  {n:'London-Gatwick', c:[51.1537,-0.1821], col:'#7c3aed', d:'✈️ Martine hjem: Norwegian DY1311 til Oslo 26/7 16:25'}
 ];
@@ -1471,6 +1506,68 @@ function wxFetch(lat, lon, label){
   }).catch(function(){ st.textContent = 'Kunne ikke hente vær (sjekk nett). Prøv igjen.'; });
 }
 
+// I DAG
+var TRIP_DAYS = [
+ {d:'2026-07-06', t:'Slependen → Larvik → ferje → Aalborg', lat:57.05, lon:9.92, plan:'Kjør til Larvik, ferje 17:30 → Hirtshals 21:15, videre til Aalborg (hotell booket).', husk:'CEU1949-billett + pass klare. Oppmøte Larvik 16:30. Depositum-kort til Aalborg.'},
+ {d:'2026-07-07', t:'Aalborg → Hamburg', lat:53.55, lon:9.99, plan:'Frokost, utsjekk innen 12:00, kjør til Hamburg (~350 km, lad i Kolding).', husk:'Utsjekk innen 12:00. Lad Elroq før avreise.'},
+ {d:'2026-07-08', t:'Hamburg – museer', lat:53.55, lon:9.99, plan:'Miniatur Wunderland, Speicherstadt, Kunsthalle.', husk:'Book Miniatur Wunderland-billett (lange køer!).'},
+ {d:'2026-07-09', t:'Hamburg → Ruhr / Düsseldorf', lat:51.29, lon:6.77, plan:'Kjør til Düsseldorf-området (~420 km). Evt. Emma + Tyler i Herne.', husk:'Overnatt nær flyplassen – Jon lander 09:30 i morgen!'},
+ {d:'2026-07-10', t:'Hent Jon (DUS 09:30) 🎉', lat:51.29, lon:6.77, plan:'Hent Jon på Düsseldorf 09:30 (YURUR3). Altstadt & bryggeri. Nå er dere fire!', husk:'Vær ved DUS ca. 09:15. Kortidsparkering P3.'},
+ {d:'2026-07-11', t:'Til Limburg · Martine → Chloe', lat:51.33, lon:5.98, plan:'Kjør til Limburg. Lever Martine hos Chloe (Helden). Slott + Kasteeltuinen Arcen.', husk:'Avtal henting av Martine i morgen kveld.'},
+ {d:'2026-07-12', t:'Limburg · hent Martine', lat:51.33, lon:5.98, plan:'Roermond / Designer Outlet. Hent Martine hos Chloe på kvelden.', husk:'Hent Martine i Helden.'},
+ {d:'2026-07-13', t:'De Hoge Veluwe · Kröller-Müller', lat:52.10, lon:5.82, plan:'Kröller-Müller + skulpturhage. Emma: ridning på Veluwe.', husk:'Book Emmas ridetur (Paardensportcentrum Epe).'},
+ {d:'2026-07-14', t:'Amsterdam', lat:52.37, lon:4.90, plan:'Rijksmuseum, kanaltur. Emma: Moco/Van Gogh. Jon: Brouwerij ’t IJ.', husk:'Book Rijksmuseum-tidsluke.'},
+ {d:'2026-07-15', t:'Amsterdam dag 2', lat:52.37, lon:4.90, plan:'Van Gogh / Zaanse Schans / Utrecht – velg selv.', husk:'Nyt dagen!'},
+ {d:'2026-07-16', t:'Til Eindhoven · siste kveld samlet', lat:51.44, lon:5.47, plan:'Den Bosch-katedral, Van Abbemuseum (Emma). Siste felles middag.', husk:'Lad til 100% for returen.'},
+ {d:'2026-07-17', t:'Martine blir · retur starter', lat:53.08, lon:8.80, plan:'Martine blir i Eindhoven. Janiche, Emma & Jon kjører nordover (~450 km).', husk:'Sjekk Martines HRT (til 27/7) + togbillett Birmingham→Gatwick.'},
+ {d:'2026-07-18', t:'Til Hirtshals · ferje hjem', lat:57.59, lon:9.96, plan:'Kjør til Hirtshals. Ferje 22:15 → Larvik. Oppmøte 21:15.', husk:'Lad godt i Hirtshals før ferja!'},
+ {d:'2026-07-19', t:'Hjem 🏠', lat:59.05, lon:10.04, plan:'Ankomst Larvik 02:00, kjør hjem til Nedre Åsvei 45 (~110 km).', husk:'Kjør forsiktig – natt. Sett bilen til lading hjemme.'}
+];
+function todayRender(){
+  var dateEl=document.getElementById('today-date'); if(!dateEl) return;
+  var titEl=document.getElementById('today-title'), planEl=document.getElementById('today-plan'), wxEl=document.getElementById('today-wx'), remEl=document.getElementById('today-remind');
+  var now=new Date();
+  var todayStr=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0')+'-'+String(now.getDate()).padStart(2,'0');
+  var day=null, idx=-1;
+  TRIP_DAYS.forEach(function(x,i){ if(x.d===todayStr){ day=x; idx=i; } });
+  if(day){
+    dateEl.textContent='I dag · '+now.toLocaleDateString('no-NO',{weekday:'long',day:'numeric',month:'long'})+' · Dag '+(idx+1)+' av 14';
+    titEl.textContent=day.t;
+    planEl.textContent=day.plan;
+    remEl.innerHTML='📌 <strong>Husk:</strong> '+day.husk;
+    todayWx(day.lat, day.lon);
+  } else {
+    wxEl.innerHTML='';
+    var start=new Date('2026-07-06T00:00');
+    if(now<start){
+      var days=Math.ceil((start-now)/86400000);
+      dateEl.textContent='Nedtelling';
+      titEl.textContent='🧳 '+days+' dag'+(days===1?'':'er')+' til avreise!';
+      planEl.textContent='Turen starter mandag 6. juli. Sjekk pakkelista og at alt er booket.';
+      remEl.innerHTML='📌 <strong>Husk:</strong> Pass, CEU1949-billett, hotellbekreftelser – og lad bilen.';
+    } else {
+      dateEl.textContent='Etter turen';
+      titEl.textContent='🏠 Velkommen hjem!';
+      planEl.textContent='Håper dere hadde en fantastisk tur. 💙';
+      remEl.innerHTML='📌 Martine: HRT til 27/7 og hjemflyet fra Gatwick 26/7.';
+    }
+  }
+}
+function todayWx(lat, lon){
+  var wxEl=document.getElementById('today-wx'); if(!wxEl) return;
+  wxEl.innerHTML='<span style="opacity:.8">Henter vær …</span>';
+  var now=new Date();
+  var todayStr=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0')+'-'+String(now.getDate()).padStart(2,'0');
+  var url='https://api.open-meteo.com/v1/forecast?latitude='+lat+'&longitude='+lon+'&hourly=temperature_2m&daily=weather_code,precipitation_probability_max&timezone=auto&forecast_days=1';
+  fetch(url).then(function(r){return r.json();}).then(function(d){
+    var hMap={}; (d.hourly.time||[]).forEach(function(t,i){ hMap[t]=d.hourly.temperature_2m[i]; });
+    function ht(hh){ var v=hMap[todayStr+'T'+hh+':00']; return v==null?'–':Math.round(v)+'°'; }
+    var ic=wxDesc(d.daily.weather_code[0]);
+    var rain=d.daily.precipitation_probability_max?d.daily.precipitation_probability_max[0]:null;
+    wxEl.innerHTML='<span>'+ic[0]+' '+ic[1]+'</span><span>🌅 '+ht('08')+'</span><span>☀️ '+ht('13')+'</span><span>🌆 '+ht('19')+'</span>'+(rain!=null?'<span>🌧️ '+rain+'%</span>':'');
+  }).catch(function(){ wxEl.innerHTML='<span style="opacity:.8">Vær utilgjengelig akkurat nå</span>'; });
+}
+
 // MAIN TABS
 function showTab(name, btn) {
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
@@ -1519,6 +1616,7 @@ function updatePersonProgress(person) {
 ['janiche','jon','emma','martine','felles'].forEach(p => updatePersonProgress(p));
 ecoRender();
 wxInit();
+todayRender();
 </script>
 </body>
 </html>
