@@ -199,6 +199,7 @@ body{-webkit-tap-highlight-color:transparent;overflow-x:hidden}
   <button class="tab" onclick="showTab('dagsplan',this)">📅 Dagsplan</button>
   <button class="tab" onclick="showTab('pakkeliste',this)">🎒 Pakkeliste</button>
   <button class="tab" onclick="showTab('lading',this)">⚡ Lading</button>
+  <button class="tab" onclick="showTab('okonomi',this)">💰 Økonomi</button>
   <button class="tab" onclick="showTab('praktisk',this)">📋 Praktisk</button>
 </div>
 
@@ -302,7 +303,7 @@ body{-webkit-tap-highlight-color:transparent;overflow-x:hidden}
     <span class="mleg"><span class="dot" style="background:#d4650a"></span>Venner &amp; besøk</span>
     <span class="mleg"><span class="dot" style="background:#7c3aed">✈</span>Flyplass</span>
   </div>
-  <div class="alert ab" style="margin-top:12px">💡 Trykk på en markør for detaljer. Kartet trenger nett for å laste – last siden på forhånd om dere skal være offline.</div>
+  <div class="alert ab" style="margin-top:12px">💡 Trykk på en markør for detaljer. Blå = kjørerute · oransje = venner/besøk · lilla = flyplass.</div>
 </div>
 </div>
 
@@ -407,6 +408,7 @@ body{-webkit-tap-highlight-color:transparent;overflow-x:hidden}
       <li><div class="ttime">09:30</div><div class="ticon">✈️</div><div class="ttext"><strong>Jon lander Düsseldorf lufthavn (DUS)</strong> – SAS YURUR3 fra Oslo via København. <span class="ttag tag-f">Henting</span> Kortidsparkering P3 er nærmest ankomsthallen. Full flyinfo i Praktisk-fanen.</div></li>
       <li><div class="ttime">Formiddag</div><div class="ticon">👋</div><div class="ttext"><strong>Emma til Tyler</strong> i Herne Wanne-Eickel (~40 km fra DUS). <span class="ttag tag-f">Venner</span></div></li>
       <li><div class="ttime">Lunsj</div><div class="ticon">🍺</div><div class="ttext">Samling i Düsseldorf Altstadt – «verdens lengste bar». <span class="ttag tag-m">Mat</span></div></li>
+      <li><div class="ttime">Ettermid.</div><div class="ticon">🍻</div><div class="ttext"><strong>For Jon:</strong> Altstadt-bryggeriene Uerige &amp; Füchschen (ferskt Altbier fra fatet). <span class="ttag tag-f">Øl</span></div></li>
       <li><div class="ttime">Ettermid.</div><div class="ticon">🏛️</div><div class="ttext">Rhinpromenaden &amp; Altstadt (historie, koselig). Rolig comfort-dag.</div></li>
       <li><div class="ttime">Kveld</div><div class="ticon">🏨</div><div class="ttext">Overnatting Düsseldorf/Ruhr. <span class="ttag tag-h">Hotell</span></div></li>
     </ul>
@@ -427,7 +429,7 @@ body{-webkit-tap-highlight-color:transparent;overflow-x:hidden}
       <li><div class="ttime">Morgen</div><div class="ticon">🚗</div><div class="ttext">Kjør fra Ruhr inn i Nederland mot Helden (~90 km). Kort etappe – ingen lading nødvendig.</div></li>
       <li><div class="ttime">~12:00</div><div class="ticon">👋</div><div class="ttext"><strong>Lever Martine hos Chloe i Helden.</strong> <span class="ttag tag-f">Venner</span> Hun bor der til 12/7. Avtal hentetidspunkt i morgen.</div></li>
       <li><div class="ttime">Ettermid.</div><div class="ticon">🌷</div><div class="ttext"><strong>Kasteeltuinen Arcen</strong> (slottshager ved Venlo) – historie + praktfulle hager. Midt i blinken for deg, Janiche! <span class="ttag tag-m">Hage</span></div></li>
-      <li><div class="ttime">Kveld</div><div class="ticon">🏨</div><div class="ttext">Overnatting Venlo/Roermond-området. <span class="ttag tag-h">Hotell</span></div></li>
+      <li><div class="ttime">Kveld</div><div class="ticon">🏰</div><div class="ttext"><strong>Overnatting: Château St. Gerlach</strong> (Valkenburg) – slottshotell med hager! <span class="ttag tag-h">Slott</span> Rimeligere: Van der Valk Venlo. Se Praktisk-fanen.</div></li>
     </ul>
   </div>
 </div>
@@ -463,6 +465,7 @@ body{-webkit-tap-highlight-color:transparent;overflow-x:hidden}
       <li><div class="ttime">Morgen</div><div class="ticon">🚗</div><div class="ttext">Kjør mot Otterlo/Arnhem (~130 km). Lad ved behov underveis. <span class="ttag tag-c">Lading</span></div></li>
       <li><div class="ttime">Dagtid</div><div class="ticon">🖼️</div><div class="ttext"><strong>Kröller-Müller Museum</strong> – nest største Van Gogh-samling + stor skulpturhage, midt i nasjonalparken. Museum + hage + natur! <span class="ttag tag-m">Museum</span></div></li>
       <li><div class="ttime">Ettermid.</div><div class="ticon">🚲</div><div class="ttext">Gratis hvite sykler i parken – rolig og fint. Comfort-tempo.</div></li>
+      <li><div class="ttime">For Emma</div><div class="ticon">🐴</div><div class="ttext"><strong>Ridning i Veluwe!</strong> Paardensportcentrum Epe eller De Nieuwe Heuvel tilbyr guidede skogsturer for erfarne ryttere (500 km rideveier). <span class="ttag tag-f">Hest</span> Ring i forveien og book. Emma har ridd siden hun var 4 – perfekt!</div></li>
       <li><div class="ttime">Kveld</div><div class="ticon">🏨</div><div class="ttext">Overnatting Arnhem/Apeldoorn. (Tips: <strong>Paleis Het Loo</strong> med barokkhage i nærheten!) <span class="ttag tag-h">Hotell</span></div></li>
     </ul>
   </div>
@@ -482,6 +485,7 @@ body{-webkit-tap-highlight-color:transparent;overflow-x:hidden}
       <li><div class="ttime">Dagtid</div><div class="ticon">🖼️</div><div class="ttext"><strong>Rijksmuseum</strong> – Rembrandt, gullalderen. <em>Forhåndsbestill!</em> <span class="ttag tag-m">Museum</span></div></li>
       <li><div class="ttime">Ettermid.</div><div class="ticon">🚤</div><div class="ttext">Kanalrundtur gjennom grachtene. Klassisk Amsterdam.</div></li>
       <li><div class="ttime">Ettermid.</div><div class="ticon">🏠</div><div class="ttext"><strong>Anne Frank-huset</strong> – gripende historie. <em>Forhåndsbestill billetter – selges ut raskt!</em></div></li>
+      <li><div class="ttime">For Jon</div><div class="ticon">🍺</div><div class="ttext"><strong>Brouwerij 't IJ</strong> – ikonisk bryggeri ved vindmølla, med egen IJ IPA + omvisning. Eller Two Chefs Brewing (Green Bullet IPA). <span class="ttag tag-f">IPA</span></div></li>
       <li><div class="ttime">Kveld</div><div class="ticon">🏨</div><div class="ttext">Overnatting Amsterdam (comfort). <span class="ttag tag-h">Hotell</span></div></li>
     </ul>
   </div>
@@ -533,7 +537,7 @@ body{-webkit-tap-highlight-color:transparent;overflow-x:hidden}
   </div>
   <div class="day-body">
     <ul class="tl">
-      <li><div class="ttime">Morgen</div><div class="ticon">💜</div><div class="ttext"><strong>Martine blir igjen hos vennene sine i Eindhoven.</strong> <span class="ttag tag-f">Venner</span> Ha en fin tid – avtal hjemreise for henne separat!</div></li>
+      <li><div class="ttime">Morgen</div><div class="ticon">💜</div><div class="ttext"><strong>Martine blir igjen hos vennene sine i Eindhoven</strong>, og reiser videre til <strong>Birmingham</strong> ✈️ etterpå. <span class="ttag tag-f">Venner</span> Sjekk at hun har HRT-medisiner til <strong>27. juli</strong>! (Flybillett legges inn når du sender den.)</div></li>
       <li><div class="ttime">~10:00</div><div class="ticon">🚗</div><div class="ttext">Janiche, Emma &amp; Jon kjører nordover. A67/A1 mot Tyskland.</div></li>
       <li><div class="ttime">Underveis</div><div class="ticon">⚡</div><div class="ttext">Ladetopper: Ruhr-området + Osnabrück (~2 stopp). <span class="ttag tag-c">Lading</span></div></li>
       <li><div class="ttime">Kveld</div><div class="ticon">🏨</div><div class="ttext">Overnatting Bremen/Hamburg-området. Lad til 100%. <span class="ttag tag-h">Hotell</span></div></li>
@@ -572,8 +576,9 @@ body{-webkit-tap-highlight-color:transparent;overflow-x:hidden}
   </div>
   <div class="day-body">
     <ul class="tl">
-      <li><div class="ttime">02:00</div><div class="ticon">🇳🇴</div><div class="ttext"><strong>Ankomst Larvik!</strong> Av-ferje og kjør hjem til Slependen (~110 km, ca. 1t 20 min). Alle er nok trøtte – kjør forsiktig!</div></li>
-      <li><div class="ttime">~04:00</div><div class="ticon">🏠</div><div class="ttext"><strong>Hjemme på Nedre Åsvei 45!</strong> 🎉 Pakk ut, last opp bilder, og hvil godt. Dere fortjener det!</div></li>
+      <li><div class="ttime">02:00</div><div class="ticon">🇳🇴</div><div class="ttext"><strong>Ankomst Larvik!</strong> Av-ferje. Hjem til Nedre Åsvei 45 er <strong>~110 km / ca. 1t 20 min</strong> (E18 via Sandvika). Alle er trøtte – kjør forsiktig!</div></li>
+      <li><div class="ttime">Lading</div><div class="ticon">⚡</div><div class="ttext"><strong>Lad i Hirtshals før avgang</strong> så dere har nok til hele hjemveien. Elroq 50 (~300 km reell) klarer 110 km lett – ingen lading nødvendig på norsk side midt på natten. <span class="ttag tag-c">Lading</span></div></li>
+      <li><div class="ttime">~03:30</div><div class="ticon">🏠</div><div class="ttext"><strong>Hjemme på Nedre Åsvei 45!</strong> 🎉 Sett bilen til lading, pakk ut det viktigste, og sov godt. Dere fortjener det!</div></li>
     </ul>
   </div>
 </div>
@@ -829,7 +834,7 @@ body{-webkit-tap-highlight-color:transparent;overflow-x:hidden}
         <label class="pitem"><input type="checkbox" data-person="martine" onchange="updatePersonProgress('martine')"><span><span>Solbriller</span></span></label>
         <label class="pitem"><input type="checkbox" data-person="martine" onchange="updatePersonProgress('martine')"><span><span>Sjampo + balsam</span></span></label>
         <label class="pitem"><input type="checkbox" data-person="martine" onchange="updatePersonProgress('martine')"><span><span>Hårprodukter</span></span></label>
-        <label class="pitem"><input type="checkbox" data-person="martine" onchange="updatePersonProgress('martine')"><span><span>HRT-medisiner</span><span class="pnote">Ta rikelig – hele reisen + oppholdet i Eindhoven etterpå!</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="martine" onchange="updatePersonProgress('martine')"><span><span>HRT-medisiner – nok til 27. juli!</span><span class="pnote">Dekker reisen + Eindhoven + videre til Birmingham. Ta med ekstra.</span></span></label>
         <label class="pitem"><input type="checkbox" data-person="martine" onchange="updatePersonProgress('martine')"><span><span>Medisiner (egne faste)</span></span></label>
       </div>
     </div>
@@ -974,6 +979,41 @@ body{-webkit-tap-highlight-color:transparent;overflow-x:hidden}
 </div>
 </div>
 
+<!-- ===== ØKONOMI ===== -->
+<div id="okonomi" class="section">
+<div class="sec-title">💰 Økonomi · reisebudsjett</div>
+
+<div class="card">
+  <div class="card-hd"><div class="ci" style="background:var(--green-l)">🧮</div><div><div class="ct">Totalt brukt</div><div class="cs" id="eco-count">0 utgifter</div></div></div>
+  <div id="eco-total" style="font-size:2rem;font-weight:800;color:var(--green);margin-bottom:2px">0 kr</div>
+  <div class="inote" style="margin-bottom:14px">Omregnet til NOK · ca. kurs: 1 € = 11,70 · 1 DKK = 1,57 · 1 £ = 13,50</div>
+  <div id="eco-bycat"></div>
+</div>
+
+<div class="card">
+  <div class="card-hd"><div class="ci" style="background:var(--blue-pale)">➕</div><div><div class="ct">Legg til utgift</div></div></div>
+  <div style="display:flex;flex-direction:column;gap:9px">
+    <input id="eco-desc" type="text" placeholder="Hva? (f.eks. Middag i Hamburg)" style="padding:12px;border:1px solid #d1d5db;border-radius:9px;font-size:.9rem;font-family:inherit;width:100%">
+    <select id="eco-cat" style="padding:12px;border:1px solid #d1d5db;border-radius:9px;font-size:.88rem;font-family:inherit;background:#fff">
+      <option>Hotell</option><option>Ferje/fly</option><option>Lading</option><option>Mat &amp; drikke</option><option>Aktiviteter</option><option>Bom/vei/parkering</option><option>Shopping</option><option>Annet</option>
+    </select>
+    <div style="display:flex;gap:8px">
+      <input id="eco-amt" type="number" inputmode="decimal" placeholder="Beløp" style="flex:2;padding:12px;border:1px solid #d1d5db;border-radius:9px;font-size:.9rem;font-family:inherit;min-width:0">
+      <select id="eco-cur" style="flex:1;padding:12px;border:1px solid #d1d5db;border-radius:9px;font-size:.88rem;font-family:inherit;background:#fff">
+        <option>NOK</option><option>EUR</option><option>DKK</option><option>GBP</option>
+      </select>
+    </div>
+    <button onclick="ecoAdd()" style="padding:13px;background:var(--green);color:#fff;border:none;border-radius:9px;font-weight:700;font-size:.92rem;cursor:pointer">Legg til utgift</button>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-hd"><div class="ci" style="background:var(--orange-l)">📋</div><div><div class="ct">Utgifter</div></div></div>
+  <div id="eco-list"></div>
+  <div class="alert ab" style="margin-top:10px">💾 Lagres lokalt på <strong>din enhet</strong> (ikke synkronisert mellom mobiler). Ferje og Aalborg-hotell er lagt inn på forhånd – slett eller endre fritt.</div>
+</div>
+</div>
+
 <!-- ===== PRAKTISK ===== -->
 <div id="praktisk" class="section">
 <div class="sec-title">📋 Praktisk informasjon</div>
@@ -1034,52 +1074,52 @@ body{-webkit-tap-highlight-color:transparent;overflow-x:hidden}
 
 <!-- Overnatting natt for natt -->
 <div class="card">
-  <div class="card-hd"><div class="ci" style="background:var(--green-l)">🛏️</div><div><div class="ct">Overnatting – natt for natt</div><div class="cs">1 booket ✅ · resten er forslag (comfort + parkering/EV-lading)</div></div></div>
+  <div class="card-hd"><div class="ci" style="background:var(--green-l)">🛏️</div><div><div class="ct">Overnatting – natt for natt</div><div class="cs">1 booket ✅ · resten er forslag · priser for antall pers. den natten</div></div></div>
   <div style="display:flex;flex-direction:column;gap:9px">
 
     <div style="display:flex;gap:10px;padding:11px 12px;background:var(--green-l);border-radius:10px;border-left:4px solid var(--green)">
       <div style="min-width:56px;font-weight:800;font-size:.72rem;color:var(--green)">Man 6/7</div>
-      <div style="font-size:.82rem;line-height:1.45"><strong>Aalborg</strong> · B&amp;B HOTEL Aalborg <span class="ttag tag-c">✅ BOOKET</span><br><span style="color:var(--gray-m);font-size:.74rem">Bekr. 6839.839.814 · frokost inkl.</span></div>
+      <div style="font-size:.82rem;line-height:1.45"><strong>Aalborg</strong> · B&amp;B HOTEL Aalborg <span class="ttag tag-c">✅ BOOKET</span><br><span style="color:var(--gray-m);font-size:.74rem">👤 3 pers · 💶 DKK 1 185 (~1 790 kr) · frokost inkl. · bekr. 6839.839.814</span></div>
     </div>
 
     <div style="display:flex;gap:10px;padding:11px 12px;background:var(--gray-l);border-radius:10px">
       <div style="min-width:56px;font-weight:800;font-size:.72rem;color:var(--blue)">Tir 7/7<br>Ons 8/7</div>
-      <div style="font-size:.82rem;line-height:1.45"><strong>Hamburg</strong> · Radisson Blu Hotel Hamburg<br><span style="color:var(--gray-m);font-size:.74rem">Sentralt · EV-lading · 2 netter · forslag</span></div>
+      <div style="font-size:.82rem;line-height:1.45"><strong>Hamburg</strong> · Radisson Blu Hotel Hamburg<br><span style="color:var(--gray-m);font-size:.74rem">👤 3 pers · 💶 ca. €160–200/natt · sentralt · EV-lading · 2 netter</span></div>
     </div>
 
     <div style="display:flex;gap:10px;padding:11px 12px;background:var(--gray-l);border-radius:10px">
       <div style="min-width:56px;font-weight:800;font-size:.72rem;color:var(--purple)">Tor 9/7</div>
-      <div style="font-size:.82rem;line-height:1.45"><strong>Düsseldorf lufthavn</strong> · Maritim Hotel Düsseldorf<br><span style="color:var(--gray-m);font-size:.74rem">Gangbro til Terminal C · EV-lading · basseng. Perfekt før henting av Jon fredag 09:30! · forslag</span></div>
+      <div style="font-size:.82rem;line-height:1.45"><strong>Düsseldorf lufthavn</strong> · Maritim Hotel Düsseldorf<br><span style="color:var(--gray-m);font-size:.74rem">👤 3 pers · 💶 ca. €150–190 · gangbro til Terminal C · perfekt før henting av Jon 09:30!</span></div>
     </div>
 
     <div style="display:flex;gap:10px;padding:11px 12px;background:var(--gray-l);border-radius:10px">
       <div style="min-width:56px;font-weight:800;font-size:.72rem;color:var(--blue)">Fre 10/7</div>
-      <div style="font-size:.82rem;line-height:1.45"><strong>Düsseldorf / Ruhr</strong> · bli på Maritim, eller kjør mot Limburg<br><span style="color:var(--gray-m);font-size:.74rem">Fleksibelt – avhengig av dagen · forslag</span></div>
+      <div style="font-size:.82rem;line-height:1.45"><strong>Düsseldorf / Ruhr</strong> · bli på Maritim, eller kjør mot Limburg<br><span style="color:var(--gray-m);font-size:.74rem">👤 4 pers (Jon med nå) · 💶 ca. €160–210 · fleksibelt</span></div>
     </div>
 
-    <div style="display:flex;gap:10px;padding:11px 12px;background:var(--gray-l);border-radius:10px">
-      <div style="min-width:56px;font-weight:800;font-size:.72rem;color:var(--blue)">Lør 11/7<br>Søn 12/7</div>
-      <div style="font-size:.82rem;line-height:1.45"><strong>Venlo (Limburg)</strong> · Van der Valk Hotel Venlo<br><span style="color:var(--gray-m);font-size:.74rem">Gratis parkering + EV · nær Chloe i Helden · 2 netter · forslag</span></div>
+    <div style="display:flex;gap:10px;padding:11px 12px;background:var(--purple-l);border-radius:10px;border-left:4px solid var(--purple)">
+      <div style="min-width:56px;font-weight:800;font-size:.72rem;color:var(--purple)">Lør 11/7<br>Søn 12/7</div>
+      <div style="font-size:.82rem;line-height:1.45"><strong>🏰 Château St. Gerlach</strong> (Valkenburg, Limburg) <span class="ttag tag-m">SLOTT</span><br>5-stjerners slottshotell fra 1200-tallet · parker, vingård &amp; hager · basseng/spa. Historie + hage for Janiche! Nær Chloe i Helden.<br><span style="color:var(--gray-m);font-size:.74rem">👤 3 pers 11/7 (Martine hos Chloe) → 4 pers 12/7 · 💶 ca. €280–420/natt (splurge)</span><br><span style="color:var(--gray-m);font-size:.74rem">Rimeligere alt.: Van der Valk Venlo (~€150, gratis parkering + EV)</span></div>
     </div>
 
     <div style="display:flex;gap:10px;padding:11px 12px;background:var(--gray-l);border-radius:10px">
       <div style="min-width:56px;font-weight:800;font-size:.72rem;color:var(--blue)">Man 13/7</div>
-      <div style="font-size:.82rem;line-height:1.45"><strong>Arnhem</strong> · Van der Valk Hotel Arnhem<br><span style="color:var(--gray-m);font-size:.74rem">EV-lading · nær De Hoge Veluwe/Kröller-Müller · forslag</span></div>
+      <div style="font-size:.82rem;line-height:1.45"><strong>Arnhem</strong> · Van der Valk Hotel Arnhem<br><span style="color:var(--gray-m);font-size:.74rem">👤 4 pers · 💶 ca. €150–190 · EV-lading · nær De Hoge Veluwe (ridning!)</span></div>
     </div>
 
     <div style="display:flex;gap:10px;padding:11px 12px;background:var(--gray-l);border-radius:10px">
       <div style="min-width:56px;font-weight:800;font-size:.72rem;color:var(--blue)">Tir 14/7<br>Ons 15/7</div>
-      <div style="font-size:.82rem;line-height:1.45"><strong>Amsterdam</strong> · Van der Valk Hotel Amsterdam (Amstel/A4)<br><span style="color:var(--gray-m);font-size:.74rem">Gratis parkering + EV · metro inn til sentrum · 2 netter · forslag</span></div>
+      <div style="font-size:.82rem;line-height:1.45"><strong>Amsterdam</strong> · Van der Valk Hotel Amsterdam (Amstel/A4)<br><span style="color:var(--gray-m);font-size:.74rem">👤 4 pers · 💶 ca. €180–230/natt · gratis parkering + EV · metro inn · 2 netter</span></div>
     </div>
 
     <div style="display:flex;gap:10px;padding:11px 12px;background:var(--gray-l);border-radius:10px">
       <div style="min-width:56px;font-weight:800;font-size:.72rem;color:var(--blue)">Tor 16/7</div>
-      <div style="font-size:.82rem;line-height:1.45"><strong>Eindhoven</strong> · Van der Valk Hotel Eindhoven<br><span style="color:var(--gray-m);font-size:.74rem">Gratis parkering + EV · nær Martines venner · forslag</span></div>
+      <div style="font-size:.82rem;line-height:1.45"><strong>Eindhoven</strong> · Van der Valk Hotel Eindhoven<br><span style="color:var(--gray-m);font-size:.74rem">👤 4 pers · 💶 ca. €150–190 · gratis parkering + EV · nær Martines venner</span></div>
     </div>
 
     <div style="display:flex;gap:10px;padding:11px 12px;background:var(--gray-l);border-radius:10px">
       <div style="min-width:56px;font-weight:800;font-size:.72rem;color:var(--blue)">Fre 17/7</div>
-      <div style="font-size:.82rem;line-height:1.45"><strong>Bremen (retur)</strong> · ATLANTIC Hotel Universum, eller tilbake til Hamburg<br><span style="color:var(--gray-m);font-size:.74rem">Siste natt før ferja · forslag</span></div>
+      <div style="font-size:.82rem;line-height:1.45"><strong>Bremen (retur)</strong> · ATLANTIC Hotel Universum<br><span style="color:var(--gray-m);font-size:.74rem">👤 3 pers (Martine i Eindhoven) · 💶 ca. €120–160 · siste natt før ferja</span></div>
     </div>
 
     <div style="display:flex;gap:10px;padding:11px 12px;background:var(--blue-pale);border-radius:10px">
@@ -1088,7 +1128,7 @@ body{-webkit-tap-highlight-color:transparent;overflow-x:hidden}
     </div>
 
   </div>
-  <div class="alert ao" style="margin-top:12px">💡 Alle unntatt Aalborg er <strong>forslag</strong> – comfort-hoteller med parkering/EV-lading langs ruten. Book Amsterdam og Düsseldorf tidlig (populært i juli). Si fra når du booker, så bytter jeg «forslag» til «booket» med bekreftelsesnummer.</div>
+  <div class="alert ao" style="margin-top:12px">💡 Priser er <strong>estimater for juli 2026</strong> (familierom for oppgitt antall). Grovt anslag for de foreslåtte nettene: <strong>ca. €1 900–2 200</strong> (med 1 slottsnatt). Book Amsterdam, Düsseldorf og slottet tidlig. Send bekreftelser, så bytter jeg «forslag» → «booket».</div>
 </div>
 
 <!-- Fly: Jon til Düsseldorf -->
@@ -1169,7 +1209,8 @@ var TRIP_PLACES = [
  {n:'Helden (Chloe)', c:[51.3306,5.9836], col:'#d4650a', d:'👋 Martine hos Chloe 11–12/7'},
  {n:'De Hoge Veluwe', c:[52.0980,5.8180], col:'#1a4fa0', d:'🎨 Kröller-Müller museum + skulpturhage · 13/7'},
  {n:'Amsterdam', c:[52.3676,4.9041], col:'#1a4fa0', d:'🏛️ 14–15/7 · Rijksmuseum, kanaler'},
- {n:'Eindhoven', c:[51.4416,5.4697], col:'#d4650a', d:'🏙️ Martine blir hos venner fra 17/7'}
+ {n:'Eindhoven', c:[51.4416,5.4697], col:'#d4650a', d:'🏙️ Martine blir hos venner fra 17/7'},
+ {n:'Birmingham', c:[52.4862,-1.8904], col:'#d4650a', d:'✈️ Martine reiser videre hit etter Eindhoven'}
 ];
 var ROUTE = [[59.889,10.523],[59.0537,10.0357],[57.5883,9.9569],[57.0488,9.9217],[55.4904,9.4722],[53.5511,9.9937],[51.2895,6.7668],[51.3306,5.9836],[52.0980,5.8180],[52.3676,4.9041],[51.4416,5.4697]];
 var tripMap = null;
@@ -1188,6 +1229,57 @@ function ensureMap(){
   setTimeout(function(){ tripMap.invalidateSize(); tripMap.fitBounds(bounds, {padding:[25,25]}); }, 80);
 }
 
+// ØKONOMI
+var ECO_RATES = {NOK:1, EUR:11.70, DKK:1.57, GBP:13.50};
+var ECO_KEY = 'roadtrip2026_eco';
+function ecoLoad(){
+  try{ var d = JSON.parse(localStorage.getItem(ECO_KEY)); if(Array.isArray(d)) return d; }catch(e){}
+  return [
+    {desc:'Color Line ferje t/r (3 voksne + bil)', cat:'Ferje/fly', amt:4692, cur:'NOK'},
+    {desc:'B&B Hotel Aalborg (natt 6/7)', cat:'Hotell', amt:1185.30, cur:'DKK'}
+  ];
+}
+function ecoSave(list){ try{ localStorage.setItem(ECO_KEY, JSON.stringify(list)); }catch(e){} }
+function ecoNOK(e){ return e.amt * (ECO_RATES[e.cur] || 1); }
+function ecoFmt(n){ return Math.round(n).toLocaleString('no-NO') + ' kr'; }
+function ecoEsc(s){ return String(s).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+function ecoRender(){
+  var list = ecoLoad();
+  var total = list.reduce(function(s,e){ return s + ecoNOK(e); }, 0);
+  var elT = document.getElementById('eco-total'); if(!elT) return;
+  elT.textContent = ecoFmt(total);
+  document.getElementById('eco-count').textContent = list.length + ' utgifter';
+  var cats = {};
+  list.forEach(function(e){ cats[e.cat] = (cats[e.cat] || 0) + ecoNOK(e); });
+  var bc = '';
+  Object.keys(cats).sort(function(a,b){ return cats[b] - cats[a]; }).forEach(function(c){
+    var pct = total > 0 ? Math.round(cats[c]/total*100) : 0;
+    bc += '<div style="margin-bottom:9px"><div style="display:flex;justify-content:space-between;font-size:.8rem;font-weight:600;margin-bottom:3px"><span>'+c+'</span><span>'+ecoFmt(cats[c])+' · '+pct+'%</span></div><div class="pprog"><div class="pprogbar" style="width:'+pct+'%"></div></div></div>';
+  });
+  document.getElementById('eco-bycat').innerHTML = bc || '<div class="inote">Ingen utgifter ennå.</div>';
+  var lh = '';
+  list.forEach(function(e,i){
+    var extra = e.cur !== 'NOK' ? ' <span style="color:var(--gray-m);font-weight:400">('+e.amt+' '+e.cur+')</span>' : '';
+    lh += '<div style="display:flex;align-items:center;gap:10px;padding:10px 2px;border-bottom:1px solid #f0f0f0">'+
+      '<div style="flex:1;min-width:0"><div style="font-size:.86rem;font-weight:600">'+ecoEsc(e.desc)+'</div><div style="font-size:.72rem;color:var(--gray-m)">'+e.cat+'</div></div>'+
+      '<div style="font-weight:700;font-size:.85rem;text-align:right;white-space:nowrap">'+ecoFmt(ecoNOK(e))+extra+'</div>'+
+      '<button onclick="ecoDelete('+i+')" style="background:none;border:none;cursor:pointer;font-size:1.05rem;padding:4px;flex-shrink:0">🗑️</button>'+
+      '</div>';
+  });
+  document.getElementById('eco-list').innerHTML = lh || '<div class="inote">Ingen utgifter registrert ennå.</div>';
+}
+function ecoAdd(){
+  var desc = document.getElementById('eco-desc').value.trim();
+  var amt = parseFloat(document.getElementById('eco-amt').value);
+  if(!desc || !(amt > 0)){ alert('Skriv inn hva utgiften gjelder og et beløp.'); return; }
+  var list = ecoLoad();
+  list.push({desc:desc, cat:document.getElementById('eco-cat').value, amt:amt, cur:document.getElementById('eco-cur').value});
+  ecoSave(list); ecoRender();
+  document.getElementById('eco-desc').value = '';
+  document.getElementById('eco-amt').value = '';
+}
+function ecoDelete(i){ var list = ecoLoad(); list.splice(i,1); ecoSave(list); ecoRender(); }
+
 // MAIN TABS
 function showTab(name, btn) {
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
@@ -1196,6 +1288,7 @@ function showTab(name, btn) {
   btn.classList.add('active');
   window.scrollTo({top:0,behavior:'smooth'});
   if(name === 'kart') ensureMap();
+  if(name === 'okonomi') ecoRender();
 }
 
 // PERSON TABS
@@ -1232,6 +1325,7 @@ function updatePersonProgress(person) {
 
 // Init all
 ['janiche','jon','emma','martine','felles'].forEach(p => updatePersonProgress(p));
+ecoRender();
 </script>
 </body>
 </html>
