@@ -537,7 +537,7 @@ body{-webkit-tap-highlight-color:transparent;overflow-x:hidden}
   </div>
   <div class="day-body">
     <ul class="tl">
-      <li><div class="ttime">Morgen</div><div class="ticon">💜</div><div class="ttext"><strong>Martine blir igjen hos vennene sine i Eindhoven</strong>, og reiser videre til <strong>Birmingham</strong> ✈️ etterpå. <span class="ttag tag-f">Venner</span> Sjekk at hun har HRT-medisiner til <strong>27. juli</strong>! (Flybillett legges inn når du sender den.)</div></li>
+      <li><div class="ttime">Morgen</div><div class="ticon">💜</div><div class="ttext"><strong>Martine blir igjen hos vennene sine i Eindhoven.</strong> <span class="ttag tag-f">Venner</span> Videre: <strong>23/7</strong> Amsterdam→Birmingham (easyJet), <strong>hjem 26/7</strong> London→Oslo (Norwegian). Full ruteinfo i Praktisk-fanen. 💊 HRT til <strong>27. juli</strong>!</div></li>
       <li><div class="ttime">~10:00</div><div class="ticon">🚗</div><div class="ttext">Janiche, Emma &amp; Jon kjører nordover. A67/A1 mot Tyskland.</div></li>
       <li><div class="ttime">Underveis</div><div class="ticon">⚡</div><div class="ttext">Ladetopper: Ruhr-området + Osnabrück (~2 stopp). <span class="ttag tag-c">Lading</span></div></li>
       <li><div class="ttime">Kveld</div><div class="ticon">🏨</div><div class="ttext">Overnatting Bremen/Hamburg-området. Lad til 100%. <span class="ttag tag-h">Hotell</span></div></li>
@@ -1153,6 +1153,31 @@ body{-webkit-tap-highlight-color:transparent;overflow-x:hidden}
   <div class="alert ab" style="margin-top:10px">🚗 <strong>Janiche henter Jon på Düsseldorf lufthavn kl 09:30.</strong> Kortidsparkering P3 ligger nærmest ankomsthallen. Se dag 5 i Dagsplanen.</div>
 </div>
 
+<!-- Martine: videre reise -->
+<div style="background:linear-gradient(135deg,#fdf0e6,#ffedd5);border:2px solid var(--orange);border-radius:var(--r);padding:18px;margin-bottom:14px">
+  <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+    <span style="font-size:1.4rem">👩‍🦱✈️</span>
+    <div><div style="font-weight:800;font-size:1rem;color:var(--orange)">Martine – videre reise etter familieturen</div>
+    <div style="font-size:.75rem;color:var(--gray-m)">Blir i Eindhoven/NL 17.–23. juli · så Birmingham · hjem 26. juli</div></div>
+  </div>
+
+  <div style="background:rgba(255,255,255,.85);border-radius:10px;padding:12px;margin-bottom:9px">
+    <div style="font-size:.68rem;font-weight:700;color:var(--gray-m);text-transform:uppercase;margin-bottom:6px">1) Torsdag 23. juli · easyJet EZY6656</div>
+    <div style="display:flex;align-items:center;gap:8px;font-weight:700;color:var(--orange)"><span>Amsterdam AMS</span><span style="color:var(--gray-m)">→</span><span>Birmingham BHX</span></div>
+    <div style="font-size:.8rem;margin-top:4px">🛫 <strong>21:35</strong> AMS → 🛬 <strong>21:50</strong> BHX (lokal tid)</div>
+    <div style="font-size:.75rem;margin-top:6px;color:var(--gray)">🎫 Ref. KCTHFRG · booket av annen konto (kontakt bestilleren for endringer)</div>
+  </div>
+
+  <div style="background:rgba(255,255,255,.85);border-radius:10px;padding:12px">
+    <div style="font-size:.68rem;font-weight:700;color:var(--gray-m);text-transform:uppercase;margin-bottom:6px">2) Søndag 26. juli · Norwegian DY1311</div>
+    <div style="display:flex;align-items:center;gap:8px;font-weight:700;color:var(--orange)"><span>London-Gatwick LGW</span><span style="color:var(--gray-m)">→</span><span>Oslo OSL</span></div>
+    <div style="font-size:.8rem;margin-top:4px">🛫 <strong>16:25</strong> LGW → 🛬 <strong>19:30</strong> OSL (2t 5m)</div>
+    <div style="font-size:.75rem;margin-top:6px;color:var(--gray)">Flys av Norwegian Air Shuttle</div>
+  </div>
+
+  <div class="alert ao" style="margin-top:10px">🚆 <strong>NB:</strong> Hjemflyet går fra <strong>London-Gatwick</strong>, ikke Birmingham. Martine må reise Birmingham → London (tog ~1t45, book i forveien) i god tid før 26/7. 💊 HRT-medisiner må vare <strong>til 27. juli</strong>.</div>
+</div>
+
 <!-- Nødnumre -->
 <div class="card">
   <div class="card-hd"><div class="ci" style="background:var(--red-l)">🆘</div><div><div class="ct">Nødnumre</div></div></div>
@@ -1210,8 +1235,10 @@ var TRIP_PLACES = [
  {n:'De Hoge Veluwe', c:[52.0980,5.8180], col:'#1a4fa0', d:'🎨 Kröller-Müller museum + skulpturhage · 13/7'},
  {n:'Amsterdam', c:[52.3676,4.9041], col:'#1a4fa0', d:'🏛️ 14–15/7 · Rijksmuseum, kanaler'},
  {n:'Eindhoven', c:[51.4416,5.4697], col:'#d4650a', d:'🏙️ Martine blir hos venner fra 17/7'},
- {n:'Birmingham', c:[52.4862,-1.8904], col:'#d4650a', d:'✈️ Martine reiser videre hit etter Eindhoven'}
+ {n:'Birmingham', c:[52.4862,-1.8904], col:'#d4650a', d:'✈️ Martine: easyJet fra Amsterdam 23/7 21:35→21:50'},
+ {n:'London-Gatwick', c:[51.1537,-0.1821], col:'#7c3aed', d:'✈️ Martine hjem: Norwegian DY1311 til Oslo 26/7 16:25'}
 ];
+var MARTINE_ROUTE = [[52.3676,4.9041],[52.4862,-1.8904],[51.1537,-0.1821],[59.889,10.523]];
 var ROUTE = [[59.889,10.523],[59.0537,10.0357],[57.5883,9.9569],[57.0488,9.9217],[55.4904,9.4722],[53.5511,9.9937],[51.2895,6.7668],[51.3306,5.9836],[52.0980,5.8180],[52.3676,4.9041],[51.4416,5.4697]];
 var tripMap = null;
 function ensureMap(){
@@ -1219,6 +1246,7 @@ function ensureMap(){
   tripMap = L.map('map', {scrollWheelZoom:false}).setView([54.5,8.5], 5);
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {maxZoom:18, attribution:'© OpenStreetMap'}).addTo(tripMap);
   L.polyline(ROUTE, {color:'#1a4fa0', weight:3, opacity:.5, dashArray:'6,8'}).addTo(tripMap);
+  L.polyline(MARTINE_ROUTE, {color:'#d4650a', weight:2, opacity:.6, dashArray:'2,7'}).addTo(tripMap).bindPopup('👩‍🦱 Martines videre reise: Amsterdam → Birmingham (23/7) → London → Oslo (26/7)');
   var bounds = [];
   TRIP_PLACES.forEach(function(p){
     L.circleMarker(p.c, {radius:9, color:'#fff', weight:2, fillColor:p.col, fillOpacity:1}).addTo(tripMap)
