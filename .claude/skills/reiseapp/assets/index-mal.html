@@ -1,0 +1,1755 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#1a4fa0">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Roadtrip 2026">
+<title>🚗 Roadtrip Europe 2026 – Sjurseth-Eliassen</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+<style>
+:root {
+  --blue:#1a4fa0; --blue-l:#2e6dd4; --blue-pale:#e8f0fb;
+  --green:#1a7a4a; --green-l:#e6f4ec;
+  --orange:#d4650a; --orange-l:#fdf0e6;
+  --red:#b91c1c; --red-l:#fef2f2;
+  --purple:#7c3aed; --purple-l:#fdf4ff;
+  --gray:#374151; --gray-l:#f3f4f6; --gray-m:#9ca3af;
+  --shadow:0 2px 12px rgba(0,0,0,0.08); --r:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;background:#f0f4f8;color:var(--gray);min-height:100vh}
+
+/* HEADER */
+header{background:linear-gradient(135deg,var(--blue) 0%,#0d3070 100%);color:#fff;padding:24px 20px 20px;position:relative;overflow:hidden}
+header::after{content:'🇩🇰🇩🇪🇳🇱';position:absolute;right:16px;top:50%;transform:translateY(-50%);font-size:2rem;opacity:.8;letter-spacing:3px}
+header h1{font-size:1.6rem;font-weight:700;margin-bottom:3px}
+header p{font-size:.88rem;opacity:.82}
+.badge-row{display:flex;gap:7px;margin-top:10px;flex-wrap:wrap}
+.badge{background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3);border-radius:20px;padding:3px 11px;font-size:.75rem;font-weight:600}
+
+/* MAIN TABS */
+.tabs{display:flex;background:#fff;border-bottom:2px solid #e5e7eb;overflow-x:auto;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.06);scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{padding:13px 16px;border:none;background:none;cursor:pointer;font-size:.82rem;font-weight:600;color:var(--gray-m);white-space:nowrap;border-bottom:3px solid transparent;transition:all .2s;display:flex;align-items:center;gap:5px;margin-bottom:-2px}
+.tab:hover{color:var(--blue);background:var(--blue-pale)}
+.tab.active{color:var(--blue);border-bottom-color:var(--blue)}
+
+.content{max-width:900px;margin:0 auto;padding:18px 14px 60px}
+.section{display:none}
+.section.active{display:block}
+.sec-title{font-size:1.1rem;font-weight:800;color:var(--blue);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+
+/* CARDS */
+.card{background:#fff;border-radius:var(--r);padding:18px;margin-bottom:14px;box-shadow:var(--shadow)}
+.card-hd{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.ci{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0}
+.ct{font-size:.97rem;font-weight:700}
+.cs{font-size:.75rem;color:var(--gray-m)}
+
+/* INFO GRID */
+.igrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:480px){.igrid{grid-template-columns:1fr}}
+.icard{background:#fff;border-radius:12px;padding:14px;box-shadow:var(--shadow)}
+.ilabel{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--gray-m);margin-bottom:3px}
+.ival{font-size:1rem;font-weight:700;color:var(--blue)}
+.inote{font-size:.73rem;color:var(--gray-m);margin-top:2px}
+
+/* ALERTS */
+.alert{border-radius:10px;padding:11px 13px;font-size:.82rem;margin-bottom:11px;line-height:1.5}
+.ab{background:var(--blue-pale);border-left:4px solid var(--blue);color:var(--blue)}
+.ao{background:var(--orange-l);border-left:4px solid var(--orange);color:var(--orange)}
+.ag{background:var(--green-l);border-left:4px solid var(--green);color:var(--green)}
+
+/* ROUTE */
+.route-wrap{overflow-x:auto;scrollbar-width:none}
+.route-wrap::-webkit-scrollbar{display:none}
+.route{display:flex;align-items:center;padding:14px 0;min-width:500px}
+.stop{display:flex;flex-direction:column;align-items:center;text-align:center;flex-shrink:0}
+.sdot{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.2rem;background:var(--blue-pale);border:3px solid var(--blue);margin-bottom:5px}
+.sname{font-size:.72rem;font-weight:700;color:var(--blue);max-width:65px}
+.sdate{font-size:.62rem;color:var(--gray-m);max-width:65px}
+.arrow{flex:1;min-width:28px;height:3px;background:linear-gradient(90deg,var(--blue-l),var(--blue));position:relative;align-self:center;margin-bottom:24px}
+.arrow::after{content:'▶';position:absolute;right:-7px;top:-9px;font-size:.65rem;color:var(--blue)}
+.adist{position:absolute;top:-16px;left:50%;transform:translateX(-50%);font-size:.58rem;color:var(--gray-m);white-space:nowrap;background:#fff;padding:1px 3px}
+
+/* DAY CARDS */
+.day-card{background:#fff;border-radius:var(--r);margin-bottom:12px;overflow:hidden;box-shadow:var(--shadow)}
+.day-hd{display:flex;align-items:center;gap:11px;padding:13px 16px;cursor:pointer;user-select:none;transition:background .15s}
+.day-hd:hover{background:var(--gray-l)}
+.dnum{width:44px;height:44px;border-radius:50%;background:var(--blue);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:800;flex-shrink:0;text-align:center;line-height:1.2}
+.dtitle{font-weight:700;font-size:.93rem}
+.dmeta{font-size:.72rem;color:var(--gray-m)}
+.dchev{margin-left:auto;color:var(--gray-m);font-size:.82rem;transition:transform .2s}
+.day-body{display:none;padding:0 16px 16px;border-top:1px solid #f0f0f0}
+.day-body.open{display:block}
+.tl{list-style:none;padding:11px 0 0}
+.tl li{display:flex;gap:10px;margin-bottom:11px;font-size:.83rem;align-items:flex-start}
+.ttime{min-width:46px;font-weight:700;color:var(--blue);font-size:.76rem;padding-top:2px}
+.ticon{width:26px;height:26px;border-radius:50%;background:var(--blue-pale);display:flex;align-items:center;justify-content:center;font-size:.85rem;flex-shrink:0}
+.ttext{flex:1;padding-top:4px;line-height:1.5}
+.ttag{display:inline-block;padding:1px 7px;border-radius:10px;font-size:.66rem;font-weight:700;margin-left:3px;vertical-align:middle}
+.tag-c{background:var(--green-l);color:var(--green)}
+.tag-f{background:var(--blue-pale);color:var(--blue)}
+.tag-h{background:var(--orange-l);color:var(--orange)}
+.tag-m{background:var(--purple-l);color:var(--purple)}
+
+/* PERSON TABS */
+.ptabs{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}
+.ptab{padding:7px 14px;border-radius:20px;border:2px solid #e5e7eb;background:#fff;cursor:pointer;font-size:.82rem;font-weight:700;color:var(--gray-m);transition:all .2s}
+.ptab:hover{border-color:var(--blue);color:var(--blue)}
+.ptab.active{background:var(--blue);border-color:var(--blue);color:#fff}
+.ppanel{display:none}
+.ppanel.active{display:block}
+
+/* PACKING */
+.pack-cat{margin-bottom:16px}
+.pcat-title{font-size:.75rem;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:var(--gray-m);margin-bottom:7px;display:flex;align-items:center;gap:5px}
+.pitems{display:flex;flex-direction:column;gap:5px}
+.pitem{display:flex;align-items:flex-start;gap:9px;padding:7px 9px;border-radius:9px;cursor:pointer;transition:background .15s;font-size:.84rem}
+.pitem:hover{background:var(--gray-l)}
+.pitem input[type=checkbox]{width:17px;height:17px;cursor:pointer;accent-color:var(--blue);flex-shrink:0;margin-top:2px}
+.pitem.checked label{text-decoration:line-through;color:var(--gray-m)}
+.pitem label{cursor:pointer;line-height:1.4;flex:1}
+.pnote{font-size:.7rem;color:var(--gray-m);margin-top:1px;display:block}
+.pprog{background:#e5e7eb;border-radius:10px;height:5px;margin-bottom:10px;overflow:hidden}
+.pprogbar{background:linear-gradient(90deg,var(--blue-l),var(--green));height:100%;border-radius:10px;transition:width .3s}
+.pstats{font-size:.78rem;color:var(--gray-m);margin-bottom:8px}
+
+/* CHARGING */
+.cstop{display:flex;gap:12px;padding:13px;border-radius:11px;background:var(--green-l);margin-bottom:11px;align-items:flex-start}
+.cicon{font-size:1.4rem;flex-shrink:0;margin-top:1px}
+.cname{font-weight:700;font-size:.92rem;color:var(--green)}
+.cdet{font-size:.78rem;color:var(--gray);margin-top:2px;line-height:1.5}
+.cmeta{display:flex;gap:7px;margin-top:5px;flex-wrap:wrap}
+.cpill{background:#fff;border-radius:20px;padding:2px 8px;font-size:.7rem;font-weight:700;border:1px solid rgba(26,122,74,.25);color:var(--green)}
+
+/* EV SPECS */
+.evgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:11px 0}
+@media(max-width:380px){.evgrid{grid-template-columns:1fr 1fr}}
+.evs{background:var(--blue-pale);border-radius:9px;padding:9px;text-align:center}
+.evsv{font-size:1.1rem;font-weight:800;color:var(--blue)}
+.evsl{font-size:.65rem;color:var(--gray-m);margin-top:2px}
+
+/* CREW */
+.crew{display:flex;gap:10px;flex-wrap:wrap;margin-top:9px}
+.crewcard{flex:1;min-width:110px;background:#fff;border-radius:11px;padding:13px;text-align:center;box-shadow:var(--shadow)}
+.cavatar{width:48px;height:48px;border-radius:50%;margin:0 auto 7px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;background:var(--blue-pale)}
+.cname{font-weight:700;font-size:.88rem}
+.crole{font-size:.7rem;color:var(--gray-m)}
+
+/* FERRY BOX */
+.ferry-box{background:linear-gradient(135deg,#e8f0fb,#dbeafe);border:2px solid var(--blue);border-radius:var(--r);padding:16px;margin-bottom:14px}
+.ferry-route{display:flex;align-items:center;gap:10px;margin:10px 0}
+.fport{text-align:center}
+.fport-name{font-weight:800;font-size:1rem;color:var(--blue)}
+.fport-sub{font-size:.72rem;color:var(--gray-m)}
+.farrow{flex:1;height:2px;background:var(--blue);position:relative}
+.farrow::after{content:'▶';position:absolute;right:-8px;top:-9px;font-size:.8rem;color:var(--blue)}
+.ftime{text-align:center;margin-top:8px}
+.ftime span{background:var(--blue);color:#fff;border-radius:8px;padding:4px 12px;font-size:.78rem;font-weight:700}
+
+.divider{height:1px;background:#e5e7eb;margin:13px 0}
+
+.appfooter{text-align:center;padding:18px;font-size:.72rem;color:var(--gray-m)}
+
+/* KART */
+#map{width:100%;height:68vh;min-height:380px;border-radius:var(--r);box-shadow:var(--shadow);z-index:1}
+.map-legend{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.mleg{display:flex;align-items:center;gap:5px;font-size:.74rem;font-weight:600;color:var(--gray);background:#fff;border:1px solid #e5e7eb;border-radius:20px;padding:4px 10px}
+.mleg .dot{width:11px;height:11px;border-radius:50%;flex-shrink:0}
+.leaflet-popup-content{font-family:inherit;font-size:.82rem;line-height:1.45;margin:10px 12px}
+.leaflet-popup-content b{color:var(--blue)}
+
+/* MOBIL */
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{-webkit-tap-highlight-color:transparent;overflow-x:hidden}
+@supports(padding:max(0px)){
+  header{padding-left:max(20px,env(safe-area-inset-left));padding-right:max(20px,env(safe-area-inset-right))}
+  .content{padding-bottom:max(60px,env(safe-area-inset-bottom))}
+}
+@media(max-width:600px){
+  header h1{font-size:1.4rem}
+  .tab{padding:12px 13px;font-size:.8rem}
+  .pitem{padding:9px 9px}
+  .pitem input[type=checkbox]{width:20px;height:20px}
+  .ptab{padding:8px 15px}
+  #map{height:72vh}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🚗 Roadtrip Europe 2026</h1>
+  <p>Sjurseth-Eliassen · 6.–19. juli · 🇳🇴 → 🇩🇰 → 🇩🇪 → 🇳🇱 → hjem</p>
+  <div class="badge-row">
+    <span class="badge">🚢 CEU1949 · Color Line</span>
+    <span class="badge">⚡ Skoda Elroq 50</span>
+    <span class="badge">👨‍👩‍👧‍👧 Janiche, Jon, Emma &amp; Martine</span>
+  </div>
+</header>
+
+<div class="tabs" id="maintabs">
+  <button class="tab active" onclick="showTab('oversikt',this)">🗺️ Oversikt</button>
+  <button class="tab" onclick="showTab('kart',this)">📍 Kart</button>
+  <button class="tab" onclick="showTab('vaer',this)">🌤️ Vær</button>
+  <button class="tab" onclick="showTab('dagsplan',this)">📅 Dagsplan</button>
+  <button class="tab" onclick="showTab('forslag',this)">💡 Forslag</button>
+  <button class="tab" onclick="showTab('pakkeliste',this)">🎒 Pakkeliste</button>
+  <button class="tab" onclick="showTab('lading',this)">⚡ Lading</button>
+  <button class="tab" onclick="showTab('okonomi',this)">💰 Økonomi</button>
+  <button class="tab" onclick="showTab('praktisk',this)">📋 Praktisk</button>
+</div>
+
+<div class="content">
+
+<!-- ===== OVERSIKT ===== -->
+<div id="oversikt" class="section active">
+
+  <!-- I DAG -->
+  <div id="today-card" style="background:linear-gradient(135deg,var(--blue) 0%,#0d3070 100%);color:#fff;border-radius:var(--r);padding:16px 16px 18px;margin-bottom:16px;box-shadow:var(--shadow)">
+    <div style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.8px;opacity:.85" id="today-date">I dag</div>
+    <div style="font-size:1.15rem;font-weight:800;margin:3px 0 2px" id="today-title">—</div>
+    <div style="font-size:.85rem;opacity:.9;line-height:1.5" id="today-plan"></div>
+    <div id="today-wx" style="display:flex;gap:12px;flex-wrap:wrap;margin-top:11px;font-size:.82rem"></div>
+    <div id="today-remind" style="margin-top:11px;font-size:.82rem;background:rgba(255,255,255,.16);border-radius:9px;padding:9px 11px;line-height:1.5"></div>
+  </div>
+
+  <!-- Ferje-høydepunkt -->
+  <div class="ferry-box">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+      <span style="font-size:1.3rem">🚢</span>
+      <div><div style="font-weight:800;font-size:.95rem;color:var(--blue)">Color Line SuperSpeed 2 · Bookingnr. CEU1949</div>
+      <div style="font-size:.75rem;color:var(--gray-m)">Betalt · Janiche Sjurseth-Eliassen</div></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px">
+      <div style="background:rgba(255,255,255,.7);border-radius:10px;padding:11px">
+        <div style="font-size:.68rem;font-weight:700;color:var(--gray-m);text-transform:uppercase;letter-spacing:.6px">UT – Man 6. juli</div>
+        <div class="ferry-route">
+          <div class="fport"><div class="fport-name">Larvik</div><div class="fport-sub">17:30</div></div>
+          <div class="farrow"></div>
+          <div class="fport"><div class="fport-name">Hirtshals</div><div class="fport-sub">21:15</div></div>
+        </div>
+        <div style="font-size:.73rem;color:var(--gray);margin-top:4px">👥 3 reisende: Janiche, Emma &amp; Martine<br>🍽️ 3× kveldsbuffet inkl. (dekk 8)<br>⏰ Oppmøte senest <strong>16:30</strong></div>
+      </div>
+      <div style="background:rgba(255,255,255,.7);border-radius:10px;padding:11px">
+        <div style="font-size:.68rem;font-weight:700;color:var(--gray-m);text-transform:uppercase;letter-spacing:.6px">RETUR – Lør 18. juli</div>
+        <div class="ferry-route">
+          <div class="fport"><div class="fport-name">Hirtshals</div><div class="fport-sub">22:15</div></div>
+          <div class="farrow"></div>
+          <div class="fport"><div class="fport-name">Larvik</div><div class="fport-sub">02:00 ✱</div></div>
+        </div>
+        <div style="font-size:.73rem;color:var(--gray);margin-top:4px">✱ Ankomst natt til søndag 19. juli<br>⏰ Oppmøte senest <strong>21:15</strong></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Rute -->
+  <div class="card">
+    <div class="card-hd"><div class="ci" style="background:var(--blue-pale)">🗺️</div><div><div class="ct">Reiseruten</div><div class="cs">6.–19. juli 2026 · 14 dager (13 netter)</div></div></div>
+    <div class="route-wrap">
+      <div class="route">
+        <div class="stop"><div class="sdot">🏠</div><div class="sname">Slependen</div><div class="sdate">Man 6/7</div></div>
+        <div class="arrow" style="position:relative"><span class="adist">ferje</span></div>
+        <div class="stop"><div class="sdot">🇩🇰</div><div class="sname">Hirtshals</div><div class="sdate">6/7</div></div>
+        <div class="arrow" style="position:relative"><span class="adist">~60 km</span></div>
+        <div class="stop"><div class="sdot">🏨</div><div class="sname">Aalborg</div><div class="sdate">Natt 6/7</div></div>
+        <div class="arrow" style="position:relative"><span class="adist">~430 km</span></div>
+        <div class="stop"><div class="sdot">🏰</div><div class="sname">Lüneburg</div><div class="sdate">Natt 7/7</div></div>
+        <div class="arrow" style="position:relative"><span class="adist">~90 km</span></div>
+        <div class="stop"><div class="sdot">🏰</div><div class="sname">Schwerin</div><div class="sdate">8/7</div></div>
+        <div class="arrow" style="position:relative"><span class="adist">~560 km</span></div>
+        <div class="stop"><div class="sdot">✈️</div><div class="sname">Düsseldorf</div><div class="sdate">Jon 10/7</div></div>
+        <div class="arrow" style="position:relative"><span class="adist">venner</span></div>
+        <div class="stop"><div class="sdot">🇳🇱</div><div class="sname">Limburg</div><div class="sdate">11–13/7</div></div>
+        <div class="arrow" style="position:relative"><span class="adist">~150 km</span></div>
+        <div class="stop"><div class="sdot">🏛️</div><div class="sname">Amsterdam</div><div class="sdate">14–15/7</div></div>
+        <div class="arrow" style="position:relative"><span class="adist">~130 km</span></div>
+        <div class="stop"><div class="sdot">🏙️</div><div class="sname">Eindhoven</div><div class="sdate">Martine 17/7→</div></div>
+        <div class="arrow" style="position:relative"><span class="adist">retur ~800 km</span></div>
+        <div class="stop"><div class="sdot">🚢</div><div class="sname">Hirtshals</div><div class="sdate">Lør 18/7</div></div>
+        <div class="arrow" style="position:relative"><span class="adist">ferje</span></div>
+        <div class="stop"><div class="sdot">🏠</div><div class="sname">Larvik</div><div class="sdate">Søn 19/7</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Gjengen -->
+  <div class="card">
+    <div class="card-hd"><div class="ci" style="background:var(--purple-l)">👨‍👩‍👧‍👧</div><div><div class="ct">Reisegjengen</div></div></div>
+    <div class="crew">
+      <div class="crewcard"><div class="cavatar">👱‍♀️</div><div class="cname">Janiche</div><div class="crole">Uorganisert sjef</div></div>
+      <div class="crewcard"><div class="cavatar">🧔</div><div class="cname">Jon</div><div class="crole">Co-pilot · joiner fre 10/7 ✈️</div></div>
+      <div class="crewcard"><div class="cavatar">👩</div><div class="cname">Emma</div><div class="crole">Eventyrer</div></div>
+      <div class="crewcard"><div class="cavatar">👩‍🦱</div><div class="cname">Martine</div><div class="crole">Kul, chill &amp; blessed</div></div>
+    </div>
+  </div>
+
+  <!-- Nøkkelinfo -->
+  <div class="card">
+    <div class="card-hd"><div class="ci" style="background:var(--orange-l)">ℹ️</div><div><div class="ct">Nøkkeltall</div></div></div>
+    <div class="igrid">
+      <div class="icard"><div class="ilabel">🚢 Booking</div><div class="ival" style="font-size:1.3rem;letter-spacing:1px">CEU1949</div><div class="inote">Color Line · Betalt</div></div>
+      <div class="icard"><div class="ilabel">⚡ Bil</div><div class="ival">Skoda Elroq 50</div><div class="inote">~375 km WLTP · EV</div></div>
+      <div class="icard"><div class="ilabel">📅 Ut</div><div class="ival">Man 6. juli</div><div class="inote">Avg Larvik 17:30</div></div>
+      <div class="icard"><div class="ilabel">📅 Hjem</div><div class="ival">Søn 19. juli</div><div class="inote">Ank Larvik ~02:00</div></div>
+      <div class="icard"><div class="ilabel">🗺️ Reisetid</div><div class="ival">14 dager</div><div class="inote">6.–19. juli · 13 netter</div></div>
+      <div class="icard"><div class="ilabel">🚗 Kjøredistanse</div><div class="ival">~2 500 km</div><div class="inote">t/r · uten ferje · ~8–9 ladestopp</div></div>
+      <div class="icard"><div class="ilabel">🏠 Adresse</div><div class="ival" style="font-size:.85rem">Nedre Åsvei 45</div><div class="inote">1341 Slependen</div></div>
+    </div>
+  </div>
+
+  <div class="alert ab">💡 Bruk fanene øverst for å navigere. 📍 Kart-fanen viser alle stoppene, og Pakkeliste-fanen har egen liste per person!</div>
+</div>
+
+<!-- ===== KART ===== -->
+<div id="kart" class="section">
+<div class="sec-title">📍 Kart · alle stoppene på turen</div>
+<div class="card" style="padding:12px">
+  <div id="map"></div>
+  <div class="map-legend">
+    <span class="mleg"><span class="dot" style="background:#1a4fa0"></span>Kjørerute / stopp</span>
+    <span class="mleg"><span class="dot" style="background:#1a7a4a"></span>Overnatting</span>
+    <span class="mleg"><span class="dot" style="background:#d4650a"></span>Venner &amp; besøk</span>
+    <span class="mleg"><span class="dot" style="background:#7c3aed">✈</span>Flyplass</span>
+  </div>
+  <div class="alert ab" style="margin-top:12px">💡 Trykk på en markør for detaljer. Blå = kjørerute · oransje = venner/besøk · lilla = flyplass.</div>
+</div>
+</div>
+
+<!-- ===== VÆR ===== -->
+<div id="vaer" class="section">
+<div class="sec-title">🌤️ Vær · morgen · formiddag · kveld</div>
+<div class="card">
+  <div style="display:flex;gap:8px;margin-bottom:12px">
+    <select id="wx-loc" onchange="wxLoad()" style="flex:1;padding:12px;border:1px solid #d1d5db;border-radius:9px;font-size:.88rem;font-family:inherit;background:#fff;min-width:0"></select>
+    <button onclick="wxGeo()" title="Bruk min posisjon" style="padding:12px 14px;background:var(--blue);color:#fff;border:none;border-radius:9px;font-weight:700;cursor:pointer;white-space:nowrap">📍 Her</button>
+  </div>
+  <div id="wx-status" class="inote" style="margin-bottom:10px"></div>
+  <div id="wx-days"></div>
+</div>
+<div class="alert ab">🔄 Oppdateres live hver gang du åpner fanen. Velg stedet dere er (eller trykk «📍 Her» for din faktiske posisjon). Værdata fra open-meteo.com.</div>
+</div>
+
+<!-- ===== DAGSPLAN ===== -->
+<div id="dagsplan" class="section">
+<div class="sec-title">📅 Dagsplan · 6–19. juli 2026</div>
+
+<!-- DAG 1 -->
+<div class="day-card">
+  <div class="day-hd" onclick="toggleDay(this)">
+    <div class="dnum">MAN<br>6/7</div>
+    <div><div class="dtitle">🏠→🚢 Slependen → Larvik → Ferje</div>
+    <div class="dmeta">Hjemreise til havn · Color Line 17:30 · Kveldsbuffet inkl.</div></div>
+    <div class="dchev">▼</div>
+  </div>
+  <div class="day-body open">
+    <ul class="tl">
+      <li><div class="ttime">Morgen</div><div class="ticon">☀️</div><div class="ttext">Siste pakking. Last bilen fra Nedre Åsvei 45. Sjekk at CEU1949-billetten er tilgjengelig digitalt eller utskrift.</div></li>
+      <li><div class="ttime">~13:00</div><div class="ticon">🚗</div><div class="ttext">Kjør fra Slependen mot Larvik (~110 km, ca. 1t 20 min via E18). Start med fulladet batteri!</div></li>
+      <li><div class="ttime">16:00</div><div class="ticon">🛳️</div><div class="ttext"><strong>Ankomst Color Line-terminalen Larvik.</strong> <span class="ttag tag-f">Ferje</span> Oppmøte senest <strong>16:30</strong> (60 min før avgang). Ha billettreferansen CEU1949 klar.</div></li>
+      <li><div class="ttime">17:30</div><div class="ticon">🚢</div><div class="ttext"><strong>Avgang Larvik!</strong> SuperSpeed 2 mot Hirtshals. Innsjekk boardingkort – brukes som lugar-nøkkel og til buffet.</div></li>
+      <li><div class="ttime">17:30+</div><div class="ticon">🍽️</div><div class="ttext"><strong>Kveldsbuffet</strong> · «Catch Me If You Can», dekk 8. <span class="ttag tag-m">3 billetter inkl.</span> Forhåndsbetalt – kan ikke refunderes. Restauranten stenger 60 min før ankomst (dvs. ~20:15).</div></li>
+      <li><div class="ttime">21:15</div><div class="ticon">🇩🇰</div><div class="ttext"><strong>Ankomst Hirtshals!</strong> Kjør av ferja og sørover mot Aalborg (~60 km, ca. 45 min via E39).</div></li>
+      <li><div class="ttime">~23:00</div><div class="ticon">🏨</div><div class="ttext"><strong>Innsjekk B&amp;B HOTEL Aalborg</strong> <span class="ttag tag-h">Hotell</span> Bekreftelse 6839.839.814 · PIN 5479. Ta med legitimasjon + kredittkort (depositum DKK 1500). Se full booking i Praktisk-fanen.</div></li>
+    </ul>
+    <div class="alert ab" style="margin-top:8px">✈️ <strong>Jon reiser separat!</strong> De tre første legene (ferje, Danmark, Hamburg) kjører Janiche, Emma &amp; Martine. Jon flyr til Düsseldorf og hentes på flyplassen <strong>fredag 10/7</strong> (se dag 5).</div>
+    <div class="alert ao" style="margin-top:8px">🚗 Elroq 50: max kjørehøyde 1,62 m – godt innenfor Color Lines grense på 1,95 m. Oppgi at det er elbil ved innsjekk.</div>
+  </div>
+</div>
+
+<!-- DAG 2 -->
+<div class="day-card">
+  <div class="day-hd" onclick="toggleDay(this)">
+    <div class="dnum">TIR<br>7/7</div>
+    <div><div class="dtitle">🇩🇰🇩🇪 Aalborg → Lüneburg</div>
+    <div class="dmeta">Frokost inkl. · ~430 km · 2 ladestopp · ~4,5 t kjøring</div></div>
+    <div class="dchev">▼</div>
+  </div>
+  <div class="day-body">
+    <ul class="tl">
+      <li><div class="ttime">Morgen</div><div class="ticon">☕</div><div class="ttext"><strong>Frokost på B&amp;B HOTEL Aalborg</strong> (inkludert). Lad Elroq så mye som mulig før avreise.</div></li>
+      <li><div class="ttime">Innen 12:00</div><div class="ticon">🚪</div><div class="ttext"><strong>Utsjekk.</strong> Kjør sørover E45 mot den tyske grensen.</div></li>
+      <li><div class="ttime">Stopp 1</div><div class="ticon">⚡</div><div class="ttext"><strong>Lading – IONITY Aabenraa (~110 km)</strong> · ved E45, kort før grensen. Lad til 80% (~270 km rekkevidde). <span class="ttag tag-c">Lading</span> Matpause!</div></li>
+      <li><div class="ttime">Underveis</div><div class="ticon">🇩🇪</div><div class="ttext">Grense DK/DE ved Flensburg. Ha pass klart. Videre sørover på A7.</div></li>
+      <li><div class="ttime">Stopp 2</div><div class="ticon">⚡</div><div class="ttext"><strong>Lading – IONITY Buddikate (A7, ved Hamburg)</strong> · lad til 80%. <span class="ttag tag-c">Lading</span></div></li>
+      <li><div class="ttime">Ettermid.</div><div class="ticon">🏰</div><div class="ttext"><strong>Ankomst Lüneburg</strong> med god margin (~50–60% igjen). Sjekk inn på <strong>B&amp;B HOTEL Lüneburg</strong>. <span class="ttag tag-h">Hotell</span></div></li>
+      <li><div class="ttime">Kveld</div><div class="ticon">🏛️</div><div class="ttext">Utforsk Lüneburgs sjarmerende <strong>middelaldergamleby</strong> – gamle salthandelshus, rådhuset og plassen «Am Sande». Historie for Janiche! Middag i gamlebyen. <span class="ttag tag-m">Mat</span></div></li>
+    </ul>
+    <div class="alert ab" style="margin-top:8px">👥 3 reisende disse dagene: Janiche, Emma &amp; Martine. Jon møter dere i Düsseldorf fredag.</div>
+  </div>
+</div>
+
+<!-- DAG 3 -->
+<div class="day-card">
+  <div class="day-hd" onclick="toggleDay(this)">
+    <div class="dnum">ONS<br>8/7</div>
+    <div><div class="dtitle">🏰 Lüneburg → Schwerin slott</div>
+    <div class="dmeta">~90 km · eventyrslott på øy i innsjøen · slottshage</div></div>
+    <div class="dchev">▼</div>
+  </div>
+  <div class="day-body">
+    <ul class="tl">
+      <li><div class="ttime">Morgen</div><div class="ticon">☕</div><div class="ttext">Frokost &amp; utsjekk i Lüneburg. Kjør til <strong>Schwerin</strong> (~90 km, ca. 1 t).</div></li>
+      <li><div class="ttime">Formiddag</div><div class="ticon">🏰</div><div class="ttext"><strong>Schweriner Schloss</strong> – Tysklands vakreste «eventyrslott», på en egen øy i Schweriner See. Slottsmuseum + delstatsparlamentet. <span class="ttag tag-m">Slott</span> <em>Sjekk åpningstider/billetter på forhånd.</em></div></li>
+      <li><div class="ttime">Formiddag</div><div class="ticon">🌷</div><div class="ttext"><strong>Slottshagen (Schlossgarten)</strong> – praktfull barokk hage med kanaler, orangeri og statuer. Midt i blinken for deg, Janiche! <span class="ttag tag-m">Hage</span></div></li>
+      <li><div class="ttime">Lunsj</div><div class="ticon">🍽️</div><div class="ttext">Lunsj i Schwerins koselige gamleby, ved slottet eller Pfaffenteich-dammen. <span class="ttag tag-m">Mat</span></div></li>
+      <li><div class="ttime">Ettermid.</div><div class="ticon">🏛️</div><div class="ttext">Rusle i den vakre <strong>Altstadt</strong> – katedralen (Dom), markedsplassen og fargerike gavlhus.</div></li>
+      <li><div class="ttime">Kveld</div><div class="ticon">🏨</div><div class="ttext">Overnatting i Schwerin-området. <span class="ttag tag-h">Hotell</span> Lad bilen til 100% over natten. <span class="ttag tag-c">Lading</span></div></li>
+    </ul>
+    <div class="alert ao" style="margin-top:8px">🛏️ Hvor sover dere natt 8/7? Send meg hotellet, så legger jeg det inn. (Herfra er det langt til Düsseldorf – se dag 4.)</div>
+  </div>
+</div>
+
+<!-- DAG 4 -->
+<div class="day-card">
+  <div class="day-hd" onclick="toggleDay(this)">
+    <div class="dnum">TOR<br>9/7</div>
+    <div><div class="dtitle">🇩🇪 Schwerin → Ruhr / Düsseldorf</div>
+    <div class="dmeta">Lang kjøredag ~560 km · posisjonering for Jon</div></div>
+    <div class="dchev">▼</div>
+  </div>
+  <div class="day-body">
+    <ul class="tl">
+      <li><div class="ttime">Morgen</div><div class="ticon">🚗</div><div class="ttext"><strong>Tidlig avreise</strong> fra Schwerin med fulladet batteri. A24 → A7 sørvestover. Lang dag – god start lønner seg!</div></li>
+      <li><div class="ttime">~11:00</div><div class="ticon">⚡</div><div class="ttext"><strong>Lading – Hannover-området (~200 km)</strong> · IONITY langs A7/A2. <span class="ttag tag-c">Lading</span></div></li>
+      <li><div class="ttime">~14:00</div><div class="ticon">⚡</div><div class="ttext"><strong>Lading + lunsj – Bielefeld/Kamen (~370 km)</strong> · IONITY langs A2. <span class="ttag tag-c">Lading</span> <span class="ttag tag-m">Mat</span></div></li>
+      <li><div class="ttime">Ettermid.</div><div class="ticon">🏨</div><div class="ttext"><strong>Ankomst Düsseldorf/Ruhr-området.</strong> Sjekk inn nær flyplassen. <span class="ttag tag-h">Hotell</span></div></li>
+      <li><div class="ttime">Kveld</div><div class="ticon">👋</div><div class="ttext">Evt. Emma treffer <strong>Tyler i Herne Wanne-Eickel</strong> (~40 km). <span class="ttag tag-f">Venner</span></div></li>
+    </ul>
+    <div class="alert ao" style="margin-top:8px">🛏️ Overnatt i Düsseldorf/Ruhr-området – klart for å hente Jon på flyplassen kl <strong>13:15</strong> fredag. ⚠️ Dette er en lang kjøredag (~560 km, ~6 t + lading) – vil du heller dele den, kan dere overnatte f.eks. i Hannover-området underveis.</div>
+  </div>
+</div>
+
+<!-- DAG 5 -->
+<div class="day-card">
+  <div class="day-hd" onclick="toggleDay(this)">
+    <div class="dnum">FRE<br>10/7</div>
+    <div><div class="dtitle">✈️ Hent Jon (DUS 13:15) + Emma &amp; Tyler</div>
+    <div class="dmeta">Jon lander 13:15 · direktefly · nå er dere fire 🎉</div></div>
+    <div class="dchev">▼</div>
+  </div>
+  <div class="day-body">
+    <ul class="tl">
+      <li><div class="ttime">Morgen</div><div class="ticon">👋</div><div class="ttext"><strong>Emma til Tyler</strong> (~40 km fra DUS) mens dere venter på Jon. <span class="ttag tag-f">Venner</span><br>📍 Deutsche Straße 23, 44649 Herne (Wanne-Eickel) · <a href="https://www.google.com/maps/dir/?api=1&amp;destination=Deutsche%20Stra%C3%9Fe%2023%2C%2044649%20Herne" target="_blank" rel="noopener" style="color:var(--blue)">åpne i kart ↗</a></div></li>
+      <li><div class="ttime">Formiddag</div><div class="ticon">☕</div><div class="ttext">Rolig start i Düsseldorf-området. Sett kursen mot flyplassen i god tid.</div></li>
+      <li><div class="ttime">13:15</div><div class="ticon">✈️</div><div class="ttext"><strong>Jon lander Düsseldorf lufthavn (DUS)</strong> – SAS direktefly SK 0816 fra Oslo. <span class="ttag tag-f">Henting</span> Kortidsparkering P3 er nærmest ankomsthallen. Nå er dere fire! Full flyinfo i Praktisk-fanen.</div></li>
+      <li><div class="ttime">Etter henting</div><div class="ticon">🍺</div><div class="ttext">Sen lunsj i Düsseldorf Altstadt – «verdens lengste bar». <span class="ttag tag-m">Mat</span></div></li>
+      <li><div class="ttime">Ettermid.</div><div class="ticon">🍻</div><div class="ttext"><strong>For Jon:</strong> Altstadt-bryggeriene Uerige &amp; Füchschen (ferskt Altbier fra fatet). <span class="ttag tag-f">Øl</span></div></li>
+      <li><div class="ttime">Ettermid.</div><div class="ticon">🏛️</div><div class="ttext">Rhinpromenaden &amp; Altstadt (historie, koselig). Rolig comfort-dag.</div></li>
+      <li><div class="ttime">Kveld</div><div class="ticon">🏨</div><div class="ttext">Overnatting Düsseldorf/Ruhr. <span class="ttag tag-h">Hotell</span></div></li>
+    </ul>
+    <div class="alert ab" style="margin-top:8px">✈️ <strong>Jons fly:</strong> OSL 11:25 → Düsseldorf 13:15 <strong>direkte</strong> (SK 0816, SAS Link, 1t 50m, ref. YURUR3). Si fra hvis noe endres, så justerer jeg dagen.</div>
+  </div>
+</div>
+
+<!-- DAG 6 -->
+<div class="day-card">
+  <div class="day-hd" onclick="toggleDay(this)">
+    <div class="dnum">LØR<br>11/7</div>
+    <div><div class="dtitle">🇳🇱 Inn i Nederland – Martine til Chloe (Helden)</div>
+    <div class="dmeta">Martine bor hos Chloe 11–12/7 · Limburg · ~90 km</div></div>
+    <div class="dchev">▼</div>
+  </div>
+  <div class="day-body">
+    <ul class="tl">
+      <li><div class="ttime">Morgen</div><div class="ticon">🚗</div><div class="ttext">Kjør fra Ruhr inn i Nederland mot Helden (~90 km). Kort etappe – ingen lading nødvendig.</div></li>
+      <li><div class="ttime">~12:00</div><div class="ticon">👋</div><div class="ttext"><strong>Lever Martine hos Chloe i Helden.</strong> <span class="ttag tag-f">Venner</span> Hun bor der til 12/7. Avtal hentetidspunkt i morgen.</div></li>
+      <li><div class="ttime">Ettermid.</div><div class="ticon">🌷</div><div class="ttext"><strong>Kasteeltuinen Arcen</strong> (slottshager ved Venlo) – historie + praktfulle hager. Midt i blinken for deg, Janiche! <span class="ttag tag-m">Hage</span></div></li>
+      <li><div class="ttime">Kveld</div><div class="ticon">🏰</div><div class="ttext"><strong>Overnatting: Château St. Gerlach</strong> (Valkenburg) – slottshotell med hager! <span class="ttag tag-h">Slott</span> Rimeligere: Van der Valk Venlo. Se Praktisk-fanen.</div></li>
+    </ul>
+  </div>
+</div>
+
+<!-- DAG 7 -->
+<div class="day-card">
+  <div class="day-hd" onclick="toggleDay(this)">
+    <div class="dnum">SØN<br>12/7</div>
+    <div><div class="dtitle">🇳🇱 Limburg – historie + hent Martine</div>
+    <div class="dmeta">Roermond/museum · Emma evt. Tyler · hent Martine</div></div>
+    <div class="dchev">▼</div>
+  </div>
+  <div class="day-body">
+    <ul class="tl">
+      <li><div class="ttime">Formiddag</div><div class="ticon">🏛️</div><div class="ttext">Utflukt: <strong>Roermond</strong> – historisk by med katedral (og outlet om noen vil shoppe). <span class="ttag tag-m">Historie</span></div></li>
+      <li><div class="ttime">Dagtid</div><div class="ticon">👋</div><div class="ttext">Emma kan treffe <strong>Tyler</strong> igjen (Herne ~1 t unna). <span class="ttag tag-f">Venner</span></div></li>
+      <li><div class="ttime">Kveld</div><div class="ticon">👋</div><div class="ttext"><strong>Hent Martine hos Chloe i Helden</strong> (slutt på oppholdet). <span class="ttag tag-f">Venner</span></div></li>
+      <li><div class="ttime">Kveld</div><div class="ticon">🏨</div><div class="ttext">Overnatting Limburg, eller kjør et stykke mot midt-Nederland. <span class="ttag tag-h">Hotell</span></div></li>
+    </ul>
+  </div>
+</div>
+
+<!-- DAG 8 -->
+<div class="day-card">
+  <div class="day-hd" onclick="toggleDay(this)">
+    <div class="dnum">MAN<br>13/7</div>
+    <div><div class="dtitle">🎨 De Hoge Veluwe + Kröller-Müller</div>
+    <div class="dmeta">Kunstmuseum + skulpturhage + natur · ~130 km</div></div>
+    <div class="dchev">▼</div>
+  </div>
+  <div class="day-body">
+    <ul class="tl">
+      <li><div class="ttime">Morgen</div><div class="ticon">🚗</div><div class="ttext">Kjør mot Otterlo/Arnhem (~130 km). Lad ved behov underveis. <span class="ttag tag-c">Lading</span></div></li>
+      <li><div class="ttime">Dagtid</div><div class="ticon">🖼️</div><div class="ttext"><strong>Kröller-Müller Museum</strong> – nest største Van Gogh-samling + stor skulpturhage, midt i nasjonalparken. Museum + hage + natur! <span class="ttag tag-m">Museum</span></div></li>
+      <li><div class="ttime">Ettermid.</div><div class="ticon">🚲</div><div class="ttext">Gratis hvite sykler i parken – rolig og fint. Comfort-tempo.</div></li>
+      <li><div class="ttime">For Emma</div><div class="ticon">🐴</div><div class="ttext"><strong>Ridning i Veluwe!</strong> Paardensportcentrum Epe eller De Nieuwe Heuvel tilbyr guidede skogsturer for erfarne ryttere (500 km rideveier). <span class="ttag tag-f">Hest</span> Ring i forveien og book. Emma har ridd siden hun var 4 – perfekt!</div></li>
+      <li><div class="ttime">Kveld</div><div class="ticon">🏨</div><div class="ttext">Overnatting Arnhem/Apeldoorn. (Tips: <strong>Paleis Het Loo</strong> med barokkhage i nærheten!) <span class="ttag tag-h">Hotell</span></div></li>
+    </ul>
+  </div>
+</div>
+
+<!-- DAG 9 -->
+<div class="day-card">
+  <div class="day-hd" onclick="toggleDay(this)">
+    <div class="dnum">TIR<br>14/7</div>
+    <div><div class="dtitle">🏛️ Amsterdam – historie &amp; museer</div>
+    <div class="dmeta">Rijksmuseum · Van Gogh · Moco · kanaler · ~90 km</div></div>
+    <div class="dchev">▼</div>
+  </div>
+  <div class="day-body">
+    <ul class="tl">
+      <li><div class="ttime">Morgen</div><div class="ticon">🚗</div><div class="ttext">Kjør til Amsterdam (~90 km). Parker på P+R i utkanten og ta metro/tram inn – enkelt og rimelig.</div></li>
+      <li><div class="ttime">Dagtid</div><div class="ticon">🖼️</div><div class="ttext"><strong>Rijksmuseum</strong> – Rembrandt, gullalderen. <em>Forhåndsbestill!</em> <span class="ttag tag-m">Museum</span></div></li>
+      <li><div class="ttime">Ettermid.</div><div class="ticon">🚤</div><div class="ttext">Kanalrundtur gjennom grachtene. Klassisk Amsterdam.</div></li>
+      <li><div class="ttime">For Emma</div><div class="ticon">🎨</div><div class="ttext"><strong>Moco Museum</strong> (Banksy &amp; moderne kunst) eller <strong>Van Gogh Museum</strong> – Emma elsker kunst! <span class="ttag tag-m">Kunst</span> Se Forslag-fanen for lenker.</div></li>
+      <li><div class="ttime">For Jon</div><div class="ticon">🍺</div><div class="ttext"><strong>Brouwerij 't IJ</strong> – ikonisk bryggeri ved vindmølla, med egen IJ IPA + omvisning. Eller Two Chefs Brewing (Green Bullet IPA). <span class="ttag tag-f">IPA</span></div></li>
+      <li><div class="ttime">Kveld</div><div class="ticon">🏨</div><div class="ttext">Overnatting Amsterdam (comfort). <span class="ttag tag-h">Hotell</span></div></li>
+    </ul>
+  </div>
+</div>
+
+<!-- DAG 10 -->
+<div class="day-card">
+  <div class="day-hd" onclick="toggleDay(this)">
+    <div class="dnum">ONS<br>15/7</div>
+    <div><div class="dtitle">🇳🇱 Amsterdam dag 2 / historiske byer</div>
+    <div class="dmeta">Van Gogh · Utrecht · Zaanse Schans – velg selv</div></div>
+    <div class="dchev">▼</div>
+  </div>
+  <div class="day-body">
+    <ul class="tl">
+      <li><div class="ttime">Valg A</div><div class="ticon">🖼️</div><div class="ttext"><strong>Van Gogh Museum</strong> eller Moco/Rembrandthuis. <span class="ttag tag-m">Museum</span></div></li>
+      <li><div class="ttime">Valg B</div><div class="ticon">🌬️</div><div class="ttext"><strong>Zaanse Schans</strong> – vindmøller, tresko &amp; ost. Hele familien elsker det!</div></li>
+      <li><div class="ttime">Valg C</div><div class="ticon">🏙️</div><div class="ttext"><strong>Utrecht</strong> – Domtoren og koselige grachten. Rolig historisk by. <span class="ttag tag-m">Historie</span></div></li>
+      <li><div class="ttime">Kveld</div><div class="ticon">🏨</div><div class="ttext">Overnatting Amsterdam. <span class="ttag tag-h">Hotell</span></div></li>
+    </ul>
+  </div>
+</div>
+
+<!-- DAG 11 -->
+<div class="day-card">
+  <div class="day-hd" onclick="toggleDay(this)">
+    <div class="dnum">TOR<br>16/7</div>
+    <div><div class="dtitle">🇳🇱 Mot Eindhoven – siste dag samlet</div>
+    <div class="dmeta">Sørover ~130 km · siste kveld alle fem</div></div>
+    <div class="dchev">▼</div>
+  </div>
+  <div class="day-body">
+    <ul class="tl">
+      <li><div class="ttime">Morgen</div><div class="ticon">🚗</div><div class="ttext">Kjør sørover mot Eindhoven (~130 km). Lad ved behov. <span class="ttag tag-c">Lading</span></div></li>
+      <li><div class="ttime">Dagtid</div><div class="ticon">⛪</div><div class="ttext">Underveis: <strong>'s-Hertogenbosch (Den Bosch)</strong> – gotisk St. Jan-katedral &amp; Hieronymus Bosch. <span class="ttag tag-m">Historie</span></div></li>
+      <li><div class="ttime">For Emma</div><div class="ticon">🎨</div><div class="ttext"><strong>Van Abbemuseum</strong> i Eindhoven – et av Europas ledende museer for samtidskunst (Picasso, Chagall, Beuys). <span class="ttag tag-m">Kunst</span></div></li>
+      <li><div class="ttime">Kveld</div><div class="ticon">🍽️</div><div class="ttext">Siste felles middag i Eindhoven. <span class="ttag tag-m">Mat</span></div></li>
+      <li><div class="ttime">Kveld</div><div class="ticon">🏨</div><div class="ttext">Overnatting Eindhoven-området. Lad til 100% for returen. <span class="ttag tag-h">Hotell</span></div></li>
+    </ul>
+  </div>
+</div>
+
+<!-- DAG 12 -->
+<div class="day-card">
+  <div class="day-hd" onclick="toggleDay(this)">
+    <div class="dnum">FRE<br>17/7</div>
+    <div><div class="dtitle">👋🇩🇪 Martine blir i Eindhoven · retur starter</div>
+    <div class="dmeta">Janiche, Emma &amp; Jon nordover · ~450 km</div></div>
+    <div class="dchev">▼</div>
+  </div>
+  <div class="day-body">
+    <ul class="tl">
+      <li><div class="ttime">Morgen</div><div class="ticon">💜</div><div class="ttext"><strong>Martine blir igjen hos vennene sine i Eindhoven.</strong> <span class="ttag tag-f">Venner</span> Videre: <strong>23/7</strong> Amsterdam→Birmingham (easyJet), <strong>hjem 26/7</strong> London→Oslo (Norwegian). Full ruteinfo i Praktisk-fanen. 💊 HRT til <strong>27. juli</strong>!</div></li>
+      <li><div class="ttime">~10:00</div><div class="ticon">🚗</div><div class="ttext">Janiche, Emma &amp; Jon kjører nordover. A67/A1 mot Tyskland.</div></li>
+      <li><div class="ttime">Underveis</div><div class="ticon">⚡</div><div class="ttext">Ladetopper: Ruhr-området + Osnabrück (~2 stopp). <span class="ttag tag-c">Lading</span></div></li>
+      <li><div class="ttime">Kveld</div><div class="ticon">🏨</div><div class="ttext">Overnatting Bremen/Hamburg-området. Lad til 100%. <span class="ttag tag-h">Hotell</span></div></li>
+    </ul>
+    <div class="alert ab" style="margin-top:8px">👥 Fra nå er dere 3 (Janiche, Emma &amp; Jon) – som stemmer med returferja for 3 voksne.</div>
+  </div>
+</div>
+
+<!-- DAG 13 -->
+<div class="day-card">
+  <div class="day-hd" onclick="toggleDay(this)">
+    <div class="dnum">LØR<br>18/7</div>
+    <div><div class="dtitle">🇩🇰🚢 Hirtshals – Ferje hjem</div>
+    <div class="dmeta">Avgang 22:15 · Oppmøte senest 21:15!</div></div>
+    <div class="dchev">▼</div>
+  </div>
+  <div class="day-body">
+    <ul class="tl">
+      <li><div class="ttime">Morgen</div><div class="ticon">🚗</div><div class="ttext">Kjør nordover fra Hamburg/Bremen gjennom Danmark. Grense ved Flensburg → E45 mot Kolding → Vejle → Aalborg → Hirtshals.</div></li>
+      <li><div class="ttime">Underveis</div><div class="ticon">⚡</div><div class="ttext">Ladestopp Flensburg + Kolding. Sørg for god reserve ved Hirtshals. <span class="ttag tag-c">Lading</span></div></li>
+      <li><div class="ttime">~19:00</div><div class="ticon">🍽️</div><div class="ttext">Middag i Hirtshals. Sjømat! God avslutning på ferieturen. <span class="ttag tag-m">Mat</span></div></li>
+      <li><div class="ttime">21:15</div><div class="ticon">🛳️</div><div class="ttext"><strong>Oppmøte Color Line-terminalen Hirtshals!</strong> <span class="ttag tag-f">Ferje</span> Senest 60 min før avgang. Ha CEU1949 klar.</div></li>
+      <li><div class="ttime">22:15</div><div class="ticon">🚢</div><div class="ttext"><strong>Avgang Hirtshals!</strong> SuperSpeed 2 mot Larvik. Natt til sjøs.</div></li>
+    </ul>
+    <div class="alert ao" style="margin-top:8px">⚠️ Buffet stenger 60 min før ankomst. Merk: ingen forhåndsbetalt buffet på returferja.</div>
+  </div>
+</div>
+
+<!-- DAG 14 -->
+<div class="day-card">
+  <div class="day-hd" onclick="toggleDay(this)">
+    <div class="dnum">SØN<br>19/7</div>
+    <div><div class="dtitle">🏠 Hjem!</div>
+    <div class="dmeta">Ankomst Larvik 02:00 · Kjøring til Slependen</div></div>
+    <div class="dchev">▼</div>
+  </div>
+  <div class="day-body">
+    <ul class="tl">
+      <li><div class="ttime">02:00</div><div class="ticon">🇳🇴</div><div class="ttext"><strong>Ankomst Larvik!</strong> Av-ferje. Hjem til Nedre Åsvei 45 er <strong>~110 km / ca. 1t 20 min</strong> (E18 via Sandvika). Alle er trøtte – kjør forsiktig!</div></li>
+      <li><div class="ttime">Lading</div><div class="ticon">⚡</div><div class="ttext"><strong>Lad i Hirtshals før avgang</strong> så dere har nok til hele hjemveien. Elroq 50 (~300 km reell) klarer 110 km lett – ingen lading nødvendig på norsk side midt på natten. <span class="ttag tag-c">Lading</span></div></li>
+      <li><div class="ttime">~03:30</div><div class="ticon">🏠</div><div class="ttext"><strong>Hjemme på Nedre Åsvei 45!</strong> 🎉 Sett bilen til lading, pakk ut det viktigste, og sov godt. Dere fortjener det!</div></li>
+    </ul>
+  </div>
+</div>
+
+</div>
+
+<!-- ===== FORSLAG ===== -->
+<div id="forslag" class="section">
+<div class="sec-title">💡 Forslag &amp; booking</div>
+<div class="alert ab" style="margin-bottom:14px">Valgfrie ideer langs ruten – trykk på et forslag for å åpne nettsiden / booke. ↗</div>
+
+<!-- KUNST for Emma -->
+<div class="card">
+  <div class="card-hd"><div class="ci" style="background:var(--purple-l)">🎨</div><div><div class="ct">Kunst &amp; museer – for Emma</div><div class="cs">Emma elsker kunst</div></div></div>
+  <div style="display:flex;flex-direction:column;gap:8px">
+    <a href="https://www.vangoghmuseum.nl/en" target="_blank" rel="noopener" style="display:block;padding:10px 12px;background:var(--gray-l);border-radius:10px;text-decoration:none;color:inherit"><div style="font-weight:700;font-size:.86rem;color:var(--blue)">Van Gogh Museum · Amsterdam ↗</div><div style="font-size:.76rem;color:var(--gray-m);margin-top:2px">Verdens største Van Gogh-samling. Forhåndsbestill.</div></a>
+    <a href="https://www.mocomuseum.com/amsterdam/" target="_blank" rel="noopener" style="display:block;padding:10px 12px;background:var(--gray-l);border-radius:10px;text-decoration:none;color:inherit"><div style="font-weight:700;font-size:.86rem;color:var(--blue)">Moco Museum · Amsterdam ↗</div><div style="font-size:.76rem;color:var(--gray-m);margin-top:2px">Banksy, moderne &amp; street art. Populært blant unge.</div></a>
+    <a href="https://www.stedelijk.nl/en" target="_blank" rel="noopener" style="display:block;padding:10px 12px;background:var(--gray-l);border-radius:10px;text-decoration:none;color:inherit"><div style="font-weight:700;font-size:.86rem;color:var(--blue)">Stedelijk Museum · Amsterdam ↗</div><div style="font-size:.76rem;color:var(--gray-m);margin-top:2px">Moderne og samtidskunst &amp; design.</div></a>
+    <a href="https://www.krollermuller.nl/en" target="_blank" rel="noopener" style="display:block;padding:10px 12px;background:var(--gray-l);border-radius:10px;text-decoration:none;color:inherit"><div style="font-weight:700;font-size:.86rem;color:var(--blue)">Kröller-Müller Museum · Otterlo ↗</div><div style="font-size:.76rem;color:var(--gray-m);margin-top:2px">Van Gogh + skulpturhage i nasjonalparken (dag 13).</div></a>
+    <a href="https://vanabbemuseum.nl/en/" target="_blank" rel="noopener" style="display:block;padding:10px 12px;background:var(--gray-l);border-radius:10px;text-decoration:none;color:inherit"><div style="font-weight:700;font-size:.86rem;color:var(--blue)">Van Abbemuseum · Eindhoven ↗</div><div style="font-size:.76rem;color:var(--gray-m);margin-top:2px">Ledende samtidskunst – der Martines venner bor (dag 16).</div></a>
+    <a href="https://www.kunstpalast.de/en" target="_blank" rel="noopener" style="display:block;padding:10px 12px;background:var(--gray-l);border-radius:10px;text-decoration:none;color:inherit"><div style="font-weight:700;font-size:.86rem;color:var(--blue)">Kunstpalast · Düsseldorf ↗</div><div style="font-size:.76rem;color:var(--gray-m);margin-top:2px">Klassisk til moderne – på hentedagen for Jon.</div></a>
+    <a href="https://www.hamburger-kunsthalle.de/en" target="_blank" rel="noopener" style="display:block;padding:10px 12px;background:var(--gray-l);border-radius:10px;text-decoration:none;color:inherit"><div style="font-weight:700;font-size:.86rem;color:var(--blue)">Hamburger Kunsthalle · Hamburg ↗</div><div style="font-size:.76rem;color:var(--gray-m);margin-top:2px">Stort kunstmuseum (dag 3).</div></a>
+  </div>
+</div>
+
+<!-- MÅ BOOKES -->
+<div class="card">
+  <div class="card-hd"><div class="ci" style="background:var(--orange-l)">🎟️</div><div><div class="ct">Bør bookes på forhånd</div><div class="cs">Populært i juli – sikre plass</div></div></div>
+  <div style="display:flex;flex-direction:column;gap:8px">
+    <a href="https://www.paardensportcentrumepe.nl/en/" target="_blank" rel="noopener" style="display:block;padding:10px 12px;background:var(--green-l);border-radius:10px;text-decoration:none;color:inherit"><div style="font-weight:700;font-size:.86rem;color:var(--green)">🐴 Emmas ridetur · Paardensportcentrum Epe ↗</div><div style="font-size:.76rem;color:var(--gray-m);margin-top:2px">Guidet skogstur på Veluwe (erfarne ryttere). Ring/mail for å booke: +31 648 101 082.</div></a>
+    <a href="https://www.denieuweheuvel.com/" target="_blank" rel="noopener" style="display:block;padding:10px 12px;background:var(--green-l);border-radius:10px;text-decoration:none;color:inherit"><div style="font-weight:700;font-size:.86rem;color:var(--green)">🐴 Alternativ ridning · De Nieuwe Heuvel ↗</div><div style="font-size:.76rem;color:var(--gray-m);margin-top:2px">Rideskole midt i Veluwe.</div></a>
+    <a href="https://www.rijksmuseum.nl/en" target="_blank" rel="noopener" style="display:block;padding:10px 12px;background:var(--gray-l);border-radius:10px;text-decoration:none;color:inherit"><div style="font-weight:700;font-size:.86rem;color:var(--blue)">🏛️ Rijksmuseum · Amsterdam ↗</div><div style="font-size:.76rem;color:var(--gray-m);margin-top:2px">Forhåndsbestill tidsluke (dag 14).</div></a>
+    <a href="https://www.hogeveluwe.nl/en" target="_blank" rel="noopener" style="display:block;padding:10px 12px;background:var(--gray-l);border-radius:10px;text-decoration:none;color:inherit"><div style="font-weight:700;font-size:.86rem;color:var(--blue)">🌲 Nasjonalpark De Hoge Veluwe ↗</div><div style="font-size:.76rem;color:var(--gray-m);margin-top:2px">Inngang + Kröller-Müller. Gratis hvite sykler (dag 13).</div></a>
+    <a href="https://www.oostwegelcollection.nl/chateau-st-gerlach/en/" target="_blank" rel="noopener" style="display:block;padding:10px 12px;background:var(--purple-l);border-radius:10px;text-decoration:none;color:inherit"><div style="font-weight:700;font-size:.86rem;color:var(--purple)">🏰 Château St. Gerlach (slott) · Valkenburg ↗</div><div style="font-size:.76rem;color:var(--gray-m);margin-top:2px">5★ slottshotell med hager. Book tidlig (dag 11–12).</div></a>
+  </div>
+</div>
+
+<!-- SHOPPING -->
+<div class="card">
+  <div class="card-hd"><div class="ci" style="background:var(--blue-pale)">🛍️</div><div><div class="ct">Shopping</div></div></div>
+  <div style="display:flex;flex-direction:column;gap:8px">
+    <a href="https://www.mcarthurglen.com/en/outlets/nl/designer-outlet-roermond/" target="_blank" rel="noopener" style="display:block;padding:10px 12px;background:var(--gray-l);border-radius:10px;text-decoration:none;color:inherit"><div style="font-weight:700;font-size:.86rem;color:var(--blue)">Designer Outlet Roermond ↗</div><div style="font-size:.76rem;color:var(--gray-m);margin-top:2px">200+ merker (Adidas, Gucci, Prada m.fl.), midt i Limburg – nær Chloe/slottet (dag 11–12).</div></a>
+    <a href="https://www.google.com/maps/search/Yohji+Yamamoto+Nationalestraat+32+Antwerpen" target="_blank" rel="noopener" style="display:block;padding:10px 12px;background:var(--purple-l);border-radius:10px;text-decoration:none;color:inherit"><div style="font-weight:700;font-size:.86rem;color:var(--purple)">Yohji Yamamoto · Antwerpen ↗</div><div style="font-size:.76rem;color:var(--gray-m);margin-top:2px">Y-3/Yohji flaggskip i motekvarteret (Nationalestraat 32). ~1,5 t fra Eindhoven/Limburg.</div></a>
+  </div>
+  <div class="alert ao" style="margin-top:10px">👕 <strong>Y-3-klær:</strong> Roermond har ingen egen Y-3-butikk (Adidas-outleten fører den av og til). For ekte Y-3/Yohji Yamamoto er <strong>flaggskipet i Antwerpen</strong> beste bet – men <strong>ring/sjekk at den er åpen</strong> før dere drar (det har vært snakk om nedleggelse). Kan gjøres som dagstur fra Limburg eller Eindhoven.</div>
+</div>
+
+<!-- ØL for Jon -->
+<div class="card">
+  <div class="card-hd"><div class="ci" style="background:var(--orange-l)">🍺</div><div><div class="ct">Øl &amp; bryggerier – for Jon</div><div class="cs">IPA &amp; craft</div></div></div>
+  <div style="display:flex;flex-direction:column;gap:8px">
+    <a href="https://www.brouwerijhetij.nl/en" target="_blank" rel="noopener" style="display:block;padding:10px 12px;background:var(--gray-l);border-radius:10px;text-decoration:none;color:inherit"><div style="font-weight:700;font-size:.86rem;color:var(--blue)">Brouwerij 't IJ · Amsterdam ↗</div><div style="font-size:.76rem;color:var(--gray-m);margin-top:2px">Ikonisk bryggeri ved vindmølla, IJ IPA + omvisning.</div></a>
+    <a href="https://www.twochefsbrewing.com" target="_blank" rel="noopener" style="display:block;padding:10px 12px;background:var(--gray-l);border-radius:10px;text-decoration:none;color:inherit"><div style="font-weight:700;font-size:.86rem;color:var(--blue)">Two Chefs Brewing · Amsterdam ↗</div><div style="font-size:.76rem;color:var(--gray-m);margin-top:2px">Green Bullet IPA &amp; masse craft.</div></a>
+    <a href="https://www.uerige.de/en/" target="_blank" rel="noopener" style="display:block;padding:10px 12px;background:var(--gray-l);border-radius:10px;text-decoration:none;color:inherit"><div style="font-weight:700;font-size:.86rem;color:var(--blue)">Uerige · Düsseldorf Altstadt ↗</div><div style="font-size:.76rem;color:var(--gray-m);margin-top:2px">Ferskt Altbier fra fatet (dag 5).</div></a>
+  </div>
+</div>
+
+<!-- RESTAURANTER -->
+<div class="card">
+  <div class="card-hd"><div class="ci" style="background:var(--green-l)">🍽️</div><div><div class="ct">Restauranttips (familievennlig)</div><div class="cs">Trykk for kart &amp; åpningstider</div></div></div>
+  <div style="display:flex;flex-direction:column;gap:8px">
+    <a href="https://www.google.com/maps/search/familievennlig+restaurant+Hamburg+Speicherstadt" target="_blank" rel="noopener" style="display:block;padding:10px 12px;background:var(--gray-l);border-radius:10px;text-decoration:none;color:inherit"><div style="font-weight:700;font-size:.86rem;color:var(--blue)">🇩🇪 Hamburg ↗</div><div style="font-size:.76rem;color:var(--gray-m);margin-top:2px">Bullerei (Sternschanze), Block House (grill), Hard Rock Cafe ved havna.</div></a>
+    <a href="https://www.google.com/maps/search/restaurant+D%C3%BCsseldorf+Altstadt+familie" target="_blank" rel="noopener" style="display:block;padding:10px 12px;background:var(--gray-l);border-radius:10px;text-decoration:none;color:inherit"><div style="font-weight:700;font-size:.86rem;color:var(--blue)">🇩🇪 Düsseldorf ↗</div><div style="font-size:.76rem;color:var(--gray-m);margin-top:2px">Brauerei zum Schlüssel (Altbier + mat), pizzeriaer i Altstadt.</div></a>
+    <a href="https://www.google.com/maps/search/restaurant+Valkenburg+Limburg+familie" target="_blank" rel="noopener" style="display:block;padding:10px 12px;background:var(--gray-l);border-radius:10px;text-decoration:none;color:inherit"><div style="font-weight:700;font-size:.86rem;color:var(--blue)">🇳🇱 Limburg / Valkenburg ↗</div><div style="font-size:.76rem;color:var(--gray-m);margin-top:2px">Château St. Gerlach (fine dining), pannenkoekenhuis, brasserier i Valkenburg.</div></a>
+    <a href="https://www.google.com/maps/search/familievennlig+restaurant+Amsterdam+centrum" target="_blank" rel="noopener" style="display:block;padding:10px 12px;background:var(--gray-l);border-radius:10px;text-decoration:none;color:inherit"><div style="font-weight:700;font-size:.86rem;color:var(--blue)">🇳🇱 Amsterdam ↗</div><div style="font-size:.76rem;color:var(--gray-m);margin-top:2px">The Pancake Bakery, Moeders (nederlandsk), Pllek (NDSM, avslappet).</div></a>
+    <a href="https://www.google.com/maps/search/restaurant+Eindhoven+centrum+familie" target="_blank" rel="noopener" style="display:block;padding:10px 12px;background:var(--gray-l);border-radius:10px;text-decoration:none;color:inherit"><div style="font-weight:700;font-size:.86rem;color:var(--blue)">🇳🇱 Eindhoven ↗</div><div style="font-size:.76rem;color:var(--gray-m);margin-top:2px">Down Town Gourmet Market (food hall), Radio Royaal (industri-sjarm).</div></a>
+  </div>
+</div>
+
+<!-- REGNVÆR-BACKUP -->
+<div class="card">
+  <div class="card-hd"><div class="ci" style="background:var(--blue-pale)">🌧️</div><div><div class="ct">Regnvær-backup (innendørs)</div><div class="cs">Sjekk Vær-fanen – planer for grå dager</div></div></div>
+  <div style="display:flex;flex-direction:column;gap:8px">
+    <a href="https://www.google.com/maps/search/Schweriner+Schloss" target="_blank" rel="noopener" style="display:block;padding:10px 12px;background:var(--gray-l);border-radius:10px;text-decoration:none;color:inherit"><div style="font-weight:700;font-size:.86rem;color:var(--blue)">🇩🇪 Schwerin / Lüneburg ↗</div><div style="font-size:.76rem;color:var(--gray-m);margin-top:2px">Schweriner Schloss (slottsmuseum), Lüneburgs saltmuseum, kunsthaller.</div></a>
+    <a href="https://www.aquazoo.duesseldorf.de/" target="_blank" rel="noopener" style="display:block;padding:10px 12px;background:var(--gray-l);border-radius:10px;text-decoration:none;color:inherit"><div style="font-weight:700;font-size:.86rem;color:var(--blue)">🇩🇪 Düsseldorf ↗</div><div style="font-size:.76rem;color:var(--gray-m);margin-top:2px">Aquazoo Löbbecke, Kunstpalast (museum).</div></a>
+    <a href="https://www.thermae2000.nl/en/" target="_blank" rel="noopener" style="display:block;padding:10px 12px;background:var(--gray-l);border-radius:10px;text-decoration:none;color:inherit"><div style="font-weight:700;font-size:.86rem;color:var(--blue)">🇳🇱 Limburg / Valkenburg ↗</div><div style="font-size:.76rem;color:var(--gray-m);margin-top:2px">Fluweelengrot/Gemeentegrot (grotter!), Thermae 2000 (spa), Outlet Roermond.</div></a>
+    <a href="https://www.nemosciencemuseum.nl/en/" target="_blank" rel="noopener" style="display:block;padding:10px 12px;background:var(--gray-l);border-radius:10px;text-decoration:none;color:inherit"><div style="font-weight:700;font-size:.86rem;color:var(--blue)">🇳🇱 Amsterdam ↗</div><div style="font-size:.76rem;color:var(--gray-m);margin-top:2px">NEMO Science Museum, kunstmuseene (Van Gogh/Rijks/Moco), Body Worlds.</div></a>
+    <a href="https://www.dafmuseum.nl/en/" target="_blank" rel="noopener" style="display:block;padding:10px 12px;background:var(--gray-l);border-radius:10px;text-decoration:none;color:inherit"><div style="font-weight:700;font-size:.86rem;color:var(--blue)">🇳🇱 Eindhoven ↗</div><div style="font-size:.76rem;color:var(--gray-m);margin-top:2px">Van Abbemuseum (kunst), Philips Museum, DAF Museum (biler).</div></a>
+  </div>
+</div>
+</div>
+
+<!-- ===== PAKKELISTE (per person) ===== -->
+<div id="pakkeliste" class="section">
+<div class="sec-title">🎒 Pakkeliste per person</div>
+
+<div class="ptabs">
+  <button class="ptab active" onclick="showPerson('janiche',this)">👱‍♀️ Janiche</button>
+  <button class="ptab" onclick="showPerson('jon',this)">🧔 Jon</button>
+  <button class="ptab" onclick="showPerson('emma',this)">👩 Emma</button>
+  <button class="ptab" onclick="showPerson('martine',this)">👩‍🦱 Martine</button>
+  <button class="ptab" onclick="showPerson('felles',this)">🚗 Felles</button>
+</div>
+
+<!-- JANICHE -->
+<div id="p-janiche" class="ppanel active">
+  <div class="card">
+    <div class="card-hd"><div class="ci" style="background:var(--purple-l)">👱‍♀️</div><div><div class="ct">Janiche – Sjåfør &amp; navigator</div></div></div>
+    <div class="pstats" id="stats-janiche"></div>
+    <div class="pprog"><div class="pprogbar" id="bar-janiche"></div></div>
+
+    <div class="pack-cat">
+      <div class="pcat-title">📄 Dokumenter (ditt ansvar)</div>
+      <div class="pitems">
+        <label class="pitem"><input type="checkbox" data-person="janiche" onchange="updatePersonProgress('janiche')"><span><span>Pass (gyldig)</span><span class="pnote">Sjekk utløpsdato!</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="janiche" onchange="updatePersonProgress('janiche')"><span><span>Color Line-billett CEU1949</span><span class="pnote">Digitalt og/eller utskrift</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="janiche" onchange="updatePersonProgress('janiche')"><span><span>Vognkort / registreringsbevis</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="janiche" onchange="updatePersonProgress('janiche')"><span><span>Grønt kort (forsikringsbevis)</span><span class="pnote">Fra Gjensidige/If e.l.</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="janiche" onchange="updatePersonProgress('janiche')"><span><span>EHIC-kort (europeisk helsetrygdkort)</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="janiche" onchange="updatePersonProgress('janiche')"><span><span>Hotellbekreftelser (alle)</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="janiche" onchange="updatePersonProgress('janiche')"><span><span>Kredittkort/bankkort (Visa/MC)</span></span></label>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div class="pack-cat">
+      <div class="pcat-title">👗 Klær (14 dager)</div>
+      <div class="pitems">
+        <label class="pitem"><input type="checkbox" data-person="janiche" onchange="updatePersonProgress('janiche')"><span><span>T-skjorter (5 stk)</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="janiche" onchange="updatePersonProgress('janiche')"><span><span>Topper/bluser (3 stk)</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="janiche" onchange="updatePersonProgress('janiche')"><span><span>Bukser (2–3 stk)</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="janiche" onchange="updatePersonProgress('janiche')"><span><span>Shorts (2 stk)</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="janiche" onchange="updatePersonProgress('janiche')"><span><span>Pent antrekk til restaurant (1 stk)</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="janiche" onchange="updatePersonProgress('janiche')"><span><span>Kjole/lett kjoler (2 stk)</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="janiche" onchange="updatePersonProgress('janiche')"><span><span>Genser/cardigan</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="janiche" onchange="updatePersonProgress('janiche')"><span><span>Regnjakke</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="janiche" onchange="updatePersonProgress('janiche')"><span><span>Badedrakt</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="janiche" onchange="updatePersonProgress('janiche')"><span><span>Undertøy + sokker (7–8 stk)</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="janiche" onchange="updatePersonProgress('janiche')"><span><span>Pysjamas</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="janiche" onchange="updatePersonProgress('janiche')"><span><span>Komfortable gåsko</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="janiche" onchange="updatePersonProgress('janiche')"><span><span>Sandaler</span></span></label>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div class="pack-cat">
+      <div class="pcat-title">🧴 Toalettsaker</div>
+      <div class="pitems">
+        <label class="pitem"><input type="checkbox" data-person="janiche" onchange="updatePersonProgress('janiche')"><span><span>Sjampo og balsam</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="janiche" onchange="updatePersonProgress('janiche')"><span><span>Tannbørste og tannkrem</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="janiche" onchange="updatePersonProgress('janiche')"><span><span>Deodorant</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="janiche" onchange="updatePersonProgress('janiche')"><span><span>Ansiktskrem og sminke</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="janiche" onchange="updatePersonProgress('janiche')"><span><span>Solkrem SPF 30+</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="janiche" onchange="updatePersonProgress('janiche')"><span><span>Solbriller</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="janiche" onchange="updatePersonProgress('janiche')"><span><span>Hårprodukter</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="janiche" onchange="updatePersonProgress('janiche')"><span><span>Medisiner (egne faste)</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="janiche" onchange="updatePersonProgress('janiche')"><span><span>C-PAP-maskin</span><span class="pnote">+ maske, slange og strømadapter (EU)</span></span></label>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div class="pack-cat">
+      <div class="pcat-title">📱 Teknologi</div>
+      <div class="pitems">
+        <label class="pitem"><input type="checkbox" data-person="janiche" onchange="updatePersonProgress('janiche')"><span><span>Mobil + USB-C-lader</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="janiche" onchange="updatePersonProgress('janiche')"><span><span>Kamera</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="janiche" onchange="updatePersonProgress('janiche')"><span><span>Power bank</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="janiche" onchange="updatePersonProgress('janiche')"><span><span>ABRP-app installert for Elroq 50</span><span class="pnote">A Better Route Planner – beste EV-ruteapp</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="janiche" onchange="updatePersonProgress('janiche')"><span><span>Google Maps / offline kart nedlastet</span><span class="pnote">Last ned DK, DE og NL offline</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="janiche" onchange="updatePersonProgress('janiche')"><span><span>IONITY-app + Fastned-app installert</span></span></label>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- JON -->
+<div id="p-jon" class="ppanel">
+  <div class="card">
+    <div class="card-hd"><div class="ci" style="background:var(--blue-pale)">🧔</div><div><div class="ct">Jon – Co-pilot &amp; navigatør</div></div></div>
+    <div class="pstats" id="stats-jon"></div>
+    <div class="pprog"><div class="pprogbar" id="bar-jon"></div></div>
+
+    <div class="pack-cat">
+      <div class="pcat-title">📄 Dokumenter</div>
+      <div class="pitems">
+        <label class="pitem"><input type="checkbox" data-person="jon" onchange="updatePersonProgress('jon')"><span><span>Pass (gyldig)</span><span class="pnote">Sjekk utløpsdato!</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="jon" onchange="updatePersonProgress('jon')"><span><span>Flybillett / boardingpass til Düsseldorf (DUS)</span><span class="pnote">Flyr og møter familien fre 10/7</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="jon" onchange="updatePersonProgress('jon')"><span><span>Håndbagasje: væske i beholdere ≤ 100 ml</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="jon" onchange="updatePersonProgress('jon')"><span><span>EHIC-kort</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="jon" onchange="updatePersonProgress('jon')"><span><span>Kredittkort/bankkort</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="jon" onchange="updatePersonProgress('jon')"><span><span>Kontanter (€ og DKK)</span><span class="pnote">~€100 og ~200 DKK</span></span></label>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div class="pack-cat">
+      <div class="pcat-title">👕 Klær (14 dager)</div>
+      <div class="pitems">
+        <label class="pitem"><input type="checkbox" data-person="jon" onchange="updatePersonProgress('jon')"><span><span>T-skjorter (6 stk)</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="jon" onchange="updatePersonProgress('jon')"><span><span>Skjorte (2 stk)</span><span class="pnote">Til restaurant i Hamburg</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="jon" onchange="updatePersonProgress('jon')"><span><span>Bukser (3 stk)</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="jon" onchange="updatePersonProgress('jon')"><span><span>Shorts (2 stk)</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="jon" onchange="updatePersonProgress('jon')"><span><span>Genser</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="jon" onchange="updatePersonProgress('jon')"><span><span>Regnjakke</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="jon" onchange="updatePersonProgress('jon')"><span><span>Badebukse</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="jon" onchange="updatePersonProgress('jon')"><span><span>Undertøy + sokker (8 stk)</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="jon" onchange="updatePersonProgress('jon')"><span><span>Pysjamas</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="jon" onchange="updatePersonProgress('jon')"><span><span>Gåsko / sneakers</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="jon" onchange="updatePersonProgress('jon')"><span><span>Sandaler</span></span></label>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div class="pack-cat">
+      <div class="pcat-title">🧴 Toalettsaker</div>
+      <div class="pitems">
+        <label class="pitem"><input type="checkbox" data-person="jon" onchange="updatePersonProgress('jon')"><span><span>Tannbørste og tannkrem</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="jon" onchange="updatePersonProgress('jon')"><span><span>Barberskum / barberhøvel</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="jon" onchange="updatePersonProgress('jon')"><span><span>Deodorant</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="jon" onchange="updatePersonProgress('jon')"><span><span>Solkrem</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="jon" onchange="updatePersonProgress('jon')"><span><span>Solbriller</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="jon" onchange="updatePersonProgress('jon')"><span><span>Medisiner (egne faste)</span></span></label>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div class="pack-cat">
+      <div class="pcat-title">📱 Teknologi &amp; co-pilot</div>
+      <div class="pitems">
+        <label class="pitem"><input type="checkbox" data-person="jon" onchange="updatePersonProgress('jon')"><span><span>Mobil + lader</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="jon" onchange="updatePersonProgress('jon')"><span><span>Hodetelefoner</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="jon" onchange="updatePersonProgress('jon')"><span><span>Power bank</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="jon" onchange="updatePersonProgress('jon')"><span><span>PlugShare-app</span><span class="pnote">Backup ladekart</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="jon" onchange="updatePersonProgress('jon')"><span><span>Offline kart DE + NL nedlastet</span></span></label>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- EMMA -->
+<div id="p-emma" class="ppanel">
+  <div class="card">
+    <div class="card-hd"><div class="ci" style="background:var(--green-l)">👩</div><div><div class="ct">Emma – Eventyreren</div><div class="cs">17 år</div></div></div>
+    <div class="pstats" id="stats-emma"></div>
+    <div class="pprog"><div class="pprogbar" id="bar-emma"></div></div>
+
+    <div class="pack-cat">
+      <div class="pcat-title">📄 Dokumenter</div>
+      <div class="pitems">
+        <label class="pitem"><input type="checkbox" data-person="emma" onchange="updatePersonProgress('emma')"><span><span>Pass</span><span class="pnote">Sjekk utløpsdato!</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="emma" onchange="updatePersonProgress('emma')"><span><span>EHIC-kort</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="emma" onchange="updatePersonProgress('emma')"><span><span>Kontaktinfo til Tyler</span><span class="pnote">Deutsche Straße 23, 44649 Herne (Wanne-Eickel) – se kart i dag 5</span></span></label>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div class="pack-cat">
+      <div class="pcat-title">👗 Klær</div>
+      <div class="pitems">
+        <label class="pitem"><input type="checkbox" data-person="emma" onchange="updatePersonProgress('emma')"><span><span>T-skjorter (6 stk)</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="emma" onchange="updatePersonProgress('emma')"><span><span>Kjoler (3 stk)</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="emma" onchange="updatePersonProgress('emma')"><span><span>Leggings / tynne bukser (2 stk)</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="emma" onchange="updatePersonProgress('emma')"><span><span>Shorts (2 stk)</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="emma" onchange="updatePersonProgress('emma')"><span><span>Genser / cardigan</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="emma" onchange="updatePersonProgress('emma')"><span><span>Regnjakke</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="emma" onchange="updatePersonProgress('emma')"><span><span>Badedrakt</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="emma" onchange="updatePersonProgress('emma')"><span><span>Undertøy + sokker (8 stk)</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="emma" onchange="updatePersonProgress('emma')"><span><span>Pysjamas</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="emma" onchange="updatePersonProgress('emma')"><span><span>Komfortable gåsko</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="emma" onchange="updatePersonProgress('emma')"><span><span>Sandaler</span></span></label>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div class="pack-cat">
+      <div class="pcat-title">🧴 Toalettsaker</div>
+      <div class="pitems">
+        <label class="pitem"><input type="checkbox" data-person="emma" onchange="updatePersonProgress('emma')"><span><span>Tannbørste + tannkrem</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="emma" onchange="updatePersonProgress('emma')"><span><span>Børste / hårstrikk</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="emma" onchange="updatePersonProgress('emma')"><span><span>Sjampo + balsam</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="emma" onchange="updatePersonProgress('emma')"><span><span>Hårprodukter</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="emma" onchange="updatePersonProgress('emma')"><span><span>Deodorant</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="emma" onchange="updatePersonProgress('emma')"><span><span>Sminke (om ønskelig)</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="emma" onchange="updatePersonProgress('emma')"><span><span>Solkrem SPF 30+</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="emma" onchange="updatePersonProgress('emma')"><span><span>Myggspray</span></span></label>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div class="pack-cat">
+      <div class="pcat-title">🎮 Underholdning i bilen</div>
+      <div class="pitems">
+        <label class="pitem"><input type="checkbox" data-person="emma" onchange="updatePersonProgress('emma')"><span><span>iPad/nettbrett + lader</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="emma" onchange="updatePersonProgress('emma')"><span><span>Hodetelefoner / AirPods</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="emma" onchange="updatePersonProgress('emma')"><span><span>Filmer/serier/musikk nedlastet offline</span><span class="pnote">Netflix, Spotify etc. – last ned hjemme!</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="emma" onchange="updatePersonProgress('emma')"><span><span>Favorittbøker (2–3 stk)</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="emma" onchange="updatePersonProgress('emma')"><span><span>Kortspill / reisespill</span><span class="pnote">UNO, Sushi Go e.l.</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="emma" onchange="updatePersonProgress('emma')"><span><span>Power bank</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="emma" onchange="updatePersonProgress('emma')"><span><span>Pute til bilen</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="emma" onchange="updatePersonProgress('emma')"><span><span>Liten ryggsekk til utflukter</span></span></label>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MARTINE -->
+<div id="p-martine" class="ppanel">
+  <div class="card">
+    <div class="card-hd"><div class="ci" style="background:var(--orange-l)">👩‍🦱</div><div><div class="ct">Martine</div><div class="cs">22 år · kul &amp; chill</div></div></div>
+    <div class="pstats" id="stats-martine"></div>
+    <div class="pprog"><div class="pprogbar" id="bar-martine"></div></div>
+
+    <div class="pack-cat">
+      <div class="pcat-title">📄 Dokumenter</div>
+      <div class="pitems">
+        <label class="pitem"><input type="checkbox" data-person="martine" onchange="updatePersonProgress('martine')"><span><span>Pass</span><span class="pnote">Sjekk utløpsdato!</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="martine" onchange="updatePersonProgress('martine')"><span><span>EHIC-kort</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="martine" onchange="updatePersonProgress('martine')"><span><span>Eget bankkort</span><span class="pnote">Til lommepenger i DK/DE/NL</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="martine" onchange="updatePersonProgress('martine')"><span><span>Resept / legeerklæring for HRT</span><span class="pnote">Greit å ha ved grensepassering og på apotek</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="martine" onchange="updatePersonProgress('martine')"><span><span>Kontaktinfo: Chloe (Helden) + venner i Eindhoven</span><span class="pnote">Bor hos Chloe 11–12/7 · blir i Eindhoven fra 17/7</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="martine" onchange="updatePersonProgress('martine')"><span><span>Egen hjemreise fra Eindhoven ordnet</span><span class="pnote">Avtal med mamma – tog/fly hjem etter oppholdet</span></span></label>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div class="pack-cat">
+      <div class="pcat-title">👗 Klær (14 dager)</div>
+      <div class="pitems">
+        <label class="pitem"><input type="checkbox" data-person="martine" onchange="updatePersonProgress('martine')"><span><span>T-skjorter / topper (6 stk)</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="martine" onchange="updatePersonProgress('martine')"><span><span>Kjoler / skjørt (2–3 stk)</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="martine" onchange="updatePersonProgress('martine')"><span><span>Bukser / jeans (2 stk)</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="martine" onchange="updatePersonProgress('martine')"><span><span>Shorts (2 stk)</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="martine" onchange="updatePersonProgress('martine')"><span><span>Genser / hoodie</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="martine" onchange="updatePersonProgress('martine')"><span><span>Regnjakke</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="martine" onchange="updatePersonProgress('martine')"><span><span>Undertøy + sokker (8 stk)</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="martine" onchange="updatePersonProgress('martine')"><span><span>Pysjamas</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="martine" onchange="updatePersonProgress('martine')"><span><span>Gåsko / sneakers</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="martine" onchange="updatePersonProgress('martine')"><span><span>Sandaler</span></span></label>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div class="pack-cat">
+      <div class="pcat-title">🧴 Toalettsaker</div>
+      <div class="pitems">
+        <label class="pitem"><input type="checkbox" data-person="martine" onchange="updatePersonProgress('martine')"><span><span>Tannbørste + tannkrem</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="martine" onchange="updatePersonProgress('martine')"><span><span>Ansiktsvask / rens</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="martine" onchange="updatePersonProgress('martine')"><span><span>Deodorant</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="martine" onchange="updatePersonProgress('martine')"><span><span>Solkrem SPF 30+</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="martine" onchange="updatePersonProgress('martine')"><span><span>Solbriller</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="martine" onchange="updatePersonProgress('martine')"><span><span>Sjampo + balsam</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="martine" onchange="updatePersonProgress('martine')"><span><span>Hårprodukter</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="martine" onchange="updatePersonProgress('martine')"><span><span>HRT-medisiner – nok til 27. juli!</span><span class="pnote">Dekker reisen + Eindhoven + videre til Birmingham. Ta med ekstra.</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="martine" onchange="updatePersonProgress('martine')"><span><span>Medisiner (egne faste)</span></span></label>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div class="pack-cat">
+      <div class="pcat-title">📱 Teknologi</div>
+      <div class="pitems">
+        <label class="pitem"><input type="checkbox" data-person="martine" onchange="updatePersonProgress('martine')"><span><span>Mobil + lader (USB-C)</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="martine" onchange="updatePersonProgress('martine')"><span><span>Hodetelefoner / ørepropper</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="martine" onchange="updatePersonProgress('martine')"><span><span>Power bank</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="martine" onchange="updatePersonProgress('martine')"><span><span>Pute til bilen</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="martine" onchange="updatePersonProgress('martine')"><span><span>PC/Switch/Playstation</span></span></label>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FELLES -->
+<div id="p-felles" class="ppanel">
+  <div class="card">
+    <div class="card-hd"><div class="ci" style="background:var(--green-l)">🚗</div><div><div class="ct">Felles – bil og familie</div></div></div>
+    <div class="pstats" id="stats-felles"></div>
+    <div class="pprog"><div class="pprogbar" id="bar-felles"></div></div>
+
+    <div class="pack-cat">
+      <div class="pcat-title">⚡ Elroq 50 – EV-tilbehør</div>
+      <div class="pitems">
+        <label class="pitem"><input type="checkbox" data-person="felles" onchange="updatePersonProgress('felles')"><span><span>CCS/Type 2 ladekabel</span><span class="pnote">Inkludert i Elroq – sjekk at den er i bilen</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="felles" onchange="updatePersonProgress('felles')"><span><span>Mode 2 nødladekabel (til vanlig stikkontakt)</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="felles" onchange="updatePersonProgress('felles')"><span><span>IONITY-app installert + konto opprettet</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="felles" onchange="updatePersonProgress('felles')"><span><span>Fastned-app installert</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="felles" onchange="updatePersonProgress('felles')"><span><span>ABRP installert med Elroq 50-profil</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="felles" onchange="updatePersonProgress('felles')"><span><span>Dekktrykk sjekket</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="felles" onchange="updatePersonProgress('felles')"><span><span>Paneserrutevann fylt opp</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="felles" onchange="updatePersonProgress('felles')"><span><span>Skjermbrikke / bompenger sjekket</span><span class="pnote">Danmark og Nederland har bomveier</span></span></label>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div class="pack-cat">
+      <div class="pcat-title">🚦 Påbudt i EU (bil)</div>
+      <div class="pitems">
+        <label class="pitem"><input type="checkbox" data-person="felles" onchange="updatePersonProgress('felles')"><span><span>Refleksvest × 4</span><span class="pnote">Påbudt i DE, DK og NL</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="felles" onchange="updatePersonProgress('felles')"><span><span>Varseltrekant</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="felles" onchange="updatePersonProgress('felles')"><span><span>Førstehjelpskit</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="felles" onchange="updatePersonProgress('felles')"><span><span>Brannslokker (anbefalt for EV)</span></span></label>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div class="pack-cat">
+      <div class="pcat-title">💊 Familie-apotek</div>
+      <div class="pitems">
+        <label class="pitem"><input type="checkbox" data-person="felles" onchange="updatePersonProgress('felles')"><span><span>Paracet</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="felles" onchange="updatePersonProgress('felles')"><span><span>Ibuprofen</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="felles" onchange="updatePersonProgress('felles')"><span><span>Reisesykemedisiner</span><span class="pnote">F.eks. Scopoderm-plaster for ferje</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="felles" onchange="updatePersonProgress('felles')"><span><span>Magemedisiner (Imodium, Imovane)</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="felles" onchange="updatePersonProgress('felles')"><span><span>Sårplaster og bandasjer</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="felles" onchange="updatePersonProgress('felles')"><span><span>Desinfeksjonsmiddel (håndsprit)</span></span></label>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div class="pack-cat">
+      <div class="pcat-title">🍎 Snacks og drikke til bilen</div>
+      <div class="pitems">
+        <label class="pitem"><input type="checkbox" data-person="felles" onchange="updatePersonProgress('felles')"><span><span>Vannflasker × 4 (gjenbrukbare)</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="felles" onchange="updatePersonProgress('felles')"><span><span>Termokopp til kaffe (Janiche/Jon)</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="felles" onchange="updatePersonProgress('felles')"><span><span>Frukt og grønnsaker til bilturen</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="felles" onchange="updatePersonProgress('felles')"><span><span>Kjeks, nøtter og snacks</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="felles" onchange="updatePersonProgress('felles')"><span><span>Søppelpose til bilen</span></span></label>
+        <label class="pitem"><input type="checkbox" data-person="felles" onchange="updatePersonProgress('felles')"><span><span>Desinfiseringsservietter</span></span></label>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<!-- ===== LADING ===== -->
+<div id="lading" class="section">
+<div class="sec-title">⚡ Ladestrategi – Elroq 50</div>
+
+<div class="card">
+  <div class="card-hd"><div class="ci" style="background:var(--green-l)">🚗</div><div><div class="ct">Skoda Elroq 50 – nøkkeltall</div></div></div>
+  <div class="evgrid">
+    <div class="evs"><div class="evsv">~375</div><div class="evsl">km WLTP</div></div>
+    <div class="evs"><div class="evsv">~260</div><div class="evsl">km motorvei reell</div></div>
+    <div class="evs"><div class="evsv">150 kW</div><div class="evsl">maks DC-lading</div></div>
+    <div class="evs"><div class="evsv">55 kWh</div><div class="evsl">netto batteri</div></div>
+    <div class="evs"><div class="evsv">~22 min</div><div class="evsl">10→80% IONITY</div></div>
+    <div class="evs"><div class="evsv">CCS/T2</div><div class="evsl">kontakttype</div></div>
+  </div>
+  <div class="alert ao" style="margin-top:8px">⚠️ Motorvei 120 km/t: planlegg ladetopp senest hvert 200. km. Start hver dag med 100%.</div>
+</div>
+
+<div class="card">
+  <div class="card-hd"><div class="ci" style="background:var(--green-l)">🇩🇰→🇩🇪</div><div><div class="ct">Aalborg → Lüneburg (~430 km)</div><div class="cs">Dag 2 · 2 ladestopp · lad mest mulig i Aalborg først</div></div></div>
+  <div class="cstop">
+    <div class="cicon">⚡</div>
+    <div><div class="cname">1. Aabenraa – IONITY</div>
+    <div class="cdet">Ca. 110 km fra Aalborg, ved E45 kort før grensen. Lad til 80% (~270 km rekkevidde). Perfekt matpause!</div>
+    <div class="cmeta"><span class="cpill">~110 km fra start</span><span class="cpill">Lad til 80%</span><span class="cpill">~20 min</span></div></div>
+  </div>
+  <div class="cstop">
+    <div class="cicon">⚡</div>
+    <div><div class="cname">2. Buddikate – IONITY (A7)</div>
+    <div class="cdet">Ved Hamburg, ~160 km videre – etter grensen ved Flensburg og sørover på A7. Lad til 80%.</div>
+    <div class="cmeta"><span class="cpill">~270 km fra start</span><span class="cpill">Lad til 80%</span><span class="cpill">~20 min</span></div></div>
+  </div>
+  <div class="cstop" style="background:var(--blue-pale)">
+    <div class="cicon">🏰</div>
+    <div><div class="cname" style="color:var(--blue)">Lüneburg – ankomst med god margin</div>
+    <div class="cdet" style="color:var(--gray)">~160 km videre til Lüneburg med ~50–60% igjen. Lad ved hotellet/offentlig hvis mulig, ellers før Hamburg dagen etter.</div>
+    <div class="cmeta"><span class="cpill" style="color:var(--blue);border-color:rgba(26,79,160,.25)">~50–60% ved ankomst</span></div></div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-hd"><div class="ci" style="background:var(--green-l)">🇩🇪→🇳🇱</div><div><div class="ct">Hamburg → Nederland (~370 km)</div><div class="cs">Start med fulladet batteri</div></div></div>
+  <div class="cstop">
+    <div class="cicon">⚡</div>
+    <div><div class="cname">1. Bremen / Osnabrück – IONITY</div>
+    <div class="cdet">Ca. 150 km fra Hamburg. IONITY Osnabrück Nord ved A1. Rask lading, god kafé-pause.</div>
+    <div class="cmeta"><span class="cpill">~150 km fra start</span><span class="cpill">Lad til 80%</span><span class="cpill">~25 min</span></div></div>
+  </div>
+  <div class="cstop">
+    <div class="cicon">⚡</div>
+    <div><div class="cname">2. Arnhem / Nijmegen – Fastned</div>
+    <div class="cdet">Ca. 100 km inn i Nederland. Fastned er sterk i NL. Valgfri stopp avhengig av forbruk.</div>
+    <div class="cmeta"><span class="cpill">~260 km fra start</span><span class="cpill">Valgfri</span><span class="cpill">~15 min</span></div></div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-hd"><div class="ci" style="background:var(--purple-l)">📱</div><div><div class="ct">Apper du trenger</div></div></div>
+  <div style="display:flex;flex-direction:column;gap:8px">
+    <div style="display:flex;align-items:center;gap:11px;padding:9px;background:var(--gray-l);border-radius:9px"><span style="font-size:1.4rem">🗺️</span><div><div style="font-weight:700;font-size:.86rem">ABRP – A Better Route Planner</div><div style="font-size:.74rem;color:var(--gray-m)">Velg Elroq 50. Last ned offline-kart. Beste EV-ruteplanlegger!</div></div></div>
+    <div style="display:flex;align-items:center;gap:11px;padding:9px;background:var(--gray-l);border-radius:9px"><span style="font-size:1.4rem">⚡</span><div><div style="font-weight:700;font-size:.86rem">IONITY</div><div style="font-size:.74rem;color:var(--gray-m)">Raskeste DC i Europa. Abonnement ~€0,35/kWh vs. €0,79 uten.</div></div></div>
+    <div style="display:flex;align-items:center;gap:11px;padding:9px;background:var(--gray-l);border-radius:9px"><span style="font-size:1.4rem">🇳🇱</span><div><div style="font-weight:700;font-size:.86rem">Fastned</div><div style="font-size:.74rem;color:var(--gray-m)">Dominerer i Nederland og tyske motorveier.</div></div></div>
+    <div style="display:flex;align-items:center;gap:11px;padding:9px;background:var(--gray-l);border-radius:9px"><span style="font-size:1.4rem">🇩🇰</span><div><div style="font-weight:700;font-size:.86rem">Recharge (tidl. Fortum)</div><div style="font-size:.74rem;color:var(--gray-m)">God dekning i Danmark.</div></div></div>
+    <div style="display:flex;align-items:center;gap:11px;padding:9px;background:var(--gray-l);border-radius:9px"><span style="font-size:1.4rem">🔌</span><div><div style="font-weight:700;font-size:.86rem">PlugShare</div><div style="font-size:.74rem;color:var(--gray-m)">Brukeranmeldelser av alle ladestasjoner. God backup.</div></div></div>
+  </div>
+  <div class="alert ab" style="margin-top:12px">💳 Kontaktløs Visa/Mastercard fungerer på de fleste IONITY og Fastned uten app.</div>
+</div>
+</div>
+
+<!-- ===== ØKONOMI ===== -->
+<div id="okonomi" class="section">
+<div class="sec-title">💰 Økonomi · reisebudsjett</div>
+
+<div class="card">
+  <div class="card-hd"><div class="ci" style="background:var(--blue-pale)">💱</div><div><div class="ct">Valutakalkulator</div><div class="cs" id="cc-rate">Henter kurs …</div></div></div>
+  <div style="display:flex;gap:10px;align-items:flex-end">
+    <div style="flex:1;min-width:0">
+      <div style="font-size:.72rem;font-weight:700;color:var(--gray-m);margin-bottom:4px">🇳🇴 NOK</div>
+      <input id="cc-nok" type="number" inputmode="decimal" placeholder="0" oninput="ccFrom('nok')" style="width:100%;padding:12px;border:1px solid #d1d5db;border-radius:9px;font-size:1rem;font-family:inherit">
+    </div>
+    <div style="font-size:1.2rem;color:var(--gray-m);padding-bottom:10px">⇄</div>
+    <div style="flex:1;min-width:0">
+      <div style="font-size:.72rem;font-weight:700;color:var(--gray-m);margin-bottom:4px">🇪🇺 EUR</div>
+      <input id="cc-eur" type="number" inputmode="decimal" placeholder="0" oninput="ccFrom('eur')" style="width:100%;padding:12px;border:1px solid #d1d5db;border-radius:9px;font-size:1rem;font-family:inherit">
+    </div>
+  </div>
+  <div class="inote" style="margin-top:8px">Skriv i ett felt – det andre regnes ut automatisk. Kurs oppdateres live.</div>
+</div>
+
+<div class="card">
+  <div class="card-hd"><div class="ci" style="background:var(--green-l)">🧮</div><div><div class="ct">Totalt brukt</div><div class="cs" id="eco-count">0 utgifter</div></div></div>
+  <div id="eco-total" style="font-size:2rem;font-weight:800;color:var(--green);margin-bottom:2px">0 kr</div>
+  <div class="inote" style="margin-bottom:14px">Omregnet til NOK · ca. kurs: 1 € = 11,70 · 1 DKK = 1,57 · 1 £ = 13,50</div>
+  <div id="eco-bycat"></div>
+</div>
+
+<div class="card">
+  <div class="card-hd"><div class="ci" style="background:var(--blue-pale)">➕</div><div><div class="ct">Legg til utgift</div></div></div>
+  <div style="display:flex;flex-direction:column;gap:9px">
+    <input id="eco-desc" type="text" placeholder="Hva? (f.eks. Middag i Hamburg)" style="padding:12px;border:1px solid #d1d5db;border-radius:9px;font-size:.9rem;font-family:inherit;width:100%">
+    <select id="eco-cat" style="padding:12px;border:1px solid #d1d5db;border-radius:9px;font-size:.88rem;font-family:inherit;background:#fff">
+      <option>Hotell</option><option>Ferje/fly</option><option>Lading</option><option>Mat &amp; drikke</option><option>Aktiviteter</option><option>Bom/vei/parkering</option><option>Shopping</option><option>Annet</option>
+    </select>
+    <div style="display:flex;gap:8px">
+      <input id="eco-amt" type="number" inputmode="decimal" placeholder="Beløp" style="flex:2;padding:12px;border:1px solid #d1d5db;border-radius:9px;font-size:.9rem;font-family:inherit;min-width:0">
+      <select id="eco-cur" style="flex:1;padding:12px;border:1px solid #d1d5db;border-radius:9px;font-size:.88rem;font-family:inherit;background:#fff">
+        <option>NOK</option><option>EUR</option><option>DKK</option><option>GBP</option>
+      </select>
+    </div>
+    <button onclick="ecoAdd()" style="padding:13px;background:var(--green);color:#fff;border:none;border-radius:9px;font-weight:700;font-size:.92rem;cursor:pointer">Legg til utgift</button>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-hd" style="align-items:center"><div class="ci" style="background:var(--orange-l)">📋</div><div style="flex:1"><div class="ct">Utgifter</div><div class="cs" id="eco-sync">…</div></div><button onclick="ecoFetch()" style="padding:8px 12px;background:var(--gray-l);border:1px solid #d1d5db;border-radius:9px;font-weight:700;font-size:.8rem;cursor:pointer;white-space:nowrap">🔄 Oppdater</button></div>
+  <div id="eco-list"></div>
+  <div class="alert ab" style="margin-top:10px">👨‍👩‍👧‍👧 <strong>Delt liste</strong> – Janiche og Jon fører på hver sin mobil og ser samme oversikt. Trykk 🔄 for å hente nyeste. Ferje + Aalborg er lagt inn på forhånd.</div>
+</div>
+</div>
+
+<!-- ===== PRAKTISK ===== -->
+<div id="praktisk" class="section">
+<div class="sec-title">📋 Praktisk informasjon</div>
+
+<!-- Color Line detaljert -->
+<div style="background:linear-gradient(135deg,#e8f0fb,#dbeafe);border:2px solid var(--blue);border-radius:var(--r);padding:18px;margin-bottom:14px">
+  <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+    <span style="font-size:1.4rem">🚢</span>
+    <div><div style="font-weight:800;font-size:1rem;color:var(--blue)">Color Line SuperSpeed 2</div>
+    <div style="font-size:.75rem;color:var(--gray-m)">Bookingnr: <strong>CEU1949</strong> · Betalt (NOK 4692) · 3 voksne + bil · Janiche Sjurseth-Eliassen</div></div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+    <div style="background:rgba(255,255,255,.8);border-radius:10px;padding:12px">
+      <div style="font-size:.68rem;font-weight:700;color:var(--gray-m);text-transform:uppercase;margin-bottom:6px">UT · Mandag 6. juli 2026</div>
+      <div style="font-weight:700;color:var(--blue)">Larvik → Hirtshals</div>
+      <div style="font-size:.8rem;margin-top:4px">🕔 Avgang: <strong>17:30</strong><br>🕘 Ankomst: <strong>21:15</strong><br>⏰ Oppmøte senest: <strong>16:30</strong></div>
+      <div style="font-size:.75rem;margin-top:6px;color:var(--gray)">👥 3 voksne (Janiche, Emma, Martine)<br>🍽️ 3× kveldsbuffet inkl. (dekk 8)<br>«Catch Me If You Can»<br>🚗 1 liten bil (max 1,95m høyde)</div>
+    </div>
+    <div style="background:rgba(255,255,255,.8);border-radius:10px;padding:12px">
+      <div style="font-size:.68rem;font-weight:700;color:var(--gray-m);text-transform:uppercase;margin-bottom:6px">RETUR · Lørdag 18. juli 2026</div>
+      <div style="font-weight:700;color:var(--blue)">Hirtshals → Larvik</div>
+      <div style="font-size:.8rem;margin-top:4px">🕙 Avgang: <strong>22:15</strong><br>🕑 Ankomst: <strong>02:00 (natt til søn 19/7)</strong><br>⏰ Oppmøte senest: <strong>21:15</strong></div>
+      <div style="font-size:.75rem;margin-top:6px;color:var(--gray)">🚗 1 liten bil<br>💰 10% retur-rabatt inkl.</div>
+    </div>
+  </div>
+  <div class="alert ao" style="margin-top:10px">🍽️ Kveldsbuffeten er <strong>forhåndsbetalt og kan ikke refunderes om bord.</strong> Bufféen stenger 60 min før ankomst, dvs. ~20:15.</div>
+  <div class="alert ab" style="margin-top:8px">⚡ Color Line: Elbiler parkeres på dedikert plass – oppgi dette ved innsjekk. Ikke regn med lademuligheter om bord.</div>
+</div>
+
+<!-- Hotell: B&B Aalborg -->
+<div style="background:linear-gradient(135deg,#e6f4ec,#d1fae5);border:2px solid var(--green);border-radius:var(--r);padding:18px;margin-bottom:14px">
+  <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+    <span style="font-size:1.4rem">🏨</span>
+    <div><div style="font-weight:800;font-size:1rem;color:var(--green)">B&amp;B HOTEL Aalborg</div>
+    <div style="font-size:.75rem;color:var(--gray-m)">Natt til tirsdag 7. juli · 1 natt · Betalt · Janiche Sjurseth-Eliassen</div></div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+    <div style="background:rgba(255,255,255,.8);border-radius:10px;padding:12px">
+      <div style="font-size:.68rem;font-weight:700;color:var(--gray-m);text-transform:uppercase;margin-bottom:6px">Bekreftelse</div>
+      <div style="font-weight:700;color:var(--green);font-size:1.05rem;letter-spacing:.5px">6839.839.814</div>
+      <div style="font-size:.8rem;margin-top:4px">🔑 PIN-kode: <strong>5479</strong></div>
+      <div style="font-size:.75rem;margin-top:6px;color:var(--gray)">🛏️ Triple Room · 3 enkeltsenger<br>👥 3 gjester · 🍳 Frokost inkludert</div>
+    </div>
+    <div style="background:rgba(255,255,255,.8);border-radius:10px;padding:12px">
+      <div style="font-size:.68rem;font-weight:700;color:var(--gray-m);text-transform:uppercase;margin-bottom:6px">Inn- og utsjekk</div>
+      <div style="font-size:.8rem">🔑 Innsjekk: <strong>Man 6/7 fra 15:00</strong><br>🚪 Utsjekk: <strong>Tir 7/7 innen 12:00</strong></div>
+      <div style="font-size:.75rem;margin-top:6px;color:var(--gray)">🚗 Dere ankommer ~23:00–00:00<br>(etter Color Line til Hirtshals)</div>
+    </div>
+  </div>
+  <div style="background:rgba(255,255,255,.8);border-radius:10px;padding:12px;margin-top:10px;font-size:.8rem;line-height:1.6">
+    📍 <strong>Dag Hammarskjölds Gade 2A, 9000 Aalborg</strong> · 📞 +45 38 20 20 00<br>
+    🧭 GPS: N 57° 2.502, E 9° 55.541 · 💶 Pris: <strong>DKK 1 185,30</strong> (~NOK 1 783, inkl. 25% MVA)<br>
+    🅿️ Parkering DKK 110/dag (på stedet, kan ikke reserveres) · 📶 Gratis WiFi
+  </div>
+  <div class="alert ao" style="margin-top:10px">💳 <strong>Depositum DKK 1500</strong> (~NOK 2256) trekkes på kort ved ankomst – refunderes innen 7 dager etter utsjekk. Ta med <strong>legitimasjon + kredittkort</strong> til innsjekk.</div>
+  <div class="alert ao" style="margin-top:8px">⚠️ <strong>Ikke refunderbar</strong> – full pris belastes ved avbestilling eller no-show.</div>
+</div>
+
+<!-- Hotell: B&B Lüneburg -->
+<div style="background:linear-gradient(135deg,#e6f4ec,#d1fae5);border:2px solid var(--green);border-radius:var(--r);padding:18px;margin-bottom:14px">
+  <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+    <span style="font-size:1.4rem">🏰</span>
+    <div><div style="font-weight:800;font-size:1rem;color:var(--green)">B&amp;B HOTEL Lüneburg</div>
+    <div style="font-size:.75rem;color:var(--gray-m)">Natt til onsdag 8. juli · 1 natt · Betalt · Janiche Sjurseth-Eliassen</div></div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+    <div style="background:rgba(255,255,255,.8);border-radius:10px;padding:12px">
+      <div style="font-size:.68rem;font-weight:700;color:var(--gray-m);text-transform:uppercase;margin-bottom:6px">Rom &amp; pris</div>
+      <div style="font-weight:700;color:var(--green);font-size:1.05rem">€154,96</div>
+      <div style="font-size:.8rem;margin-top:4px">🍳 Frokost €12,90 · 🏙️ bystatt inkl.</div>
+      <div style="font-size:.75rem;margin-top:6px;color:var(--gray)">🛏️ Triple room · 👥 3 gjester<br>(Janiche, Martine, Emma)</div>
+    </div>
+    <div style="background:rgba(255,255,255,.8);border-radius:10px;padding:12px">
+      <div style="font-size:.68rem;font-weight:700;color:var(--gray-m);text-transform:uppercase;margin-bottom:6px">Inn- og utsjekk</div>
+      <div style="font-size:.8rem">🔑 Innsjekk: <strong>Tir 7/7</strong><br>🚪 Utsjekk: <strong>Ons 8/7</strong></div>
+      <div style="font-size:.75rem;margin-top:6px;color:var(--gray)">✅ Gratis avbestilling til kl 19:00 på ankomstdagen</div>
+    </div>
+  </div>
+  <div style="background:rgba(255,255,255,.8);border-radius:10px;padding:12px;margin-top:10px;font-size:.8rem;line-height:1.6">
+    📍 <strong>An der Wittenberger Bahn 3, 21337 Lüneburg</strong><br>
+    📞 <a href="tel:+4961468153511" style="color:var(--green);text-decoration:none">+49 6146 815351-1</a> · ✉️ lueneburg@hotelbb.com
+  </div>
+</div>
+
+<!-- Overnatting natt for natt -->
+<div class="card">
+  <div class="card-hd"><div class="ci" style="background:var(--green-l)">🛏️</div><div><div class="ct">Overnatting – natt for natt</div><div class="cs">1 booket ✅ · resten er forslag · priser for antall pers. den natten</div></div></div>
+  <div style="display:flex;flex-direction:column;gap:9px">
+
+    <div style="display:flex;gap:10px;padding:11px 12px;background:var(--green-l);border-radius:10px;border-left:4px solid var(--green)">
+      <div style="min-width:56px;font-weight:800;font-size:.72rem;color:var(--green)">Man 6/7</div>
+      <div style="font-size:.82rem;line-height:1.45"><strong>Aalborg</strong> · B&amp;B HOTEL Aalborg <span class="ttag tag-c">✅ BOOKET</span><br><span style="color:var(--gray-m);font-size:.74rem">👤 3 pers · 💶 DKK 1 185 (~1 790 kr) · frokost inkl. · bekr. 6839.839.814</span></div>
+    </div>
+
+    <div style="display:flex;gap:10px;padding:11px 12px;background:var(--green-l);border-radius:10px;border-left:4px solid var(--green)">
+      <div style="min-width:56px;font-weight:800;font-size:.72rem;color:var(--green)">Tir 7/7</div>
+      <div style="font-size:.82rem;line-height:1.45"><strong>Lüneburg</strong> · B&amp;B HOTEL Lüneburg <span class="ttag tag-c">✅ BOOKET</span><br><span style="color:var(--gray-m);font-size:.74rem">👤 3 pers · 💶 €154,96 + frokost €12,90 · An der Wittenberger Bahn 3</span></div>
+    </div>
+
+    <div style="display:flex;gap:10px;padding:11px 12px;background:var(--gray-l);border-radius:10px">
+      <div style="min-width:56px;font-weight:800;font-size:.72rem;color:var(--blue)">Ons 8/7</div>
+      <div style="font-size:.82rem;line-height:1.45"><strong>Schwerin-området</strong> · overnatting etter slottsbesøket<br><span style="color:var(--gray-m);font-size:.74rem">👤 3 pers · 💶 ~€110–150 · forslag – send meg hotellet du booker</span></div>
+    </div>
+
+    <div style="display:flex;gap:10px;padding:11px 12px;background:var(--gray-l);border-radius:10px">
+      <div style="min-width:56px;font-weight:800;font-size:.72rem;color:var(--purple)">Tor 9/7</div>
+      <div style="font-size:.82rem;line-height:1.45"><strong>Düsseldorf lufthavn</strong> · Maritim Hotel Düsseldorf<br><span style="color:var(--gray-m);font-size:.74rem">👤 3 pers · 💶 ca. €150–190 · gangbro til Terminal C · nær flyplassen for henting av Jon 13:15</span></div>
+    </div>
+
+    <div style="display:flex;gap:10px;padding:11px 12px;background:var(--gray-l);border-radius:10px">
+      <div style="min-width:56px;font-weight:800;font-size:.72rem;color:var(--blue)">Fre 10/7</div>
+      <div style="font-size:.82rem;line-height:1.45"><strong>Düsseldorf / Ruhr</strong> · bli på Maritim, eller kjør mot Limburg<br><span style="color:var(--gray-m);font-size:.74rem">👤 4 pers (Jon med nå) · 💶 ca. €160–210 · fleksibelt</span></div>
+    </div>
+
+    <div style="display:flex;gap:10px;padding:11px 12px;background:var(--purple-l);border-radius:10px;border-left:4px solid var(--purple)">
+      <div style="min-width:56px;font-weight:800;font-size:.72rem;color:var(--purple)">Lør 11/7<br>Søn 12/7</div>
+      <div style="font-size:.82rem;line-height:1.45"><strong>🏰 Château St. Gerlach</strong> (Valkenburg, Limburg) <span class="ttag tag-m">SLOTT</span><br>5-stjerners slottshotell fra 1200-tallet · parker, vingård &amp; hager · basseng/spa. Historie + hage for Janiche! Nær Chloe i Helden.<br><span style="color:var(--gray-m);font-size:.74rem">👤 3 pers 11/7 (Martine hos Chloe) → 4 pers 12/7 · 💶 ca. €280–420/natt (splurge)</span><br><span style="color:var(--gray-m);font-size:.74rem">Rimeligere alt.: Van der Valk Venlo (~€150, gratis parkering + EV)</span></div>
+    </div>
+
+    <div style="display:flex;gap:10px;padding:11px 12px;background:var(--gray-l);border-radius:10px">
+      <div style="min-width:56px;font-weight:800;font-size:.72rem;color:var(--blue)">Man 13/7</div>
+      <div style="font-size:.82rem;line-height:1.45"><strong>Arnhem</strong> · Van der Valk Hotel Arnhem<br><span style="color:var(--gray-m);font-size:.74rem">👤 4 pers · 💶 ca. €150–190 · EV-lading · nær De Hoge Veluwe (ridning!)</span></div>
+    </div>
+
+    <div style="display:flex;gap:10px;padding:11px 12px;background:var(--gray-l);border-radius:10px">
+      <div style="min-width:56px;font-weight:800;font-size:.72rem;color:var(--blue)">Tir 14/7<br>Ons 15/7</div>
+      <div style="font-size:.82rem;line-height:1.45"><strong>Amsterdam</strong> · Van der Valk Hotel Amsterdam (Amstel/A4)<br><span style="color:var(--gray-m);font-size:.74rem">👤 4 pers · 💶 ca. €180–230/natt · gratis parkering + EV · metro inn · 2 netter</span></div>
+    </div>
+
+    <div style="display:flex;gap:10px;padding:11px 12px;background:var(--gray-l);border-radius:10px">
+      <div style="min-width:56px;font-weight:800;font-size:.72rem;color:var(--blue)">Tor 16/7</div>
+      <div style="font-size:.82rem;line-height:1.45"><strong>Eindhoven</strong> · Van der Valk Hotel Eindhoven<br><span style="color:var(--gray-m);font-size:.74rem">👤 4 pers · 💶 ca. €150–190 · gratis parkering + EV · nær Martines venner</span></div>
+    </div>
+
+    <div style="display:flex;gap:10px;padding:11px 12px;background:var(--gray-l);border-radius:10px">
+      <div style="min-width:56px;font-weight:800;font-size:.72rem;color:var(--blue)">Fre 17/7</div>
+      <div style="font-size:.82rem;line-height:1.45"><strong>Bremen (retur)</strong> · ATLANTIC Hotel Universum<br><span style="color:var(--gray-m);font-size:.74rem">👤 3 pers (Martine i Eindhoven) · 💶 ca. €120–160 · siste natt før ferja</span></div>
+    </div>
+
+    <div style="display:flex;gap:10px;padding:11px 12px;background:var(--blue-pale);border-radius:10px">
+      <div style="min-width:56px;font-weight:800;font-size:.72rem;color:var(--blue)">Lør 18/7</div>
+      <div style="font-size:.82rem;line-height:1.45"><strong>🚢 Color Line – natt til sjøs</strong><br><span style="color:var(--gray-m);font-size:.74rem">Hirtshals 22:15 → Larvik 02:00. Ingen hotell.</span></div>
+    </div>
+
+  </div>
+  <div class="alert ao" style="margin-top:12px">💡 Priser er <strong>estimater for juli 2026</strong> (familierom for oppgitt antall). Grovt anslag for de foreslåtte nettene: <strong>ca. €1 900–2 200</strong> (med 1 slottsnatt). Book Amsterdam, Düsseldorf og slottet tidlig. Send bekreftelser, så bytter jeg «forslag» → «booket».</div>
+</div>
+
+<!-- Fly: Jon til Düsseldorf -->
+<div style="background:linear-gradient(135deg,#fdf4ff,#f3e8ff);border:2px solid var(--purple);border-radius:var(--r);padding:18px;margin-bottom:14px">
+  <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+    <span style="font-size:1.4rem">✈️</span>
+    <div><div style="font-weight:800;font-size:1rem;color:var(--purple)">Jon – fly til Düsseldorf</div>
+    <div style="font-size:.75rem;color:var(--gray-m)">SAS · Bestillingsref. <strong>YURUR3</strong> · Economy Bonus · Jon Neergaard Sjurseth Eliassen</div></div>
+  </div>
+  <div style="background:rgba(255,255,255,.85);border-radius:10px;padding:12px">
+    <div style="font-size:.68rem;font-weight:700;color:var(--gray-m);text-transform:uppercase;margin-bottom:6px">Utreise · Fredag 10. juli 2026</div>
+    <div style="display:flex;align-items:center;gap:8px;font-weight:700;color:var(--purple);flex-wrap:wrap">
+      <span>Oslo OSL</span><span style="color:var(--gray-m)">→</span><span>Düsseldorf DUS</span><span style="font-size:.7rem;background:var(--purple-l);color:var(--purple);padding:1px 7px;border-radius:10px">DIREKTE</span>
+    </div>
+    <div style="font-size:.8rem;margin-top:6px;line-height:1.6">
+      🛫 <strong>11:25</strong> Oslo (OSL) → 🛬 <strong>13:15</strong> Düsseldorf (DUS)<br>
+      ✈️ SK 0816 · flys av SAS Link · 1t 50m direkte
+    </div>
+    <div style="font-size:.75rem;margin-top:6px;color:var(--gray)">🧳 1 innsjekket bagasje + håndbagasje + liten veske · 🎫 EuroBonus EBB123490526</div>
+  </div>
+  <div class="alert ab" style="margin-top:10px">🚗 <strong>Janiche henter Jon på Düsseldorf lufthavn kl 13:15.</strong> Kortidsparkering P3 ligger nærmest ankomsthallen. Se dag 5 i Dagsplanen.</div>
+</div>
+
+<!-- Martine: videre reise -->
+<div style="background:linear-gradient(135deg,#fdf0e6,#ffedd5);border:2px solid var(--orange);border-radius:var(--r);padding:18px;margin-bottom:14px">
+  <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+    <span style="font-size:1.4rem">👩‍🦱✈️</span>
+    <div><div style="font-weight:800;font-size:1rem;color:var(--orange)">Martine – videre reise etter familieturen</div>
+    <div style="font-size:.75rem;color:var(--gray-m)">Blir i Eindhoven/NL 17.–23. juli · så Birmingham · hjem 26. juli</div></div>
+  </div>
+
+  <div style="background:rgba(255,255,255,.85);border-radius:10px;padding:12px;margin-bottom:9px">
+    <div style="font-size:.68rem;font-weight:700;color:var(--gray-m);text-transform:uppercase;margin-bottom:6px">1) Torsdag 23. juli · easyJet EZY6656</div>
+    <div style="display:flex;align-items:center;gap:8px;font-weight:700;color:var(--orange)"><span>Amsterdam AMS</span><span style="color:var(--gray-m)">→</span><span>Birmingham BHX</span></div>
+    <div style="font-size:.8rem;margin-top:4px">🛫 <strong>21:35</strong> AMS → 🛬 <strong>21:50</strong> BHX (lokal tid)</div>
+    <div style="font-size:.75rem;margin-top:6px;color:var(--gray)">🎫 Ref. KCTHFRG · booket av annen konto (kontakt bestilleren for endringer)</div>
+  </div>
+
+  <div style="background:rgba(255,255,255,.85);border-radius:10px;padding:12px">
+    <div style="font-size:.68rem;font-weight:700;color:var(--gray-m);text-transform:uppercase;margin-bottom:6px">2) Søndag 26. juli · Norwegian DY1311</div>
+    <div style="display:flex;align-items:center;gap:8px;font-weight:700;color:var(--orange)"><span>London-Gatwick LGW</span><span style="color:var(--gray-m)">→</span><span>Oslo OSL</span></div>
+    <div style="font-size:.8rem;margin-top:4px">🛫 <strong>16:25</strong> LGW → 🛬 <strong>19:30</strong> OSL (2t 5m)</div>
+    <div style="font-size:.75rem;margin-top:6px;color:var(--gray)">Flys av Norwegian Air Shuttle</div>
+  </div>
+
+  <div class="alert ao" style="margin-top:10px">🚆 <strong>Viktig:</strong> Hjemflyet går fra <strong>London-Gatwick</strong> – Martine må komme seg Birmingham → Gatwick søndag 26/7. 💊 HRT må vare <strong>til 27. juli</strong>.</div>
+
+  <div style="background:rgba(255,255,255,.9);border-radius:10px;padding:12px;margin-top:9px;font-size:.82rem;line-height:1.6">
+    <div style="font-weight:800;color:var(--orange);margin-bottom:6px">🚆 Slik kommer Martine til Gatwick (søn 26/7)</div>
+    <div style="font-weight:700;margin-bottom:2px">Alt. A – Tog (raskest, ~2t45 + bytte)</div>
+    1. Birmingham New Street → <strong>London Euston</strong> (Avanti West Coast, ~1t25)<br>
+    2. T-bane Victoria line: Euston → <strong>Victoria</strong> (~10 min)<br>
+    3. Gatwick Express/Southern: Victoria → <strong>Gatwick</strong> (~30 min)<br>
+    <div style="font-weight:700;margin:8px 0 2px">Alt. B – Direktebuss (ingen bytte – roligst!)</div>
+    National Express Birmingham → Gatwick direkte (~4–4,5t, én buss hele veien).<br>
+    <div style="margin-top:8px;padding:8px 10px;background:var(--orange-l);border-radius:8px">⏰ <strong>Anbefalt:</strong> Reis fra Birmingham senest <strong>~10:00</strong> (tog) / <strong>~08:00</strong> (buss) → framme Gatwick ~13:00. Flyet er 16:25, så da har hun god margin. <strong>Kjøp billett i forveien!</strong></div>
+    <div style="margin-top:8px">🎫 Book: <a href="https://www.thetrainline.com/train-times/birmingham-new-street-to-gatwick-airport" target="_blank" rel="noopener" style="color:var(--orange)">Trainline (tog) ↗</a> · <a href="https://www.nationalexpress.com" target="_blank" rel="noopener" style="color:var(--orange)">National Express (buss) ↗</a></div>
+  </div>
+</div>
+
+<!-- Nødnumre -->
+<div class="card">
+  <div class="card-hd"><div class="ci" style="background:var(--red-l)">🆘</div><div><div class="ct">Nødnumre</div></div></div>
+  <div class="igrid">
+    <div class="icard"><div class="ilabel">🇪🇺 Nød (alle EU-land)</div><div class="ival" style="color:var(--red);font-size:1.4rem">112</div></div>
+    <div class="icard"><div class="ilabel">🇩🇰 Politiet (ikke-akutt)</div><div class="ival" style="color:var(--red)">114</div></div>
+    <div class="icard"><div class="ilabel">🇩🇪 Politiet (ikke-akutt)</div><div class="ival" style="color:var(--red)">110</div></div>
+    <div class="icard"><div class="ilabel">🇳🇱 Politiet (ikke-akutt)</div><div class="ival" style="color:var(--red);font-size:.85rem">0900-8844</div></div>
+    <div class="icard"><div class="ilabel">🇳🇴 Utenrikstjenesten</div><div class="ival" style="font-size:.82rem">+47 23 95 00 00</div><div class="inote">24/7</div></div>
+    <div class="icard"><div class="ilabel">🚗 Skoda veihjelp EU</div><div class="ival" style="font-size:.78rem">+49 800 023 1100</div></div>
+  </div>
+</div>
+
+<!-- Reiseforsikring -->
+<div class="card">
+  <div class="card-hd"><div class="ci" style="background:var(--blue-pale)">🛡️</div><div><div class="ct">Reiseforsikring</div><div class="cs">Europeiske Reiseforsikring</div></div></div>
+  <div class="alert ao" style="margin-bottom:11px">🚑 <strong>Ved akutt skade/sykdom – ring Europeiske Alarmsentral (24/7):</strong></div>
+  <div class="igrid">
+    <div class="icard"><div class="ilabel">📞 Alarmsentral (Norge)</div><div class="ival"><a href="tel:+4721495000" style="color:var(--blue);text-decoration:none">+47 21 49 50 00</a></div></div>
+    <div class="icard"><div class="ilabel">📞 Alarmsentral (Danmark)</div><div class="ival"><a href="tel:+4570152500" style="color:var(--blue);text-decoration:none">+45 70 15 25 00</a></div></div>
+  </div>
+  <div style="margin-top:11px;padding:12px;background:var(--gray-l);border-radius:10px;font-size:.84rem;line-height:1.6">
+    💻 <strong>Øvrige skader</strong> meldes elektronisk på <a href="https://www.europeiske.no" target="_blank" rel="noopener" style="color:var(--blue)">europeiske.no ↗</a><br>
+    📄 <strong>Avtalenummer:</strong> KS Digitale Fellestjeneste <strong>SP6394153</strong>
+  </div>
+</div>
+
+<!-- Helsehjelp 24/7 -->
+<div class="card">
+  <div class="card-hd"><div class="ci" style="background:var(--green-l)">🩺</div><div><div class="ct">Helsehjelp 24/7 – Dr.Dropin</div><div class="cs">Via Villaforsikring · Gjensidige</div></div></div>
+  <div style="padding:12px;background:var(--green-l);border-radius:10px;font-size:.84rem;line-height:1.6">
+    👨‍⚕️ <strong>Fri videokonsultasjon med allmennlege</strong> hos Dr.Dropin – <strong>hele døgnet, alle dager</strong>. Gjelder hele husstanden, <strong>i hele verden</strong>. Perfekt hvis noen blir syke underveis!<br>
+    <span style="color:var(--gray-m)">Også: psykolog, fysioterapeut &amp; digitale selvhjelpsprogrammer via Dr.Dropin.</span>
+  </div>
+  <div style="margin-top:9px;padding:12px;background:var(--gray-l);border-radius:10px;font-size:.84rem;line-height:1.6">
+    📄 <strong>Avtalenummer:</strong> 94320400 (Gjensidige)<br>
+    📱 Bruk <strong>Dr.Dropin-appen</strong> eller <a href="https://www.gjensidige.no" target="_blank" rel="noopener" style="color:var(--green)">gjensidige.no ↗</a> (Din side)
+  </div>
+  <div class="alert ao" style="margin-top:9px">⚠️ Dekker <strong>ikke</strong> akutt/øyeblikkelig hjelp eller behandling på sykehus/klinikk – ved akutt: ring <strong>112</strong> eller Europeiske Alarmsentral (over).</div>
+</div>
+
+<!-- Bilforsikring -->
+<div class="card">
+  <div class="card-hd"><div class="ci" style="background:var(--blue-pale)">🚗</div><div><div class="ct">Bilforsikring</div><div class="cs">JBF Forsikring · Skoda Elroq</div></div></div>
+  <div class="alert ab" style="margin-bottom:11px">🛟 <strong>Veihjelp i Europa er inkludert</strong> (kasko, egenandel kr 3.000) – ring JBF ved bilproblemer underveis.</div>
+  <div style="padding:12px;background:var(--gray-l);border-radius:10px;font-size:.84rem;line-height:1.7">
+    🚙 <strong>Skoda Elroq</strong> (ER34427) · Batteri/EV<br>
+    📄 <strong>Forsikringsnr:</strong> 2493013 · <strong>Kundenr:</strong> 439742<br>
+    📅 <strong>Gyldig:</strong> 23.03.2026 – 22.03.2027 · kasko/superkasko<br>
+    📞 <strong>JBF:</strong> <a href="tel:+4721622600" style="color:var(--blue);text-decoration:none">21 62 26 00</a> · <a href="https://www.jbf.no" target="_blank" rel="noopener" style="color:var(--blue)">jbf.no ↗</a>
+  </div>
+  <div class="alert ao" style="margin-top:9px">⚠️ <strong>Fører under 23 år gir redusert erstatning</strong> ved skade. La kun <strong>Janiche &amp; Jon</strong> (23+) kjøre – ikke Martine (22) eller Emma (17).</div>
+</div>
+
+<!-- Trafikk -->
+<div class="card">
+  <div class="card-hd"><div class="ci" style="background:var(--orange-l)">🚦</div><div><div class="ct">Trafikkregler</div></div></div>
+  <div style="display:flex;flex-direction:column;gap:9px">
+    <div style="padding:10px 12px;background:var(--gray-l);border-radius:9px"><div style="font-weight:700;font-size:.87rem;margin-bottom:2px">🇩🇰 Danmark – fartsgrense motorvei 130 km/t</div><div style="font-size:.79rem;color:var(--gray);line-height:1.5">0,5 promille. Refleksvest i bil. Ingen mobilbruk uten håndfri.</div></div>
+    <div style="padding:10px 12px;background:var(--gray-l);border-radius:9px"><div style="font-weight:700;font-size:.87rem;margin-bottom:2px">🇩🇪 Tyskland – varierende (130 anbefalt)</div><div style="font-size:.79rem;color:var(--gray);line-height:1.5">Refleksvest <strong>påbudt</strong>. Varseltrekant påbudt. Bom på noen veier.</div></div>
+    <div style="padding:10px 12px;background:var(--gray-l);border-radius:9px"><div style="font-weight:700;font-size:.87rem;margin-bottom:2px">🇳🇱 Nederland – motorvei 100 km/t (dagtid)</div><div style="font-size:.79rem;color:var(--gray);line-height:1.5">Syklister alltid hensyn! Mange miljøsoner i byer – EV slipper inn. Moproute på sykkelfelt: forbudt.</div></div>
+    <div style="padding:10px 12px;background:var(--blue-pale);border-radius:9px"><div style="font-weight:700;font-size:.87rem;margin-bottom:2px">💶 Valuta</div><div style="font-size:.79rem;color:var(--gray);line-height:1.5"><strong>Danmark:</strong> Dansk krone (DKK). <strong>Tyskland + Nederland:</strong> Euro (€). Bankkort aksepteres nesten overalt.</div></div>
+  </div>
+</div>
+
+<!-- Schwerin slott -->
+<div class="card">
+  <div class="card-hd"><div class="ci" style="background:var(--purple-l)">🏰</div><div><div class="ct">Schwerin slott – tips</div></div></div>
+  <div style="padding:12px;background:var(--purple-l);border-radius:10px;font-size:.84rem;line-height:1.6">
+    <strong>Schweriner Schloss</strong> – et av Tysklands vakreste slott, på en egen øy i Schweriner See, omkranset av en praktfull <strong>barokk slottshage</strong>. Slottsmuseet er åpent for besøkende (<strong>sjekk åpningstider</strong> – ofte stengt mandager). Slottshagen er gratis å spasere i. Kart &amp; info: <a href="https://www.google.com/maps/search/Schweriner+Schloss" target="_blank" rel="noopener" style="color:var(--purple)">Schweriner Schloss ↗</a>.
+  </div>
+  <div style="padding:12px;background:var(--orange-l);border-radius:10px;font-size:.84rem;line-height:1.6;margin-top:9px">
+    📌 Alle aktiviteter som bør bookes på forhånd – med lenker – finner du samlet i <strong>💡 Forslag-fanen</strong>.
+  </div>
+</div>
+
+</div>
+
+</div><!-- /content -->
+
+<div class="appfooter">Roadtrip Europe 2026 · Sjurseth-Eliassen · Janiche, Jon, Emma &amp; Martine 🚗⚡🇩🇰🇩🇪🇳🇱</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script>
+// KART-DATA (kjøreruten i rekkefølge)
+var TRIP_PLACES = [
+ {n:'Slependen (hjem)', c:[59.889,10.523], col:'#1a7a4a', d:'🏠 Start & slutt – Nedre Åsvei 45'},
+ {n:'Larvik', c:[59.0537,10.0357], col:'#1a4fa0', d:'🚢 Color Line ut 6/7 17:30 · hjem 19/7 02:00'},
+ {n:'Hirtshals', c:[57.5883,9.9569], col:'#1a4fa0', d:'🇩🇰 Ankomst 6/7 21:15 · retur 18/7 22:15'},
+ {n:'Aalborg', c:[57.0488,9.9217], col:'#1a7a4a', d:'🏨 B&B Hotel Aalborg – natt til 7/7'},
+ {n:'Lüneburg', c:[53.2494,10.4141], col:'#1a7a4a', d:'🏰 B&B Hotel Lüneburg – natt 7/7 · historisk hansaby'},
+ {n:'Schwerin', c:[53.6296,11.4166], col:'#1a4fa0', d:'🏰 Schwerin slott 8/7 · eventyrslott + slottshage'},
+ {n:'Düsseldorf lufthavn', c:[51.2895,6.7668], col:'#7c3aed', d:'✈️ Hent Jon 10/7 kl 13:15 (SK 0816, direkte)'},
+ {n:'Herne (Tyler)', c:[51.5361,7.1547], col:'#d4650a', d:'👋 Emma besøker Tyler<br>📍 Deutsche Straße 23, 44649 Herne<br><a href="https://www.google.com/maps/dir/?api=1&destination=Deutsche%20Stra%C3%9Fe%2023%2C%2044649%20Herne" target="_blank">Åpne i kart ↗</a>'},
+ {n:'Helden (Chloe)', c:[51.3306,5.9836], col:'#d4650a', d:'👋 Martine hos Chloe 11–12/7'},
+ {n:'De Hoge Veluwe', c:[52.0980,5.8180], col:'#1a4fa0', d:'🎨 Kröller-Müller museum + skulpturhage · 13/7'},
+ {n:'Amsterdam', c:[52.3676,4.9041], col:'#1a4fa0', d:'🏛️ 14–15/7 · Rijksmuseum, kanaler'},
+ {n:'Eindhoven', c:[51.4416,5.4697], col:'#d4650a', d:'🏙️ Martine blir hos venner fra 17/7'},
+ {n:'Antwerpen (valgfri)', c:[51.2194,4.4025], col:'#1a7a4a', d:'🛍️ Yohji Yamamoto / Y-3 flaggskip · valgfri dagstur ~1,5t'},
+ {n:'Birmingham', c:[52.4862,-1.8904], col:'#d4650a', d:'✈️ Martine: easyJet fra Amsterdam 23/7 21:35→21:50'},
+ {n:'London-Gatwick', c:[51.1537,-0.1821], col:'#7c3aed', d:'✈️ Martine hjem: Norwegian DY1311 til Oslo 26/7 16:25'}
+];
+var MARTINE_ROUTE = [[52.3676,4.9041],[52.4862,-1.8904],[51.1537,-0.1821],[59.889,10.523]];
+var ROUTE = [[59.889,10.523],[59.0537,10.0357],[57.5883,9.9569],[57.0488,9.9217],[53.2494,10.4141],[53.6296,11.4166],[51.2895,6.7668],[51.3306,5.9836],[52.0980,5.8180],[52.3676,4.9041],[51.4416,5.4697]];
+var tripMap = null;
+function ensureMap(){
+  if(tripMap){ setTimeout(function(){ tripMap.invalidateSize(); }, 60); return; }
+  tripMap = L.map('map', {scrollWheelZoom:false}).setView([54.5,8.5], 5);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {maxZoom:18, attribution:'© OpenStreetMap'}).addTo(tripMap);
+  L.polyline(ROUTE, {color:'#1a4fa0', weight:3, opacity:.5, dashArray:'6,8'}).addTo(tripMap);
+  L.polyline(MARTINE_ROUTE, {color:'#d4650a', weight:2, opacity:.6, dashArray:'2,7'}).addTo(tripMap).bindPopup('👩‍🦱 Martines videre reise: Amsterdam → Birmingham (23/7) → London → Oslo (26/7)');
+  var bounds = [];
+  TRIP_PLACES.forEach(function(p){
+    L.circleMarker(p.c, {radius:9, color:'#fff', weight:2, fillColor:p.col, fillOpacity:1}).addTo(tripMap)
+      .bindPopup('<b>'+p.n+'</b><br>'+p.d);
+    bounds.push(p.c);
+  });
+  tripMap.fitBounds(bounds, {padding:[25,25]});
+  setTimeout(function(){ tripMap.invalidateSize(); tripMap.fitBounds(bounds, {padding:[25,25]}); }, 80);
+}
+
+// ØKONOMI (delt liste via Supabase – begge mobiler ser samme)
+var SB_URL = 'https://fkmcamjjksqafuvtcjze.supabase.co';
+var SB_KEY = 'sb_publishable_W6cGE5nKw9Enp0I56GRBpQ_5skVZZZm';
+var ECO_RATES = {NOK:1, EUR:11.70, DKK:1.57, GBP:13.50};
+var ECO_CACHE = 'roadtrip2026_eco_cache';
+var ecoData = [];
+function ecoHeaders(extra){
+  var h = {'apikey':SB_KEY, 'Authorization':'Bearer '+SB_KEY};
+  if(extra){ for(var k in extra){ h[k]=extra[k]; } }
+  return h;
+}
+function ecoNOK(e){ return e.amt * (ECO_RATES[e.cur] || 1); }
+function ecoFmt(n){ return Math.round(n).toLocaleString('no-NO') + ' kr'; }
+function ecoEsc(s){ return String(s).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+function ecoStatus(t){ var el = document.getElementById('eco-sync'); if(el) el.textContent = t; }
+function ecoFetch(){
+  ecoStatus('Henter …');
+  fetch(SB_URL+'/rest/v1/expenses?select=*&order=created_at.asc', {headers:ecoHeaders()})
+    .then(function(r){ if(!r.ok) throw new Error('http'); return r.json(); })
+    .then(function(rows){
+      ecoData = rows.map(function(r){ return {id:r.id, desc:r.title, cat:r.category, amt:Number(r.amount), cur:r.currency}; });
+      try{ localStorage.setItem(ECO_CACHE, JSON.stringify(ecoData)); }catch(e){}
+      ecoRender(); ecoStatus('✓ Delt liste · oppdatert nå');
+    })
+    .catch(function(){
+      try{ var c = JSON.parse(localStorage.getItem(ECO_CACHE)); if(Array.isArray(c)) ecoData = c; }catch(e){}
+      ecoRender(); ecoStatus('⚠️ Offline – viser sist lagrede. Trykk 🔄 når nettet er tilbake.');
+    });
+}
+function ecoRender(){
+  var elT = document.getElementById('eco-total'); if(!elT) return;
+  var total = ecoData.reduce(function(s,e){ return s + ecoNOK(e); }, 0);
+  elT.textContent = ecoFmt(total);
+  document.getElementById('eco-count').textContent = ecoData.length + ' utgifter';
+  var cats = {};
+  ecoData.forEach(function(e){ cats[e.cat] = (cats[e.cat] || 0) + ecoNOK(e); });
+  var bc = '';
+  Object.keys(cats).sort(function(a,b){ return cats[b] - cats[a]; }).forEach(function(c){
+    var pct = total > 0 ? Math.round(cats[c]/total*100) : 0;
+    bc += '<div style="margin-bottom:9px"><div style="display:flex;justify-content:space-between;font-size:.8rem;font-weight:600;margin-bottom:3px"><span>'+c+'</span><span>'+ecoFmt(cats[c])+' · '+pct+'%</span></div><div class="pprog"><div class="pprogbar" style="width:'+pct+'%"></div></div></div>';
+  });
+  document.getElementById('eco-bycat').innerHTML = bc || '<div class="inote">Ingen utgifter ennå.</div>';
+  var lh = '';
+  ecoData.forEach(function(e){
+    var extra = e.cur !== 'NOK' ? ' <span style="color:var(--gray-m);font-weight:400">('+e.amt+' '+e.cur+')</span>' : '';
+    lh += '<div style="display:flex;align-items:center;gap:10px;padding:10px 2px;border-bottom:1px solid #f0f0f0">'+
+      '<div style="flex:1;min-width:0"><div style="font-size:.86rem;font-weight:600">'+ecoEsc(e.desc)+'</div><div style="font-size:.72rem;color:var(--gray-m)">'+e.cat+'</div></div>'+
+      '<div style="font-weight:700;font-size:.85rem;text-align:right;white-space:nowrap">'+ecoFmt(ecoNOK(e))+extra+'</div>'+
+      '<button onclick="ecoDelete('+e.id+')" style="background:none;border:none;cursor:pointer;font-size:1.05rem;padding:4px;flex-shrink:0">🗑️</button>'+
+      '</div>';
+  });
+  document.getElementById('eco-list').innerHTML = lh || '<div class="inote">Ingen utgifter registrert ennå.</div>';
+}
+function ecoAdd(){
+  var desc = document.getElementById('eco-desc').value.trim();
+  var amt = parseFloat(document.getElementById('eco-amt').value);
+  if(!desc || !(amt > 0)){ alert('Skriv inn hva utgiften gjelder og et beløp.'); return; }
+  ecoStatus('Lagrer …');
+  fetch(SB_URL+'/rest/v1/expenses', {
+    method:'POST',
+    headers:ecoHeaders({'Content-Type':'application/json','Prefer':'return=representation'}),
+    body:JSON.stringify({title:desc, category:document.getElementById('eco-cat').value, amount:amt, currency:document.getElementById('eco-cur').value})
+  }).then(function(r){ if(!r.ok) throw new Error('http'); return r.json(); })
+    .then(function(){ document.getElementById('eco-desc').value=''; document.getElementById('eco-amt').value=''; ecoFetch(); })
+    .catch(function(){ ecoStatus('⚠️ Kunne ikke lagre'); alert('Kunne ikke lagre utgiften. Sjekk nettforbindelsen og prøv igjen.'); });
+}
+function ecoDelete(id){
+  if(!confirm('Slette denne utgiften? Den forsvinner for begge.')) return;
+  ecoStatus('Sletter …');
+  fetch(SB_URL+'/rest/v1/expenses?id=eq.'+id, {method:'DELETE', headers:ecoHeaders()})
+    .then(function(r){ if(!r.ok) throw new Error('http'); ecoFetch(); })
+    .catch(function(){ ecoStatus('⚠️ Kunne ikke slette'); });
+}
+
+// VALUTAKALKULATOR (live ECB-kurs via frankfurter.app, fast backup)
+var CC_RATE = 11.70; // NOK per EUR (fallback)
+function ccRateLabel(date){ var el=document.getElementById('cc-rate'); if(el) el.textContent = '1 € = '+CC_RATE.toFixed(2)+' kr' + (date ? ' · kurs '+date : ' · fast kurs (offline)'); }
+function ccFrom(which){
+  var nok=document.getElementById('cc-nok'), eur=document.getElementById('cc-eur'); if(!nok||!eur) return;
+  if(which==='nok'){ var v=parseFloat(nok.value); eur.value = isNaN(v) ? '' : (v/CC_RATE).toFixed(2); }
+  else { var w=parseFloat(eur.value); nok.value = isNaN(w) ? '' : (w*CC_RATE).toFixed(2); }
+}
+function ccFetchRate(){
+  fetch('https://api.frankfurter.dev/v1/latest?base=EUR&symbols=NOK')
+    .then(function(r){ return r.json(); })
+    .then(function(d){ if(d && d.rates && d.rates.NOK){ CC_RATE = d.rates.NOK; ccRateLabel(d.date); var n=document.getElementById('cc-nok'); if(n && n.value!=='') ccFrom('nok'); } })
+    .catch(function(){ ccRateLabel(null); });
+}
+
+// VÆR (Open-Meteo, ingen API-nøkkel)
+var WX_STOPS = [
+  {n:'Larvik / Hirtshals', lat:57.59, lon:9.96, from:'2026-07-06'},
+  {n:'Aalborg', lat:57.05, lon:9.92, from:'2026-07-07'},
+  {n:'Lüneburg', lat:53.25, lon:10.41, from:'2026-07-07'},
+  {n:'Schwerin', lat:53.63, lon:11.42, from:'2026-07-08'},
+  {n:'Düsseldorf / Ruhr', lat:51.29, lon:6.77, from:'2026-07-10'},
+  {n:'Limburg (Venlo/Helden)', lat:51.33, lon:5.98, from:'2026-07-11'},
+  {n:'Arnhem / De Hoge Veluwe', lat:52.10, lon:5.82, from:'2026-07-13'},
+  {n:'Amsterdam', lat:52.37, lon:4.90, from:'2026-07-14'},
+  {n:'Eindhoven', lat:51.44, lon:5.47, from:'2026-07-16'},
+  {n:'Bremen / Hamburg (retur)', lat:53.08, lon:8.80, from:'2026-07-17'}
+];
+function wxDesc(c){
+  if(c===0) return ['☀️','Klarvær'];
+  if(c<=2) return ['🌤️','Lettskyet'];
+  if(c===3) return ['☁️','Skyet'];
+  if(c===45||c===48) return ['🌫️','Tåke'];
+  if(c>=51&&c<=57) return ['🌦️','Yr'];
+  if(c>=61&&c<=67) return ['🌧️','Regn'];
+  if(c>=71&&c<=77) return ['❄️','Snø'];
+  if(c>=80&&c<=82) return ['🌧️','Regnbyger'];
+  if(c>=85&&c<=86) return ['🌨️','Snøbyger'];
+  if(c>=95) return ['⛈️','Torden'];
+  return ['🌡️','—'];
+}
+function wxInit(){
+  var sel = document.getElementById('wx-loc'); if(!sel) return;
+  sel.innerHTML = WX_STOPS.map(function(s,i){ return '<option value="'+i+'">'+s.n+'</option>'; }).join('');
+  var today = new Date(); var pick = 0;
+  WX_STOPS.forEach(function(s,i){ if(new Date(s.from+'T00:00') <= today) pick = i; });
+  sel.value = pick;
+}
+function wxLoad(){
+  var sel = document.getElementById('wx-loc'); if(!sel) return;
+  var s = WX_STOPS[parseInt(sel.value,10)] || WX_STOPS[0];
+  wxFetch(s.lat, s.lon, s.n);
+}
+function wxGeo(){
+  var st = document.getElementById('wx-status');
+  if(!navigator.geolocation){ st.textContent = 'Posisjon støttes ikke i denne nettleseren.'; return; }
+  st.textContent = 'Henter posisjonen din …';
+  navigator.geolocation.getCurrentPosition(
+    function(p){ wxFetch(p.coords.latitude, p.coords.longitude, '📍 Din posisjon'); },
+    function(){ st.textContent = 'Fikk ikke posisjon (avvist eller utilgjengelig). Velg sted i listen i stedet.'; }
+  );
+}
+function wxFetch(lat, lon, label){
+  var st = document.getElementById('wx-status');
+  var box = document.getElementById('wx-days');
+  st.textContent = 'Henter vær for ' + label + ' …';
+  box.innerHTML = '';
+  var url = 'https://api.open-meteo.com/v1/forecast?latitude='+lat+'&longitude='+lon+
+    '&hourly=temperature_2m,precipitation_probability,weather_code'+
+    '&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max,precipitation_sum'+
+    '&timezone=auto&forecast_days=7';
+  fetch(url).then(function(r){ return r.json(); }).then(function(d){
+    if(!d.daily){ st.textContent = 'Fant ikke værdata.'; return; }
+    var hMap = {};
+    (d.hourly.time||[]).forEach(function(t,i){ hMap[t] = d.hourly.temperature_2m[i]; });
+    function hourTemp(day, hh){ var v = hMap[day+'T'+hh+':00']; return v==null ? '–' : Math.round(v)+'°'; }
+    var html = '';
+    d.daily.time.forEach(function(day, i){
+      var wd = new Date(day+'T12:00').toLocaleDateString('no-NO', {weekday:'short', day:'numeric', month:'numeric'});
+      var ic = wxDesc(d.daily.weather_code[i]);
+      html += '<div style="padding:11px 12px;background:var(--gray-l);border-radius:10px;margin-bottom:9px">'+
+        '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:7px">'+
+          '<div style="font-weight:800;font-size:.88rem;text-transform:capitalize">'+wd+'</div>'+
+          '<div style="font-size:.85rem;font-weight:600">'+ic[0]+' '+ic[1]+'</div>'+
+        '</div>'+
+        '<div style="display:flex;gap:12px;font-size:.82rem;flex-wrap:wrap">'+
+          '<span>🌅 Morgen <b>'+hourTemp(day,'08')+'</b></span>'+
+          '<span>☀️ Formiddag <b>'+hourTemp(day,'13')+'</b></span>'+
+          '<span>🌆 Kveld <b>'+hourTemp(day,'19')+'</b></span>'+
+        '</div>'+
+        '<div style="font-size:.76rem;color:var(--gray-m);margin-top:5px">🌡️ '+Math.round(d.daily.temperature_2m_min[i])+'–'+Math.round(d.daily.temperature_2m_max[i])+'° · 🌧️ regn '+(d.daily.precipitation_probability_max[i]==null?'–':d.daily.precipitation_probability_max[i]+'%')+' ('+(d.daily.precipitation_sum[i]||0)+' mm)</div>'+
+      '</div>';
+    });
+    box.innerHTML = html;
+    st.textContent = label + ' · oppdatert nå';
+  }).catch(function(){ st.textContent = 'Kunne ikke hente vær (sjekk nett). Prøv igjen.'; });
+}
+
+// I DAG
+var TRIP_DAYS = [
+ {d:'2026-07-06', t:'Slependen → Larvik → ferje → Aalborg', lat:57.05, lon:9.92, plan:'Kjør til Larvik, ferje 17:30 → Hirtshals 21:15, videre til Aalborg (hotell booket).', husk:'CEU1949-billett + pass klare. Oppmøte Larvik 16:30. Depositum-kort til Aalborg.'},
+ {d:'2026-07-07', t:'Aalborg → Lüneburg', lat:53.25, lon:10.41, plan:'Frokost, utsjekk innen 12:00, kjør til Lüneburg (~430 km, lad IONITY Aabenraa + Buddikate).', husk:'Utsjekk Aalborg innen 12:00. B&B Lüneburg booket – ta med kredittkort.'},
+ {d:'2026-07-08', t:'Lüneburg → Schwerin slott', lat:53.63, lon:11.42, plan:'Utsjekk Lüneburg, kjør til Schwerin (~90 km). Schweriner Schloss + slottshagen, gamlebyen.', husk:'Sjekk åpningstider på slottet. Hvor sover dere natt 8/7?'},
+ {d:'2026-07-09', t:'Schwerin → Ruhr / Düsseldorf', lat:51.29, lon:6.77, plan:'Lang kjøredag ~560 km mot Düsseldorf. Lad Hannover + Bielefeld/Kamen. Tidlig start!', husk:'Overnatt i Düsseldorf/Ruhr – Jon lander 13:15 i morgen.'},
+ {d:'2026-07-10', t:'Hent Jon (DUS 13:15) 🎉', lat:51.29, lon:6.77, plan:'Emma til Tyler om morgenen. Hent Jon på Düsseldorf 13:15 (SK 0816, direkte). Altstadt & bryggeri. Nå er dere fire!', husk:'Hent Jon 13:15 · kortidsparkering P3.'},
+ {d:'2026-07-11', t:'Til Limburg · Martine → Chloe', lat:51.33, lon:5.98, plan:'Kjør til Limburg. Lever Martine hos Chloe (Helden). Slott + Kasteeltuinen Arcen.', husk:'Avtal henting av Martine i morgen kveld.'},
+ {d:'2026-07-12', t:'Limburg · hent Martine', lat:51.33, lon:5.98, plan:'Roermond / Designer Outlet. Hent Martine hos Chloe på kvelden.', husk:'Hent Martine i Helden.'},
+ {d:'2026-07-13', t:'De Hoge Veluwe · Kröller-Müller', lat:52.10, lon:5.82, plan:'Kröller-Müller + skulpturhage. Emma: ridning på Veluwe.', husk:'Book Emmas ridetur (Paardensportcentrum Epe).'},
+ {d:'2026-07-14', t:'Amsterdam', lat:52.37, lon:4.90, plan:'Rijksmuseum, kanaltur. Emma: Moco/Van Gogh. Jon: Brouwerij ’t IJ.', husk:'Book Rijksmuseum-tidsluke.'},
+ {d:'2026-07-15', t:'Amsterdam dag 2', lat:52.37, lon:4.90, plan:'Van Gogh / Zaanse Schans / Utrecht – velg selv.', husk:'Nyt dagen!'},
+ {d:'2026-07-16', t:'Til Eindhoven · siste kveld samlet', lat:51.44, lon:5.47, plan:'Den Bosch-katedral, Van Abbemuseum (Emma). Siste felles middag.', husk:'Lad til 100% for returen.'},
+ {d:'2026-07-17', t:'Martine blir · retur starter', lat:53.08, lon:8.80, plan:'Martine blir i Eindhoven. Janiche, Emma & Jon kjører nordover (~450 km).', husk:'Sjekk Martines HRT (til 27/7) + togbillett Birmingham→Gatwick.'},
+ {d:'2026-07-18', t:'Til Hirtshals · ferje hjem', lat:57.59, lon:9.96, plan:'Kjør til Hirtshals. Ferje 22:15 → Larvik. Oppmøte 21:15.', husk:'Lad godt i Hirtshals før ferja!'},
+ {d:'2026-07-19', t:'Hjem 🏠', lat:59.05, lon:10.04, plan:'Ankomst Larvik 02:00, kjør hjem til Nedre Åsvei 45 (~110 km).', husk:'Kjør forsiktig – natt. Sett bilen til lading hjemme.'}
+];
+function todayRender(){
+  var dateEl=document.getElementById('today-date'); if(!dateEl) return;
+  var titEl=document.getElementById('today-title'), planEl=document.getElementById('today-plan'), wxEl=document.getElementById('today-wx'), remEl=document.getElementById('today-remind');
+  var now=new Date();
+  var todayStr=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0')+'-'+String(now.getDate()).padStart(2,'0');
+  var day=null, idx=-1;
+  TRIP_DAYS.forEach(function(x,i){ if(x.d===todayStr){ day=x; idx=i; } });
+  if(day){
+    dateEl.textContent='I dag · '+now.toLocaleDateString('no-NO',{weekday:'long',day:'numeric',month:'long'})+' · Dag '+(idx+1)+' av 14';
+    titEl.textContent=day.t;
+    planEl.textContent=day.plan;
+    remEl.innerHTML='📌 <strong>Husk:</strong> '+day.husk;
+    todayWx(day.lat, day.lon);
+  } else {
+    wxEl.innerHTML='';
+    var start=new Date('2026-07-06T00:00');
+    if(now<start){
+      var days=Math.ceil((start-now)/86400000);
+      dateEl.textContent='Nedtelling';
+      titEl.textContent='🧳 '+days+' dag'+(days===1?'':'er')+' til avreise!';
+      planEl.textContent='Turen starter mandag 6. juli. Sjekk pakkelista og at alt er booket.';
+      remEl.innerHTML='📌 <strong>Husk:</strong> Pass, CEU1949-billett, hotellbekreftelser – og lad bilen.';
+    } else {
+      dateEl.textContent='Etter turen';
+      titEl.textContent='🏠 Velkommen hjem!';
+      planEl.textContent='Håper dere hadde en fantastisk tur. 💙';
+      remEl.innerHTML='📌 Martine: HRT til 27/7 og hjemflyet fra Gatwick 26/7.';
+    }
+  }
+}
+function todayWx(lat, lon){
+  var wxEl=document.getElementById('today-wx'); if(!wxEl) return;
+  wxEl.innerHTML='<span style="opacity:.8">Henter vær …</span>';
+  var now=new Date();
+  var todayStr=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0')+'-'+String(now.getDate()).padStart(2,'0');
+  var url='https://api.open-meteo.com/v1/forecast?latitude='+lat+'&longitude='+lon+'&hourly=temperature_2m&daily=weather_code,precipitation_probability_max&timezone=auto&forecast_days=1';
+  fetch(url).then(function(r){return r.json();}).then(function(d){
+    var hMap={}; (d.hourly.time||[]).forEach(function(t,i){ hMap[t]=d.hourly.temperature_2m[i]; });
+    function ht(hh){ var v=hMap[todayStr+'T'+hh+':00']; return v==null?'–':Math.round(v)+'°'; }
+    var ic=wxDesc(d.daily.weather_code[0]);
+    var rain=d.daily.precipitation_probability_max?d.daily.precipitation_probability_max[0]:null;
+    wxEl.innerHTML='<span>'+ic[0]+' '+ic[1]+'</span><span>🌅 '+ht('08')+'</span><span>☀️ '+ht('13')+'</span><span>🌆 '+ht('19')+'</span>'+(rain!=null?'<span>🌧️ '+rain+'%</span>':'');
+  }).catch(function(){ wxEl.innerHTML='<span style="opacity:.8">Vær utilgjengelig akkurat nå</span>'; });
+}
+
+// MAIN TABS
+function showTab(name, btn) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(name).classList.add('active');
+  btn.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(name === 'kart') ensureMap();
+  if(name === 'okonomi'){ ecoFetch(); ccFetchRate(); }
+  if(name === 'vaer') wxLoad();
+}
+
+// PERSON TABS
+function showPerson(name, btn) {
+  document.querySelectorAll('.ppanel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.ptab').forEach(t => t.classList.remove('active'));
+  document.getElementById('p-' + name).classList.add('active');
+  btn.classList.add('active');
+}
+
+// DAY ACCORDION
+function toggleDay(hd) {
+  const body = hd.nextElementSibling;
+  const chev = hd.querySelector('.dchev');
+  const open = body.classList.toggle('open');
+  chev.style.transform = open ? 'rotate(180deg)' : '';
+}
+
+// PACKING PROGRESS PER PERSON
+function updatePersonProgress(person) {
+  const all = document.querySelectorAll(`input[data-person="${person}"]`);
+  const checked = document.querySelectorAll(`input[data-person="${person}"]:checked`);
+  const pct = all.length > 0 ? Math.round(checked.length / all.length * 100) : 0;
+  const bar = document.getElementById('bar-' + person);
+  const stats = document.getElementById('stats-' + person);
+  if (bar) bar.style.width = pct + '%';
+  if (stats) stats.textContent = `${checked.length} av ${all.length} pakket (${pct}%)`;
+  // Toggle style
+  all.forEach(cb => {
+    const item = cb.closest('.pitem');
+    item.classList.toggle('checked', cb.checked);
+  });
+}
+
+// Init all
+['janiche','jon','emma','martine','felles'].forEach(p => updatePersonProgress(p));
+ecoFetch();
+ccRateLabel(null);
+ccFetchRate();
+wxInit();
+todayRender();
+</script>
+</body>
+</html>
